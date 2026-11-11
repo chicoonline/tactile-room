@@ -2,6 +2,11 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## Unreleased
+- Published on GitHub Pages at https://tactileroom.chicomorais.com (11 Nov).
+- Studio note no longer says "Only you see this": anyone who adds `#studio` to the address can open it, but changes made there stay in their own browser.
+- New `docs/` folder for the project report, so the record lives with the code. `.DS_Store` removed and ignored.
+
 ## 1.4 · 11 Nov 2026
 - New look, "deep-sea sonar studio" (Chico's direction, 11 Nov): dark background (#050B14) with faint sonar rings; the shell sits in an open, borderless stage with a still cyan-and-coral halo and a faint cyan pool of light under it; controls in one floating glass panel beside the shell (below it on phones); the sound trace glows. Headings in Space Grotesk, numbers and labels in JetBrains Mono.
 - Colours on the shell: ridges cyan (#00F2FE), grooves coral (#FF5A5F), landmarks amber (#F59E0B). The ripples under your finger take the colour of what is under it.

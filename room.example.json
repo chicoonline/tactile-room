@@ -1,0 +1,66 @@
+{
+  "model": "assets/shell.glb",
+  "orientation": [
+    0,
+    0,
+    0
+  ],
+  "label": {
+    "name": {
+      "en": "[common name, or just 'Shell']",
+      "pt": "[nome comum, ou só 'Concha']",
+      "de": "[gebräuchlicher Name, oder einfach 'Muschel']"
+    },
+    "scientific": "[only if checked on WoRMS or iNaturalist; otherwise leave empty]",
+    "place": "[beach, country]",
+    "year": "[year you found it]",
+    "size": "[e.g. 54 × 31 mm]",
+    "method": "[e.g. Photogrammetry, 168 photos, Apple Object Capture]"
+  },
+  "description": {
+    "text": {
+      "en": "[your checked description, 60–90 seconds spoken]",
+      "pt": "[sua descrição verificada, 60–90 segundos falada]",
+      "de": "[deine geprüfte Beschreibung, 60–90 Sekunden gesprochen]"
+    },
+    "audio": {
+      "en": "",
+      "pt": "",
+      "de": ""
+    },
+    "lang": "en-GB",
+    "voice": "",
+    "rate": 1
+  },
+  "about": "[a short paragraph in your words. A blank line starts a new paragraph.]",
+  "credits": "[e.g. Concept, scan and testing: Chico Morais. Code written with AI assistance (Claude). 3D: three.js.]",
+  "sound": {
+    "pitchFrom": "bulge",
+    "low": 48,
+    "high": 81,
+    "steps": true,
+    "texture": 0.55,
+    "toneVol": 0.7,
+    "texVol": 0.55,
+    "waterVol": 0,
+    "smoothing": 2,
+    "invert": false,
+    "vibration": 0.7
+  },
+  "landmarks": [
+    {
+      "name": {
+        "en": "Tip",
+        "pt": "Ponta",
+        "de": "Spitze"
+      },
+      "at": [
+        0,
+        0.95,
+        0
+      ]
+    }
+  ],
+  "landmarkRadius": 0.12,
+  "strings": {}
+}

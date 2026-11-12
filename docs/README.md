@@ -250,7 +250,8 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 
 ## Known limits
 
-- **Not yet tried on a real phone, gamepad or with a screen reader.** 83 automated checks pass in desktop Chrome and in a phone-sized touch view (55 for the room, 28 for vibration and gamepad, with simulated devices), but Sunday's test is the real check. (GAP)
+- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones. On top of that, 199 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried with a gamepad, or by a blind person with a screen reader. (GAP)
+- **Android vibration not felt yet** (12 Nov: your LG K9 and three friends' Android phones). Being checked with `vibration-check.html`; see the project report.
 - **Vibration:** Android Chrome and gamepads in Chrome or Edge only. Not on iPhones (no browser there can vibrate) and not in Firefox. How it feels depends on the phone's motor: tune the strength on your own Android phone if you have one.
 - **iPhone silent switch.** The page asks iOS to play sound anyway; on older iOS versions it may stay silent. Tell testers to flip the switch.
 - **Old browsers.** The page needs iOS 16.4 or newer (Safari 16.4+). Older devices show a message instead of the shell.

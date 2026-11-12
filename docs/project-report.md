@@ -87,6 +87,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | — | Tester invitation: your own intro, how you know Oliver, "du" | Chico | Personal and informal fits how Oliver knows them |
 | 12 Nov | 1.9 | Feedback form at the end of the page (EN/PT/DE), answers to a Google Sheet; device details in the test log | Chico (in case no blind testers can meet before the deadline); Claude (build) | Remote people can try it and answer; the log shows the device without asking |
 | 12 Nov | 1.9 | First form question: "How do you describe yourself?" (blind, partially sighted, sighted, prefer not to say), not how much someone sees | Chico | "How much do you see" can feel offensive; self-description is optional and respectful |
+| 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
 | 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, on Bürgergeld, no fee possible, results may support a fellowship or master's | Chico (who to ask; that they know you're an immigrant on Bürgergeld, doing it out of love); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 
 - Every version is kept in the package (`versions/`, CHANGELOG.md).
@@ -98,8 +99,9 @@ Working record of the whole process: research, decisions, versions, tests and id
 - **Your files** (`photogrammetry shell`): a medium-detail test (USDZ, 26 MB), the full-detail scan (USDZ, 58 MB), a GLB with 4K textures (37 MB) and a GLB with 4K JPEG textures (4.4 MB).
 - **On the site:** the 4.4 MB file with 2K textures (3.2 MB), so cheaper phones don't run out of graphics memory. 96,566 triangles; geometry unchanged.
 - **Size:** about 7 cm long, measured by you with a set square (`shell measurement 7cm.JPG`).
-- **iNaturalist (12 Nov):** five observations posted (Corbu, Constanța, 8 Sep 2025), waiting for identifications; one already carries a suggestion of veined rapa whelk (*Rapana venosa*).
-- **Species and place: not settled.** Google's AI said mutable conch; size (7 cm against a 4 cm maximum) and place (Black Sea against Indo-Pacific) speak against it, and for *Rapana venosa*. Evidence and next step (iNaturalist): ideas/where-did-this-come-from.md.
+- **Species: veined rapa whelk, *Rapana venosa*** (FACT, iNaturalist, 12 Nov 2026): **Research Grade**, 3 of 3 identifications agree, observed 8 Sep 2025 at Corbu, Constanța, Romania; iNaturalist marks it as introduced there. Observation: https://www.inaturalist.org/observations/414290045 (all photos now in this one; you deleted the duplicate observations on request). Screenshots of every observation before deletion: `process/screencapture-inaturalist-…pdf`.
+- **On the label since 12 Nov:** *Rapana venosa*; found on the Black Sea coast, Romania; 2025. The beach itself stays off the label until you've checked the collecting rules (ideas/where-did-this-come-from.md).
+- Google's AI had said mutable conch; size and place spoke against it. Evidence: ideas/where-did-this-come-from.md.
 - Your verdict (12 Nov): "the shell was beautifully scanned".
 
 ### 4.2 Process images (for the website's development section and OceanX)
@@ -157,6 +159,18 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Data protection (INFERENCE, not legal advice): a disability is health data under GDPR. Get explicit consent, collect only what you need, store it locally, and name participants P1 and P2.
 - **Session guide in German** (12 Nov): projects/tactile-room-session-guide.md. Same nine questions as the online form, so the two can be compared.
 
+### 5.5b Where it's been tried (correction, 12 Nov)
+- You test each version yourself on a computer, an iPhone and Android phones (an earlier note in the build guide said "not yet tried on a real phone": wrong, now fixed).
+- The automated checks run in Chrome on a server with simulated phones. They prove the page *asks* for vibration, not that a motor moves.
+
+### 5.5c Android vibration not felt (12 Nov): what's known
+- Felt nothing: your LG K9 and three friends' Android phones (Chico, 12 Nov).
+- **Not the iPhone problem (FACT):** Chrome for Android and Samsung Internet support web vibration; Firefox for Android and every iPhone browser don't ([caniuse](https://caniuse.com/vibration)).
+- **Chrome blocks vibration until the page has been tapped (FACT):** since Chrome 60, "calls to navigator.vibrate will immediately return 'false' if the user has yet to tap on the frame" ([Chromium, 2017](https://groups.google.com/a/chromium.org/g/blink-dev/c/QGcpjisxtik/m/reSqe_HgCgAJ)). Whether a drag counts as a tap isn't documented there (POTENTIAL: a first drag may stay silent).
+- **The phone can refuse even when the browser asks (INFERENCE):** silent mode, Do Not Disturb, battery saver, or vibration set to zero in the phone's settings.
+- **The check:** `vibration-check.html` on the site shows, on the phone itself, whether the browser has vibration, whether the page counts as tapped, and whether each request was accepted or refused; "Copy results" gives a text to send. Accepted but not felt = the phone's settings or motor; refused = the browser's rules; no vibration at all = the browser.
+- Decision: fix nothing until the check results are in.
+
 ### 5.6 Online feedback (v1.9, 12 Nov)
 - A form at the end of the page, in the visitor's language. Nine short questions, all optional except the agreement; a second box (unticked) adds anonymous visit details: device, system, browser, minutes, how they explored, landmarks found, settings.
 - Answers go to a Google Sheet in your account through `docs/feedback-receiver.gs` (setup: build guide, "Feedback form"). The form stays hidden until room.json has the script's address.
@@ -188,7 +202,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 11 Nov | Gemini | Inspiration mockups for the new look | Invented readouts and sliders that don't exist in the room | Left out of v1.4 |
 | 11 Nov | Claude | v1.4 restyle from your direction; contrast checks and accessibility audit | Kept the old layout; same fonts; About misaligned. Looked generic | Fonts changed in 1.5; layout redesign planned in Figma after OceanX |
 | 11 Nov | Claude | v1.5: fonts, trackpad turning, touch-area cues, layout fixes | [to fill after you've tried it] | [to fill] |
-| 12 Nov | Google (AI search) | Identified the shell as a mutable conch, about 35–40 mm | Wrong size (your ruler: 7 cm); species very likely wrong (4 cm maximum; Indo-Pacific, not the Black Sea) | You checked WoRMS (name superseded); Claude checked size and range. Label keeps no species until iNaturalist |
+| 12 Nov | Google (AI search) | Identified the shell as a mutable conch, about 35–40 mm | Wrong size (your ruler: 7 cm) and wrong species: the iNaturalist community confirmed *Rapana venosa* (Research Grade, 3 of 3) the same day | You checked WoRMS (name superseded); Claude checked size and range; people identified it |
 | 12 Nov | Claude | v1.6: removed the generated shell, set up your scan, placed two landmarks, Dark \| Light, device language | Didn't send a zip of 1.5 (its files went straight into your folder) | [to fill] |
 | 12 Nov | Claude | v1.7–1.9: clearer names, vibration levels, feedback form and receiver script; session guide; tester and association emails | [to fill after testing] | [to fill] |
 | [Sat] | [local model] | Draft shell description | [to fill] | [to fill] |
@@ -199,7 +213,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Which phones do the testers use? (Since 1.9 the log and the form's visit box record it.)
 - Is the "gap" real after a proper literature search?
 - Are Spiral tip, Back tip and Opening where you'd put them? Other spots worth naming (the shoulder knobs)?
-- Which species is it? (iNaturalist.) Was it found on the Corbu–Midia beach, and may shells be taken there?
+- ~~Which species is it?~~ *Rapana venosa*, confirmed 12 Nov. Still open: may shells be taken on the Corbu–Midia beach?
 - Dark or light: which do low-vision testers prefer?
 - Does the touch-area ping help people find the shell, or is it noise?
 - Do screen-reader users manage with VoiceOver's pass-through gesture, or switch it off?

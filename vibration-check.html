@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibration check · Tactile Room</title>
+<meta name="description" content="A one-minute check: can this phone vibrate from a web page?">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  :root { --bg: #04131A; --panel: #0B2530; --ink: #E8F4F6; --muted: #A9C3C9; --accent: #5FE3D6; --warn: #FF8A8E; --line: #3C6470; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 "Inclusive Sans", system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 18px; }
+  h1, h2, button { font-family: "Syne", system-ui, sans-serif; }
+  h1 { font-size: 1.7rem; margin: 0; } h2 { font-size: 1.15rem; margin: 0 0 6px; }
+  p { margin: 0; } .muted { color: var(--muted); }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 10px; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; } dt { color: var(--muted); } dd { margin: 0; font-family: "Martian Mono", ui-monospace, monospace; font-size: 0.9rem; }
+  button { font-size: 1.05rem; font-weight: 700; min-height: 52px; padding: 10px 16px; border-radius: 12px; border: 2px solid var(--accent); background: transparent; color: var(--ink); cursor: pointer; text-align: left; }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  #drag { min-height: 180px; border: 2px dashed var(--accent); border-radius: 14px; display: grid; place-items: center; text-align: center; padding: 16px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #drag.on { background: rgba(95, 227, 214, 0.12); }
+  .ok { color: var(--accent); font-weight: 700; } .bad { color: var(--warn); font-weight: 700; }
+  ol, ul { margin: 0; padding-left: 1.3em; } li + li { margin-top: 4px; }
+  textarea { width: 100%; min-height: 110px; font: 0.85rem/1.4 "Martian Mono", ui-monospace, monospace; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1 data-t="title">Vibration check</h1>
+  <p data-t="intro">One minute, to find out whether this phone can vibrate from a web page, and if not, why.</p>
+
+  <section aria-labelledby="h-steps">
+    <h2 id="h-steps" data-t="stepsH">Do this, in this order</h2>
+    <ol>
+      <li data-t="s1">Before tapping anything else, drag your finger around the box below.</li>
+      <li data-t="s2">Tap “Vibrate for half a second”.</li>
+      <li data-t="s3">Tap “Short pulses”.</li>
+      <li data-t="s4">Drag in the box again.</li>
+      <li data-t="s5">Tap “Copy results” and send them to Chico.</li>
+    </ol>
+  </section>
+
+  <div id="drag" role="application" aria-labelledby="drag-l"><p id="drag-l" data-t="drag">Drag your finger here</p></div>
+  <button type="button" id="long" data-t="long">Vibrate for half a second</button>
+  <button type="button" id="short" data-t="short">Short pulses (like the Tactile Room)</button>
+  <p id="out" role="status" aria-live="polite"></p>
+
+  <section aria-labelledby="h-facts">
+    <h2 id="h-facts" data-t="factsH">What this browser says</h2>
+    <dl>
+      <dt data-t="fDevice">Device</dt><dd id="f-device"></dd>
+      <dt data-t="fApi">Web vibration</dt><dd id="f-api"></dd>
+      <dt data-t="fTapped">Page tapped yet</dt><dd id="f-tapped"></dd>
+      <dt data-t="fDrag">Drag pulses</dt><dd id="f-drag">0 / 0</dd>
+    </dl>
+  </section>
+
+  <section aria-labelledby="h-copy">
+    <h2 id="h-copy" data-t="copyH">Results</h2>
+    <textarea id="results" readonly aria-labelledby="h-copy"></textarea>
+    <button type="button" id="copy" data-t="copy">Copy results</button>
+  </section>
+
+  <section aria-labelledby="h-felt">
+    <h2 id="h-felt" data-t="feltH">“Accepted”, but you felt nothing?</h2>
+    <p data-t="feltP">Then the browser asked the phone to vibrate and the phone didn't. Check:</p>
+    <ul>
+      <li data-t="c1">Silent mode and Do Not Disturb are off.</li>
+      <li data-t="c2">Battery saver is off.</li>
+      <li data-t="c3">Settings → Sound and vibration → Vibration (and touch feedback) are on, and not at zero.</li>
+      <li data-t="c4">You're in Chrome or Samsung Internet. Firefox and iPhones can't vibrate from a web page.</li>
+    </ul>
+  </section>
+  <p class="muted"><a href="./" data-t="back">Back to the Tactile Room</a></p>
+</main>
+<script>
+const S = {
+  en: { title: 'Vibration check', intro: 'One minute, to find out whether this phone can vibrate from a web page, and if not, why.', stepsH: 'Do this, in this order',
+    s1: 'Before tapping anything else, drag your finger around the box below.', s2: 'Tap “Vibrate for half a second”.', s3: 'Tap “Short pulses”.', s4: 'Drag in the box again.', s5: 'Tap “Copy results” and send them to Chico.',
+    drag: 'Drag your finger here', long: 'Vibrate for half a second', short: 'Short pulses (like the Tactile Room)', factsH: 'What this browser says',
+    fDevice: 'Device', fApi: 'Web vibration', fTapped: 'Page tapped yet', fDrag: 'Drag pulses (accepted / refused)', copyH: 'Results', copy: 'Copy results', copied: 'Copied.',
+    feltH: '“Accepted”, but you felt nothing?', feltP: 'Then the browser asked the phone to vibrate and the phone didn’t. Check:',
+    c1: 'Silent mode and Do Not Disturb are off.', c2: 'Battery saver is off.', c3: 'Settings → Sound and vibration → Vibration (and touch feedback) are on, and not at zero.',
+    c4: 'You’re in Chrome or Samsung Internet. Firefox and iPhones can’t vibrate from a web page.', back: 'Back to the Tactile Room',
+    yes: 'yes', no: 'no', unknown: 'unknown', supported: 'supported', missing: 'not in this browser',
+    accepted: 'The browser accepted it. Did the phone vibrate?', refused: 'The browser refused it.', noApi: 'This browser can’t vibrate at all.' },
+  pt: { title: 'Teste de vibração', intro: 'Um minuto para descobrir se este celular consegue vibrar a partir de uma página da web e, se não, por quê.', stepsH: 'Faça isto, nesta ordem',
+    s1: 'Antes de tocar em qualquer outra coisa, arraste o dedo pela caixa abaixo.', s2: 'Toque em “Vibrar meio segundo”.', s3: 'Toque em “Pulsos curtos”.', s4: 'Arraste na caixa de novo.', s5: 'Toque em “Copiar resultados” e envie para o Chico.',
+    drag: 'Arraste o dedo aqui', long: 'Vibrar meio segundo', short: 'Pulsos curtos (como na Sala Tátil)', factsH: 'O que este navegador diz',
+    fDevice: 'Aparelho', fApi: 'Vibração na web', fTapped: 'Página já tocada', fDrag: 'Pulsos ao arrastar (aceitos / recusados)', copyH: 'Resultados', copy: 'Copiar resultados', copied: 'Copiado.',
+    feltH: '“Aceito”, mas não sentiu nada?', feltP: 'Então o navegador pediu a vibração e o celular não vibrou. Verifique:',
+    c1: 'Modo silencioso e Não perturbe desligados.', c2: 'Economia de bateria desligada.', c3: 'Configurações → Som e vibração → Vibração (e resposta ao toque) ligadas e não no zero.',
+    c4: 'Você está no Chrome ou no Samsung Internet. Firefox e iPhone não vibram a partir de páginas da web.', back: 'Voltar à Sala Tátil',
+    yes: 'sim', no: 'não', unknown: 'desconhecido', supported: 'disponível', missing: 'não existe neste navegador',
+    accepted: 'O navegador aceitou. O celular vibrou?', refused: 'O navegador recusou.', noApi: 'Este navegador não consegue vibrar.' },
+  de: { title: 'Vibrationstest', intro: 'Eine Minute, um herauszufinden, ob dieses Handy über eine Webseite vibrieren kann, und wenn nicht, warum.', stepsH: 'Bitte in dieser Reihenfolge',
+    s1: 'Bevor Sie etwas anderes antippen: mit dem Finger über das Feld unten ziehen.', s2: '„Eine halbe Sekunde vibrieren“ antippen.', s3: '„Kurze Impulse“ antippen.', s4: 'Noch einmal über das Feld ziehen.', s5: '„Ergebnisse kopieren“ antippen und an Chico schicken.',
+    drag: 'Hier mit dem Finger ziehen', long: 'Eine halbe Sekunde vibrieren', short: 'Kurze Impulse (wie im Tastraum)', factsH: 'Was dieser Browser meldet',
+    fDevice: 'Gerät', fApi: 'Web-Vibration', fTapped: 'Seite schon angetippt', fDrag: 'Impulse beim Ziehen (angenommen / abgelehnt)', copyH: 'Ergebnisse', copy: 'Ergebnisse kopieren', copied: 'Kopiert.',
+    feltH: '„Angenommen“, aber nichts gespürt?', feltP: 'Dann hat der Browser die Vibration angefordert, aber das Handy hat nicht vibriert. Bitte prüfen:',
+    c1: 'Lautlos und „Nicht stören“ sind aus.', c2: 'Energiesparmodus ist aus.', c3: 'Einstellungen → Töne und Vibration → Vibration (und Berührungsfeedback) sind an und nicht auf null.',
+    c4: 'Sie sind in Chrome oder Samsung Internet. Firefox und iPhones können über Webseiten nicht vibrieren.', back: 'Zurück zum Tastraum',
+    yes: 'ja', no: 'nein', unknown: 'unbekannt', supported: 'vorhanden', missing: 'gibt es in diesem Browser nicht',
+    accepted: 'Der Browser hat angenommen. Hat das Handy vibriert?', refused: 'Der Browser hat abgelehnt.', noApi: 'Dieser Browser kann nicht vibrieren.' }
+};
+const q = new URLSearchParams(location.search).get('lang');
+const LANG = (q && S[q]) ? q : ((navigator.languages || [navigator.language || 'en']).map((l) => String(l).slice(0, 2).toLowerCase()).find((l) => S[l]) || 'en');
+const t = S[LANG]; document.documentElement.lang = LANG; document.title = t.title + ' · ' + (LANG === 'pt' ? 'Sala Tátil' : LANG === 'de' ? 'Tastraum' : 'Tactile Room');
+document.querySelectorAll('[data-t]').forEach((el) => { if (t[el.dataset.t]) el.textContent = t[el.dataset.t]; });
+
+const $ = (id) => document.getElementById(id);
+const api = typeof navigator.vibrate === 'function';
+const ua = navigator.userAgent || '';
+const m = (re) => { const r = re.exec(ua); return r ? ' ' + r[1] : ''; };
+const os = /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'iOS/iPadOS' : /Windows/.test(ua) ? 'Windows' : /Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'other';
+const browser = /SamsungBrowser\//.test(ua) ? 'Samsung Internet' + m(/SamsungBrowser\/(\d+)/) : /Edg(?:A|iOS)?\//.test(ua) ? 'Edge' + m(/Edg(?:A|iOS)?\/(\d+)/)
+  : /OPR\//.test(ua) ? 'Opera' + m(/OPR\/(\d+)/) : /Firefox\/|FxiOS\//.test(ua) ? 'Firefox' + m(/(?:Firefox|FxiOS)\/(\d+)/)
+  : /CriOS\/|Chrome\//.test(ua) ? 'Chrome' + m(/(?:CriOS|Chrome)\/(\d+)/) : (/Safari\//.test(ua) && /Version\//.test(ua)) ? 'Safari' + m(/Version\/(\d+)/) : 'other';
+const inApp = /; wv\)|FBAN|FBAV|Instagram|WhatsApp/.test(ua);
+const tapped = () => (navigator.userActivation ? navigator.userActivation.hasBeenActive : null);
+const log = [];
+const drag = { ok: 0, no: 0, firstTapped: null, last: 0 };
+function vib(p) { if (!api) return null; try { return navigator.vibrate(p); } catch (e) { return false; } }
+function note(what, r) { log.push(`${what}=${r === null ? 'no-api' : r ? 'accepted' : 'refused'} (tapped before: ${tapped()})`); }
+function show(r) { const o = $('out'); o.className = r === null ? 'bad' : r ? 'ok' : 'bad'; o.textContent = r === null ? t.noApi : r ? t.accepted : t.refused; }
+function refresh() {
+  $('f-device').textContent = `${os} · ${browser}${inApp ? ' · in-app' : ''}`;
+  $('f-api').textContent = api ? t.supported : t.missing;
+  const tp = tapped(); $('f-tapped').textContent = tp === null ? t.unknown : tp ? t.yes : t.no;
+  $('f-drag').textContent = `${drag.ok} / ${drag.no}`;
+  $('results').value = [`Vibration check · ${new Date().toISOString().slice(0, 16)}`, `device: ${os}; browser: ${browser}; in-app: ${inApp}; api: ${api}; touch points: ${navigator.maxTouchPoints || 0}`,
+    `first drag before any tap: ${drag.firstTapped === null ? 'not done' : drag.firstTapped ? 'page already tapped' : 'page not tapped yet'}`, `drag pulses accepted/refused: ${drag.ok}/${drag.no}`, ...log, `ua: ${ua}`].join('\n');
+}
+$('long').addEventListener('click', () => { const r = vib(500); note('half-second', r); show(r); refresh(); });
+$('short').addEventListener('click', () => { const r = vib([30, 60, 30, 60, 30]); note('short-pulses', r); show(r); refresh(); });
+const box = $('drag');
+box.addEventListener('pointerdown', (e) => { box.classList.add('on'); if (drag.firstTapped === null) drag.firstTapped = !!tapped(); try { box.setPointerCapture(e.pointerId); } catch (er) {} });
+box.addEventListener('pointermove', (e) => {
+  if (!box.classList.contains('on')) return;
+  const now = performance.now(); if (now - drag.last < 150) return; drag.last = now;
+  const r = vib(40); if (r) drag.ok++; else drag.no++; refresh();
+});
+for (const ev of ['pointerup', 'pointercancel']) box.addEventListener(ev, () => { box.classList.remove('on'); refresh(); });
+$('copy').addEventListener('click', async () => {
+  refresh(); const v = $('results').value;
+  try { await navigator.clipboard.writeText(v); } catch (e) { $('results').select(); try { document.execCommand('copy'); } catch (er) {} }
+  $('out').className = 'ok'; $('out').textContent = t.copied;
+});
+setInterval(refresh, 700); refresh();
+</script>
+</body>
+</html>

@@ -11,9 +11,13 @@
       "pt": "Concha de caramujo marinho",
       "de": "Gehäuse einer Meeresschnecke"
     },
-    "scientific": "",
-    "place": "",
-    "year": "",
+    "scientific": "Rapana venosa",
+    "place": {
+      "en": "Black Sea coast, Romania",
+      "pt": "Litoral do Mar Negro, Romênia",
+      "de": "Schwarzmeerküste, Rumänien"
+    },
+    "year": "2025",
     "size": {
       "en": "About 7 cm long",
       "pt": "Cerca de 7 cm de comprimento",

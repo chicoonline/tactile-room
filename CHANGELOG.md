@@ -2,6 +2,13 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.13 · 13 Nov 2026
+- **Screen-reader switch first on the page** (Chico: spoken hints should start off for screen-reader users). A browser can't tell whether a screen reader is running, so the first thing on the page is a button, hidden until it gets focus like a skip link: "Using a screen reader? Switch off this page's own voice, so your screen reader reads the hints instead." It works both ways and says what it did.
+- **Spoken hints are remembered** in the browser, from the switch or the side-panel button.
+- **`?hints=off` in a link** starts with spoken hints off (and remembers it), for links sent to screen-reader users; `?hints=on` switches them back on.
+- Tests: new v1.13 suite (first in the page and in the tab order, hidden until focused, switches and announces, remembered after a reload, both buttons in step, `?hints=off` and `?hints=on`, German and Portuguese, axe).
+- 1.12 saved in `versions/v1.12-2026-11-12/`.
+
 ## 1.12 · 12 Nov 2026
 - **The description, from Chico's own check** of a local AI's description (Qwen 3.5 9B, given his four photos): about 7 cm long and 6 cm wide, oval with a point at each end, six turns, knobs on the shoulder, a fine net where low ribs cross the spiral ridges, hundreds of thin brown lines that fade into the cream near the top, turn dotted, then strong, and run on deep inside the opening, which is pinkish white to salmon with brown at the inner lip. Label size updated to 7 × 6 cm.
 - **No more empty gap** (Chico): the description and the keys now sit under the shell instead of in the side panel, so opening them fills the shell's column. The description keeps its paragraphs.

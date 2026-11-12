@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.12 (12 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, and a feedback form (in a pop-up) for people you can't meet.
+- Current version: 1.13 (13 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, and a feedback form (in a pop-up) for people you can't meet.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -92,6 +92,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | 1.11 | Description corrected from the photos: cream with rows of brown dashes outside; inside smooth and glossy, salmon orange at the inner edge, darker brown bands deeper in | Chico (Qwen description); Claude (checked it against the photos) | Qwen got the size and the inside colour wrong (below, AI log) |
 | 12 Nov | 1.12 | Description rewritten from your own check of the Qwen description: 7 × 6 cm, a point at each end, six turns, the net of ribs, hundreds of fine brown lines that fade into the cream, turn dotted, then strong, and run deep inside; inside pinkish white to salmon with brown at the inner lip. Label size: 7 cm long, 6 cm wide | Chico (measured and checked against the shell) | Your eyes on the object beat both AIs |
 | 12 Nov | 1.12 | Description and keys moved under the shell; the description keeps its paragraphs | Chico (an open description left a big empty gap) | The side panel stays short; the text fills the shell's column |
+| 13 Nov | 1.13 | Screen-reader switch as the first thing on the page; spoken hints remembered; `?hints=off` for links to screen-reader users | Chico (hints should start off for screen-reader users) | A browser can't detect a screen reader, so the switch has to come first instead |
 | 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
 | 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, no fee possible, results may support a fellowship or master's | Chico (who to ask; that it's done out of love, not for money); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 
@@ -210,6 +211,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 ## 8. Open questions
 - Does silence off the shell make it harder to find the shell again?
 - Is the knock right, or should the landmark sound come from the real shell?
+- **Protection (12 Nov, your question):** copyright protects your concrete work automatically (scan, photos, texts, your checked description), not the idea or the mechanism. A European patent is ruled out for what you've already published (no grace period for your own disclosure), and patents cost thousands to get and enforce. Your dated public repository already works as a defensive publication. Open: which licence to put on the repository (after OceanX).
 - Which phones do the testers use? (Since 1.9 the log and the form's visit box record it.)
 - Is the "gap" real after a proper literature search?
 - Are Spiral tip, Back tip and Opening where you'd put them? Other spots worth naming (the shoulder knobs)?

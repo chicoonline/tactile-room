@@ -31,9 +31,9 @@
   },
   "description": {
     "text": {
-      "en": "",
-      "pt": "",
-      "de": ""
+      "en": "A veined rapa whelk shell, Rapana venosa, about 7 centimetres long: it fits in the palm of a hand. At one end is the spiral tip, a few small turns that wind to a short point. From there the shell widens quickly into one large turn that makes up most of it. Where the turns meet, a row of low knobs runs around the shoulder. Fine ridges follow the spiral all the way round; you hear them as crackles. On one side is the opening, large and oval, leading inside; in this shell it is deep orange. At the other end, the back tip, the shell narrows into a short channel.\n\nThis sea snail comes from the seas around Japan, Korea and China. It was first found in the Black Sea in 1947, probably brought by ships, and has spread there since. Chico found this shell on a beach in Romania in 2025.",
+      "pt": "Uma concha de caramujo marinho da espécie Rapana venosa, com cerca de 7 centímetros de comprimento: cabe na palma da mão. Numa ponta fica a ponta da espiral, algumas voltas pequenas que terminam numa ponta curta. A partir dali, a concha se alarga rápido numa volta grande, que forma quase toda a concha. Onde as voltas se encontram, uma fileira de saliências baixas corre em volta do ombro. Sulcos finos acompanham a espiral por toda a volta; você os ouve como estalos. De um lado fica a abertura, grande e oval, que leva para dentro; nesta concha ela é laranja forte. Na outra ponta, a ponta de trás, a concha se estreita num canal curto.\n\nEste caramujo vem dos mares em volta do Japão, da Coreia e da China. Foi encontrado no Mar Negro pela primeira vez em 1947, provavelmente trazido por navios, e desde então se espalhou por lá. Chico encontrou esta concha numa praia da Romênia, em 2025.",
+      "de": "Das Gehäuse einer Meeresschnecke der Art Rapana venosa, etwa 7 Zentimeter lang: Es passt in eine Handfläche. An einem Ende liegt die Spitze der Spirale, einige kleine Windungen, die in einer kurzen Spitze enden. Von dort wird das Gehäuse schnell breiter, zu einer großen Windung, die fast das ganze Gehäuse bildet. Wo die Windungen aneinanderstoßen, läuft eine Reihe flacher Knoten um die Schulter. Feine Rippen folgen der Spirale rundherum; man hört sie als Knistern. Auf einer Seite liegt die Öffnung, groß und oval, die ins Innere führt; bei diesem Gehäuse ist sie kräftig orange. Am anderen Ende, der hinteren Spitze, wird das Gehäuse zu einem kurzen Kanal schmal.\n\nDiese Schnecke stammt aus den Meeren um Japan, Korea und China. Im Schwarzen Meer wurde sie 1947 zum ersten Mal gefunden, wahrscheinlich von Schiffen eingeschleppt, und hat sich dort seitdem ausgebreitet. Chico hat dieses Gehäuse 2025 an einem Strand in Rumänien gefunden."
     },
     "audio": {
       "en": "",
@@ -46,9 +46,9 @@
   },
   "about": "",
   "credits": {
-    "en": "Concept and scan: Chico Morais. Code written with AI assistance (Claude). 3D: three.js. Fonts: Syne, Inclusive Sans and Martian Mono (SIL Open Font License).",
-    "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA (Claude). 3D: three.js. Fontes: Syne, Inclusive Sans e Martian Mono (SIL Open Font License).",
-    "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben (Claude). 3D: three.js. Schriften: Syne, Inclusive Sans und Martian Mono (SIL Open Font License)."
+    "en": "Concept and scan: Chico Morais. Code written with AI assistance (Claude).",
+    "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA (Claude).",
+    "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben (Claude)."
   },
   "sound": {
     "pitchFrom": "bulge",

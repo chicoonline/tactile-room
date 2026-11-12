@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.9 (12 Nov 2026): your scanned shell, three landmarks, vibration levels, and a feedback form for people you can't meet.
+- Current version: 1.10 (12 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, and a feedback form (in a pop-up) for people you can't meet.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -87,6 +87,8 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | — | Tester invitation: your own intro, how you know Oliver, "du" | Chico | Personal and informal fits how Oliver knows them |
 | 12 Nov | 1.9 | Feedback form at the end of the page (EN/PT/DE), answers to a Google Sheet; device details in the test log | Chico (in case no blind testers can meet before the deadline); Claude (build) | Remote people can try it and answer; the log shows the device without asking |
 | 12 Nov | 1.9 | First form question: "How do you describe yourself?" (blind, partially sighted, sighted, prefer not to say), not how much someone sees | Chico | "How much do you see" can feel offensive; self-description is optional and respectful |
+| 12 Nov | 1.10 | Form in a pop-up; credits as one line at the bottom, no About box; fonts and three.js no longer named on the page | Chico (keep the page clean; that information isn't important to visitors) | Font licences stay with the font files, which is what they require |
+| 12 Nov | 1.10 | The shell's description, spoken by Describe: shape with the landmark names, then the species' journey and where you found it | Chico (asked for it back once the species was confirmed); Claude (draft from checked facts) | **Check against the real shell:** the orange inside, the knobs on the shoulder, the short channel at the back tip |
 | 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
 | 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, on Bürgergeld, no fee possible, results may support a fellowship or master's | Chico (who to ask; that they know you're an immigrant on Bürgergeld, doing it out of love); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 

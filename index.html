@@ -172,10 +172,18 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
 
 /* v1.9 feedback form: large targets, labels on every field, no grids or sliders (hard with a screen reader) */
 a.btn { text-decoration: none; }
-.feedback { display: grid; gap: 12px; padding: 18px 20px; }
-.feedback > *, .feedback form > * { max-width: 70ch; }
-.feedback h2 { font-size: var(--s2); }
-.feedback > p { color: var(--muted); }
+dialog.feedback { width: min(680px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); margin: auto; padding: 0; overflow: auto; overscroll-behavior: contain;
+  color: var(--ink); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+dialog.feedback::backdrop { background: rgba(2, 10, 14, 0.72); }
+.fb-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: var(--panel-solid); border-bottom: 1px solid var(--hair); }
+.fb-head h2 { font-size: var(--s2); outline-offset: 4px; }
+.fb-close { flex: none; }
+.fb-body { display: grid; gap: 12px; padding: 14px 20px 22px; }
+.fb-body > p { color: var(--muted); }
+.feedback form > * { max-width: 70ch; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding: 4px 4px 28px; color: var(--muted); font-size: var(--s-1); }
+.foot:empty, .foot p:empty { display: none; }
+.linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .feedback form { display: grid; gap: 14px; }
 .fb-q { border: 0; border-top: 1px solid var(--hair); margin: 0; padding: 12px 0 0; display: grid; gap: 2px; min-width: 0; }
 .fb-q legend { font-family: var(--f-display); font-weight: 700; padding: 0; margin-bottom: 6px; float: left; width: 100%; } /* floated: the divider runs above it, not through it */
@@ -205,7 +213,7 @@ a.btn { text-decoration: none; }
   .bench { grid-template-columns: minmax(0, 1fr) 360px; }
   .stage { aspect-ratio: auto; height: calc(100svh - 300px); max-height: none; min-height: 460px; }
   /* v1.5: the panel grows with its content (no scroll box inside the page), and About lines up with the shell's column */
-  .about, .feedback { margin-right: calc(360px + 16px); }
+  .about, .foot { margin-right: calc(360px + 16px); }
   body.studio-open .page { margin-right: 380px; }
 }
 
@@ -315,7 +323,7 @@ a.btn { text-decoration: none; }
             <button type="button" id="vibe-strong" aria-pressed="true" data-i18n="vibeStrong">Strong</button>
           </div>
         </div>
-        <a class="btn" id="fb-link" href="#feedback" hidden><span data-i18n="fbLink">Tell me how it went</span><span class="state" aria-hidden="true">↓</span></a>
+        <button type="button" class="btn" id="fb-link" aria-haspopup="dialog" hidden><span data-i18n="fbLink">Tell me how it went</span><span class="state" aria-hidden="true">↗</span></button>
       </div>
       <div class="legend" id="legend" hidden>
         <span><i style="background: var(--ridge)"></i><span data-i18n="lgRidge">Ridge: brighter sound, clicks as you cross it</span></span>
@@ -357,12 +365,21 @@ a.btn { text-decoration: none; }
   <section class="about glass" id="about" hidden aria-labelledby="about-h">
     <h2 id="about-h" data-i18n="about">About this room</h2>
     <div id="about-text"></div>
-    <p class="credits" id="credits"></p>
   </section>
 
-  <!-- v1.9: feedback. Shown only when room.json names an endpoint. Answers are stored as language-independent codes. -->
-  <section class="feedback glass" id="feedback" hidden aria-labelledby="fb-h">
-    <h2 id="fb-h" data-i18n="fbTitle">How was it?</h2>
+  <!-- v1.10: credits as a plain line at the bottom, no box -->
+  <footer class="foot" id="foot">
+    <p class="credits" id="credits"></p>
+    <button type="button" class="linkish" id="fb-link2" aria-haspopup="dialog" hidden data-i18n="fbLink">Tell me how it went</button>
+  </footer>
+
+  <!-- v1.9: feedback; v1.10: in a pop-up. Available only when room.json names an endpoint. Answers are stored as language-independent codes. -->
+  <dialog class="feedback" id="feedback" aria-labelledby="fb-h">
+    <div class="fb-head">
+      <h2 id="fb-h" tabindex="-1" data-i18n="fbTitle">How was it?</h2>
+      <button type="button" class="btn fb-close" id="fb-close" data-i18n="fbClose">Close</button>
+    </div>
+    <div class="fb-body">
     <p data-i18n="fbIntro">About five minutes. Answer only what you want to; I don’t ask for your name.</p>
     <form id="fb-form" novalidate>
       <fieldset class="fb-q"><legend data-i18n="fbWho">How do you describe yourself?</legend>
@@ -413,7 +430,8 @@ a.btn { text-decoration: none; }
       <button class="btn primary fb-send" type="submit"><span data-i18n="fbSend">Send</span></button>
       <p class="fb-status" id="fb-status" role="status"></p>
     </form>
-  </section>
+    </div>
+  </dialog>
 </div>
 
 <aside class="studio" id="studio" hidden aria-label="Studio">
@@ -522,8 +540,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log
-const VERSION = '1.9';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description
+const VERSION = '1.10';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -650,7 +668,8 @@ const UI = {
     fbSend: "Send",
     fbSending: "Sending…",
     fbThanks: "Thank you! Your answers were sent.",
-    fbFailed: "Sending didn’t work. Please check your connection and try again."
+    fbFailed: "Sending didn’t work. Please check your connection and try again.",
+    fbClose: "Close"
   },
   pt: {
     title: 'Sala Tátil',
@@ -720,7 +739,8 @@ const UI = {
     fbSend: "Enviar",
     fbSending: "Enviando…",
     fbThanks: "Obrigado! Suas respostas foram enviadas.",
-    fbFailed: "O envio não funcionou. Verifique sua conexão e tente de novo."
+    fbFailed: "O envio não funcionou. Verifique sua conexão e tente de novo.",
+    fbClose: "Fechar"
   },
   de: {
     title: 'Tastraum',
@@ -790,7 +810,8 @@ const UI = {
     fbSend: "Senden",
     fbSending: "Wird gesendet…",
     fbThanks: "Vielen Dank! Ihre Antworten wurden gesendet.",
-    fbFailed: "Das Senden hat nicht geklappt. Bitte prüfen Sie die Verbindung und versuchen Sie es noch einmal."
+    fbFailed: "Das Senden hat nicht geklappt. Bitte prüfen Sie die Verbindung und versuchen Sie es noch einmal.",
+    fbClose: "Schließen"
   }
 };
 const SPEECH_LANG = { en: 'en-GB', pt: 'pt-BR', de: 'de-DE' };
@@ -2031,7 +2052,7 @@ function renderText() {
   at.textContent = '';
   (txt.about || '').split(/\n\s*\n/).filter(Boolean).forEach((para) => { const p = document.createElement('p'); p.textContent = para.trim(); at.append(p); });
   $('credits').textContent = txt.credits || '';
-  about.hidden = !(txt.about || txt.credits);
+  about.hidden = !txt.about;
   T = deepMerge(({ en: STRINGS, pt: STRINGS_PT, de: STRINGS_DE })[LANG] || STRINGS, stringsFor(cfg.strings));
   applyStaticText();
   $('map-state').textContent = soundMap.on ? U('on') : U('off');
@@ -2238,13 +2259,24 @@ function visitSummary() {
 
 const FB_FIELDS = ['who', 'aids', 'aidsWhich', 'noticed', 'sounds', 'soundsConfusing', 'vibration', 'hints', 'change', 'objects', 'quote', 'contact'];
 function feedbackEndpoint() { const e = String((cfg.feedback && cfg.feedback.endpoint) || '').trim(); return /^https:\/\/\S+$/.test(e) ? e : ''; }
+let fbHashDone = false;
+function openFeedback() {
+  const d = $('feedback'); if (!feedbackEndpoint() || d.open) return;
+  try { d.showModal(); } catch (e) { d.setAttribute('open', ''); }
+  $('fb-h').focus();
+}
 function renderFeedback() {
   const on = !!feedbackEndpoint();
-  $('feedback').hidden = !on; $('fb-link').hidden = !on;
+  $('fb-link').hidden = !on; $('fb-link2').hidden = !on;
+  if (!on && $('feedback').open) $('feedback').close();
+  if (on && !fbHashDone && location.hash === '#feedback') { fbHashDone = true; openFeedback(); }   // a link ending in #feedback opens the form
   const c = String((cfg.feedback && cfg.feedback.contact) || '').trim();
   $('fb-privacy-text').textContent = U('fbPrivacyText') + (c ? ' ' + U('fbPrivacyContact').replace('{c}', c) : '');
 }
 let fbSending = false;
+$('fb-link').addEventListener('click', openFeedback);
+$('fb-link2').addEventListener('click', openFeedback);
+$('fb-close').addEventListener('click', () => $('feedback').close());
 $('fb-consent').addEventListener('change', (e) => { if (e.target.checked) { $('fb-consent-err').hidden = true; e.target.removeAttribute('aria-invalid'); } });
 $('fb-form').addEventListener('submit', async (e) => {
   e.preventDefault();

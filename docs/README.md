@@ -1,6 +1,6 @@
 # Tactile Room: build guide
 
-**Version 1.9 (12 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
+**Version 1.10 (12 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
 
 **Look.** Dark by default (the deep-sea look). Visitors switch with **Dark | Light** at the top (the one in use is filled); the choice is remembered in their browser. Both looks meet the same contrast rules.
 
@@ -187,7 +187,7 @@ At the end of the page, a short form asks, in the visitor's language:
 - what to change first, and which other objects they'd like to explore this way;
 - whether you may quote them (without their name), and, if they like, a contact for the next version.
 
-Everything is optional except the agreement. A second box, unticked by default, adds anonymous details about the visit: device, system and browser, how long they stayed, how they explored (touch, mouse, keyboard, gamepad), the landmarks they found and their settings. Nothing leaves the page until they press Send. A "Tell me how it went" link in the side panel leads to the form.
+Everything is optional except the agreement. A second box, unticked by default, adds anonymous details about the visit: device, system and browser, how long they stayed, how they explored (touch, mouse, keyboard, gamepad), the landmarks they found and their settings. Nothing leaves the page until they press Send. Since 1.10 the form opens in a pop-up from "Tell me how it went" (in the side panel and at the bottom of the page). **For emails:** a link ending in `#feedback` (for example `https://tactileroom.chicomorais.com/?lang=de#feedback`) opens the form straight away; send it only to people who have already tried the room.
 
 **The form stays hidden until `room.json` has an endpoint.** To switch it on (about 5 minutes, once):
 1. In Google Drive, make a new Google Sheet, for example "Tactile Room feedback".

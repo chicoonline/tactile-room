@@ -2,6 +2,13 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.10 · 12 Nov 2026
+- **The form opens in a pop-up** (Chico: keep the page clean). "Tell me how it went" in the side panel and at the bottom of the page opens it; Close or Esc closes it, and what was typed stays until it's sent. A link ending in `#feedback` opens it straight away, for emails.
+- **The shell's description is back** (Chico: the species is confirmed, so the description was missing). Describe (or D) reads it aloud in the page's language: the shape, walked through with the landmark names, then where the species comes from and where Chico found it. Draft by Claude from checked facts (size, landmarks, iNaturalist, MarLIN); Chico to check the shape details against the real shell.
+- **No About box; credits are one line at the bottom** (Chico): "Concept and scan: Chico Morais. Code written with AI assistance (Claude)." The fonts and three.js are no longer named on the page; the fonts' licences stay in `fonts/` next to the font files, as their licence asks.
+- Tests: the form suite now checks the pop-up (opens with focus on its title, the page behind can't be used, Esc and Close, focus back to the button, answers kept, `#feedback` link, fits a phone, title stays at the top while scrolling, axe in both looks and on a phone).
+- 1.9 saved in `versions/v1.9-2026-11-12/` (with its own room.json, without the form's address).
+
 ## 1.9, later the same day (12 Nov 2026): content and a check page, no code change
 - **Label:** *Rapana venosa* (veined rapa whelk), found on the Black Sea coast, Romania, 2025. The iNaturalist community confirmed the species (Research Grade, 3 of 3 identifications); Chico agreed.
 - **`vibration-check.html`:** a one-minute page that shows, on the phone itself, whether the browser can vibrate, whether the page counts as tapped, and whether each vibration request was accepted. For finding out why Android phones felt nothing, before changing any code.

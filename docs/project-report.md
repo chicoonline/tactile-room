@@ -174,6 +174,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 ### 5.6 Online feedback (v1.9, 12 Nov)
 - A form at the end of the page, in the visitor's language. Nine short questions, all optional except the agreement; a second box (unticked) adds anonymous visit details: device, system, browser, minutes, how they explored, landmarks found, settings.
 - Answers go to a Google Sheet in your account through `docs/feedback-receiver.gs` (setup: build guide, "Feedback form"). The form stays hidden until room.json has the script's address.
+- **Connected 12 Nov:** Claude made the sheet "Tactile Room feedback" in your Google Drive; you added the script and deployed it; its address is in room.json. Still to do: one test answer from the live page, and a public contact address for the privacy note.
 - What a page can't know (FACT): whether a screen reader is on, or how much someone sees. Those stay questions.
 - With few answers, quote people; don't turn two answers into percentages.
 

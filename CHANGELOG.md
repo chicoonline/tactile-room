@@ -6,6 +6,7 @@ Each version is kept as it was, so the development can be compared. Reasons for 
 - **Label:** *Rapana venosa* (veined rapa whelk), found on the Black Sea coast, Romania, 2025. The iNaturalist community confirmed the species (Research Grade, 3 of 3 identifications); Chico agreed.
 - **`vibration-check.html`:** a one-minute page that shows, on the phone itself, whether the browser can vibrate, whether the page counts as tapped, and whether each vibration request was accepted. For finding out why Android phones felt nothing, before changing any code.
 - Build guide: corrected "not yet tried on a real phone". Chico tests on a computer, an iPhone and Android phones.
+- **Feedback form switched on:** room.json now points to the script behind the "Tactile Room feedback" sheet in Chico's Google Drive.
 
 ## 1.9 · 12 Nov 2026
 - **Feedback form at the end of the page** (Chico, 12 Nov: in case no blind testers can meet before the OceanX deadline, people should be able to try it online and answer). Nine short questions in the visitor's language, all optional except the agreement; large targets, a label on every field, no grids or sliders. A "Tell me how it went" link in the side panel leads to it.

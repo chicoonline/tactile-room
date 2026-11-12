@@ -2,6 +2,16 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.9 · 12 Nov 2026
+- **Feedback form at the end of the page** (Chico, 12 Nov: in case no blind testers can meet before the OceanX deadline, people should be able to try it online and answer). Nine short questions in the visitor's language, all optional except the agreement; large targets, a label on every field, no grids or sliders. A "Tell me how it went" link in the side panel leads to it.
+- **The first question asks how people describe themselves** (blind, partially sighted, sighted, prefer not to say), not how much they see (Chico: that can feel offensive).
+- **Consent:** nothing is sent without ticking the agreement; a second box, unticked by default, adds anonymous details about the visit (device, system, browser, how long, how they explored, landmarks found, settings). No names asked; the privacy note says where answers go.
+- Answers go to a Google Sheet in Chico's account through a small Google Apps Script (`docs/feedback-receiver.gs`). The form stays hidden until `room.json` has the script's address (`feedback.endpoint`).
+- **Test log:** each test now starts with a device row (phone or computer, system, browser, whether it can vibrate, settings) and records changes to the vibration level. A browser can't tell whether a screen reader is on, so that stays a question.
+- Tests: new v1.9 suite (form hidden without an endpoint, consent, what is sent with and without the visit box, failure message, EN/PT/DE, 44 px targets on a phone, axe in both looks, device row). The receiver script is tested against mock Google services.
+- 1.8 saved in `versions/v1.8-2026-11-12/`.
+- **Saved versions open properly again:** 1.6, 1.7 and 1.8 each get the `room.json` they had (pointing to the scan in `assets/`), and 1.5–1.8 load the fonts from the site's `fonts/` folder. Only these paths changed; the code is as it was. Before, they showed "The shell couldn't load" when opened from `versions/`.
+
 ## 1.8 · 12 Nov 2026
 - **The intro is about objects, with the shell as the first one** (Chico, 12 Nov: the project is a way to explore objects through sound and vibration, not only a shell). EN: "Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys." Same in PT and DE; the page description for search engines too.
 - **Vibration: Off | Light | Strong** (Chico, 12 Nov: nothing felt on an LG K9). The short taps of 1.1–1.7 (about 5–15 ms) are likely too short for the cheaper vibration motors in older phones. Strong, now the default, makes every pulse 2.5 times longer and at least 30 ms (20 ms inside the fine rhythm on sharp ridges). Light keeps the short taps. Choosing Light or Strong gives a test buzz at once (60 or 160 ms), so you know straight away whether the phone vibrates at all. The choice is remembered in that browser.

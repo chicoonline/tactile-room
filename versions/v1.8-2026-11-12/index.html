@@ -1,0 +1,2189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tactile Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Explore objects through sound and vibration, with or without seeing them. The first is a scanned sea snail shell.">
+<!-- fonts: kept on this site (fonts/), see fonts/fonts.css -->
+<link rel="preload" href="../../fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/inclusive-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+/* v1.4 · "Deep-sea sonar studio" (Chico's direction, 11 Nov 2026).
+   Dark by default, with a visible light option. The shell sits in an open, borderless stage with sonar rings;
+   controls float beside it in glass panels. Accessibility comes first: text contrast 4.5:1 or more in both themes
+   (most dark text above 8:1), control borders 3:1, 44 px targets, visible focus, no text over the 3D image,
+   and solid panels for people who ask their system for less transparency or more contrast. */
+:root {
+  --bg: #050B14;                        /* abyssal midnight */
+  --panel: rgba(15, 23, 42, 0.72);      /* glass HUD panel */
+  --panel-solid: #0F172A;
+  --hair: rgba(255, 255, 255, 0.08);    /* decorative panel edge */
+  --ink: #E6EEF7;
+  --muted: #A3B1C6;
+  --line: #5B6B84;                      /* control borders, 3:1 */
+  --accent: #00F2FE;                    /* sonar cyan: interaction, sound */
+  --accent-ink: #03141A;
+  --ridge: #00F2FE;                     /* ridges: cyan */
+  --groove: #FF5A5F;                    /* grooves: coral */
+  --landmark: #F59E0B;                  /* landmarks: amber */
+  --warn: #FF8A8E;
+  --glow: rgba(0, 242, 254, 0.35);
+  --ring: rgba(0, 242, 254, 0.03);        /* sonar rings, as specified */
+  --ring-line: rgba(0, 242, 254, 0.06);
+  --floor: #00F2FE; --floor-a: 0.14;     /* a faint cyan pool of light under the shell */
+  --scene: #050B14;
+  --shadow: #000000;
+  --focus: #00F2FE;
+  /* v1.5 type: Syne (made for Synesthésie, an art centre in Saint-Denis, near Paris) for headings and buttons;
+     Inclusive Sans (designed for accessibility) for reading; Martian Mono for notes, numbers and labels */
+  --f-display: "Syne", "Inclusive Sans", system-ui, sans-serif;
+  --f-body: "Inclusive Sans", "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "Martian Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --s-1: 0.8125rem; --s0: 1rem; --s1: 1.1875rem; --s2: 1.5rem; --s3: 2.25rem;
+  --r: 16px;
+  color-scheme: dark;
+}
+:root[data-look="light"] {
+  --bg: #EEF3F7; --panel: rgba(255, 255, 255, 0.82); --panel-solid: #FFFFFF; --hair: rgba(11, 23, 36, 0.10);
+  --ink: #0B1724; --muted: #44546A; --line: #7A889C;
+  --accent: #006D77; --accent-ink: #FFFFFF; --ridge: #00838F; --groove: #C8323A; --landmark: #B45309; --warn: #B42318;
+  --glow: rgba(0, 109, 119, 0.18); --ring: rgba(0, 109, 119, 0.05); --ring-line: rgba(0, 109, 119, 0.09);
+  --floor: #0B1724; --floor-a: 0.30; --scene: #EEF3F7; --shadow: #0B1724; --focus: #006D77;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); }
+body { background-image: radial-gradient(ellipse 80% 60% at 30% 0%, var(--ring), transparent 70%); background-attachment: fixed; }
+body { color: var(--ink); font-family: var(--f-body); font-size: var(--s0); line-height: 1.55; margin: 0; min-height: 100svh; }
+.page {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 40px;
+  display: grid; gap: 16px;
+}
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; line-height: 1.1; letter-spacing: -0.015em; }
+h1 { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); font-weight: 800; color: var(--accent); text-shadow: 0 0 24px var(--glow); }
+h2 { font-size: var(--s2); }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+.label { font-family: var(--f-mono); font-size: var(--s-1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* Martian Mono is wide: a narrower cut for the small labels and readouts */
+.label, .mono, .lang button, .pill-btn, .trace output, .btn .state, .specimen dt, kbd, .studio h3, .studio .row output, .studio pre { font-stretch: 87.5%; }
+
+/* glass panels */
+.glass { background: var(--panel); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--hair); border-radius: var(--r); }
+
+.masthead { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: end; justify-content: space-between; }
+.masthead .lede { color: var(--muted); max-width: 60ch; margin-top: 6px; font-size: var(--s1); }
+.top-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--panel); }
+.lang button { font: inherit; font-family: var(--f-mono); font-size: var(--s-1); min-height: 44px; min-width: 44px; padding: 4px 12px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.pill-btn { font: inherit; font-family: var(--f-mono); font-size: var(--s-1); min-height: 44px; padding: 4px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); cursor: pointer; }
+.pill-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.sound-chip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-body); font-size: var(--s-1); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: var(--panel); }
+.sound-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.sound-chip.on { color: var(--ink); }
+.sound-chip.on .dot { background: var(--accent); box-shadow: 0 0 10px var(--glow); }
+
+.bench { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+
+.stage-wrap { display: grid; gap: 12px; min-width: 0; }
+/* the stage: open water, no box. Faint sonar rings behind a transparent 3D canvas. */
+.stage {
+  position: relative; width: 100%; aspect-ratio: 3 / 4; max-height: 66svh; min-height: 320px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--ring) 0, transparent 62%),
+    repeating-radial-gradient(circle at 50% 50%, var(--ring-line) 0 1px, transparent 1px 72px),
+    var(--bg);
+  border-radius: var(--r); overflow: hidden;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: crosshair;
+}
+/* a still halo around the shell: cyan on one side, coral on the other (decorative only) */
+.stage::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: min(78%, 62svh); aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 200deg, transparent 0deg, var(--ridge) 70deg, transparent 150deg, transparent 190deg, var(--groove) 270deg, transparent 340deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  opacity: 0.55; filter: drop-shadow(0 0 10px var(--glow));
+}
+.stage:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* v1.5: the touch area lights up while a finger is on it, so sighted people see why the page doesn't scroll */
+.stage.touching { box-shadow: inset 0 0 0 2px var(--accent), 0 0 28px var(--glow); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage #fx { pointer-events: none; }
+.stage-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); font-size: var(--s1); pointer-events: none; }
+.stage-msg.error { color: var(--warn); }
+/* over the moving 3D image: no blur (it would be redrawn every frame) */
+.turn { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; }
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; padding: 0; }
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn svg { width: 20px; height: 20px; }
+.curtain { position: absolute; inset: 0; background: #000; color: #8a8a8a; display: grid; place-items: center; pointer-events: none; font-family: var(--f-mono); font-size: var(--s-1); z-index: 2; }
+.hint { color: var(--muted); font-size: var(--s-1); }
+
+/* "What you hear": a glowing trace in a glass strip */
+.trace { padding: 10px 14px 8px; display: grid; gap: 4px; }
+.trace-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.trace output { font-family: var(--f-mono); font-size: var(--s-1); color: var(--ink); }
+.trace canvas { width: 100%; height: 64px; display: block; }
+
+/* the side panel: one glass panel, sections divided by hairlines, no boxes inside */
+.side { display: grid; gap: 16px; min-width: 0; padding: 16px; }
+.actions { display: grid; gap: 8px; }
+.btn { font: inherit; font-family: var(--f-display); font-weight: 600; font-size: var(--s0); min-height: 44px; padding: 8px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; box-shadow: 0 0 18px var(--glow); }
+.vibe-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 44px; font-family: var(--f-display); font-weight: 600; }
+.btn .state { font-family: var(--f-mono); font-size: var(--s-1); opacity: 0.9; }
+.btn[aria-pressed="true"]:not(.primary) { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), 0 0 14px var(--glow); }
+.btn[aria-pressed="true"]:not(.primary) .state { color: var(--accent); }
+
+.legend { display: grid; gap: 6px; font-size: var(--s-1); color: var(--muted); padding-top: 12px; border-top: 1px solid var(--hair); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex: none; }
+
+.specimen { padding-top: 14px; border-top: 1px solid var(--hair); display: grid; gap: 10px; }
+.specimen h2 { font-size: var(--s2); }
+.specimen .sci { font-style: italic; color: var(--muted); }
+.specimen dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; margin: 4px 0 0; font-size: var(--s-1); }
+.specimen dt { font-family: var(--f-mono); color: var(--muted); letter-spacing: 0.04em; }
+.specimen dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.specimen .rule { display: none; }
+
+details { border-top: 1px solid var(--hair); padding-top: 12px; }
+summary { cursor: pointer; font-family: var(--f-display); font-weight: 700; min-height: 44px; display: flex; align-items: center; }
+details p { margin-top: 8px; max-width: 65ch; }
+.keys dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 8px 0 0; font-size: var(--s-1); }
+kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel-solid); color: var(--ink); white-space: nowrap; }
+
+.about { display: grid; gap: 10px; padding: 18px 20px; }
+.about > * { max-width: 70ch; }
+.about h2 { font-size: var(--s1); }
+.about .credits { color: var(--muted); font-size: var(--s-1); }
+
+@media (min-width: 600px) and (max-width: 1023px) { .stage { aspect-ratio: 4 / 3; max-height: 70svh; } }
+
+/* Wide screens: the stage fills the screen beside one floating control panel */
+@media (min-width: 1024px) {
+  .page { padding-inline: max(24px, env(safe-area-inset-left, 0px)); }
+  .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+  .stage { aspect-ratio: auto; height: calc(100svh - 300px); max-height: none; min-height: 460px; }
+  /* v1.5: the panel grows with its content (no scroll box inside the page), and About lines up with the shell's column */
+  .about { margin-right: calc(360px + 16px); }
+  body.studio-open .page { margin-right: 380px; }
+}
+
+/* Studio drawer: only with #studio (solid, because it is a long form) */
+.studio {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 380px; z-index: 20; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--panel-solid); border-left: 1px solid var(--line); color: var(--ink);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) calc(32px + env(safe-area-inset-bottom, 0px)) 16px;
+  display: grid; gap: 14px; align-content: start; font-size: var(--s-1);
+}
+@media (max-width: 1023px) {
+  .studio { top: auto; left: 0; width: auto; height: 46vh; border-left: 0; border-top: 1px solid var(--line);
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  body.studio-open .page { padding-bottom: 48vh; }
+}
+.studio h2 { font-size: var(--s1); }
+.studio h3 { font-family: var(--f-mono); font-size: var(--s-1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-top: 6px; }
+.studio .row { display: grid; gap: 4px; }
+.studio .row label { display: flex; justify-content: space-between; gap: 8px; }
+.studio .row output { font-family: var(--f-mono); color: var(--muted); }
+.studio input[type="range"] { width: 100%; accent-color: var(--accent); }
+.studio input[type="text"], .studio textarea, .studio select { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.studio textarea { min-height: 84px; resize: vertical; }
+.studio .btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.studio .btns button, .studio .sbtn { font: inherit; min-height: 36px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.studio .sbtn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.studio .check { display: flex; gap: 8px; align-items: center; }
+.studio .note { color: var(--muted); }
+.studio .drop { border: 1px dashed var(--accent); border-radius: 10px; padding: 12px; text-align: center; color: var(--muted); }
+.studio .warn { color: var(--warn); }
+.studio ul { margin: 0; padding-left: 18px; }
+.studio li { margin: 2px 0; }
+.studio .lm { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.studio pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; max-height: 160px; overflow: auto; font-family: var(--f-mono); font-size: 12px; margin: 0; }
+
+/* People who ask for less transparency or more contrast get solid panels, stronger edges and no glow */
+@media (prefers-reduced-transparency: reduce) {
+  .glass, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  :root { --hair: var(--line); --glow: transparent; --muted: var(--ink); }
+  .glass, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .stage::before { display: none; }
+}
+@media (forced-colors: active) { .stage::before { display: none; } .btn, .pill-btn, .icon-btn { border: 1px solid ButtonText; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<script>try { if (localStorage.getItem('tactileRoom.look') === 'light') document.documentElement.dataset.look = 'light'; } catch (e) {}</script>
+<div class="page">
+  <header class="masthead">
+    <div>
+      <h1 data-i18n="title">Tactile Room</h1>
+      <p class="lede" id="lede" data-i18n="lede">Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys.</p>
+    </div>
+    <div class="top-right">
+      <div class="lang" role="group" aria-label="Language / Idioma">
+        <button type="button" id="lang-en" lang="en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-pt" lang="pt" aria-pressed="false">PT</button>
+        <button type="button" id="lang-de" lang="de" aria-pressed="false">DE</button>
+      </div>
+      <div class="lang" role="group" id="look" aria-label="Background" data-i18n-label="lookLabel">
+        <button type="button" id="look-dark" aria-pressed="true" data-i18n="lookDark">Dark</button>
+        <button type="button" id="look-light" aria-pressed="false" data-i18n="lookLight">Light</button>
+      </div>
+      <p class="sound-chip" id="sound-chip"><span class="dot" aria-hidden="true"></span><span id="sound-chip-text">Sound starts when you touch the shell</span></p>
+    </div>
+  </header>
+
+  <main class="bench">
+    <section class="stage-wrap" aria-label="The shell" data-i18n-label="secShell">
+      <div id="stage" class="stage" tabindex="0" role="application" aria-roledescription="sound surface"
+           aria-label="Shell. Drag across it, or move with the arrow keys, to hear its shape. Q and E turn it. Enter describes the spot. D plays the description." data-i18n-label="stage"
+           aria-describedby="stage-help">
+        <canvas id="gl" aria-hidden="true"></canvas>
+        <canvas id="fx" aria-hidden="true"></canvas>
+        <div class="stage-msg" id="stage-msg">Loading the shell…</div>
+        <div class="turn" role="group" aria-label="Turn the shell" data-i18n-label="turn">
+          <button class="icon-btn" id="turn-l" type="button" aria-label="Turn the shell left" data-i18n-label="turnL">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+          </button>
+          <button class="icon-btn" id="turn-r" type="button" aria-label="Turn the shell right" data-i18n-label="turnR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+          </button>
+        </div>
+        <div class="curtain" id="curtain" hidden><p>Screen hidden for the test</p></div>
+      </div>
+      <p id="stage-help" class="hint" data-i18n="help">Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn't scroll while you touch this area: scroll outside it.</p>
+      <div class="trace glass">
+        <div class="trace-head"><span class="label" data-i18n="hear">What you hear</span><output id="readout" class="mono" aria-live="off">Silent</output></div>
+        <canvas id="trace" aria-hidden="true"></canvas>
+      </div>
+    </section>
+
+    <aside class="side glass" aria-label="Controls and specimen label" data-i18n-label="secSide">
+      <div class="actions">
+        <button class="btn primary" id="describe" type="button" aria-pressed="false"><span id="describe-label">Describe the shell</span><span class="state" aria-hidden="true">D</span></button>
+        <button class="btn" id="map" type="button" aria-pressed="false"><span data-i18n="map">Show the sound map</span><span class="state" id="map-state">off</span></button>
+        <button class="btn" id="hints" type="button" aria-pressed="true"><span data-i18n="hints">Spoken hints</span><span class="state" id="hints-state">on</span></button>
+        <p class="hint" data-i18n="hintsNote">Turn spoken hints off if you use a screen reader. It will read them instead.</p>
+        <div class="vibe-row" id="vibe" hidden>
+          <span id="vibe-label" data-i18n="vibe">Vibration</span>
+          <div class="lang" role="group" aria-labelledby="vibe-label">
+            <button type="button" id="vibe-off" aria-pressed="false" data-i18n="vibeOff">Off</button>
+            <button type="button" id="vibe-light" aria-pressed="false" data-i18n="vibeLight">Light</button>
+            <button type="button" id="vibe-strong" aria-pressed="true" data-i18n="vibeStrong">Strong</button>
+          </div>
+        </div>
+      </div>
+      <div class="legend" id="legend" hidden>
+        <span><i style="background: var(--ridge)"></i><span data-i18n="lgRidge">Ridge: brighter sound, clicks as you cross it</span></span>
+        <span><i style="background: var(--groove)"></i><span data-i18n="lgGroove">Groove: duller sound</span></span>
+        <span><i style="background: linear-gradient(90deg, #555, #eee); border: 1px solid var(--line)"></i><span data-i18n="lgLight">Lighter: higher note</span></span>
+      </div>
+
+      <article class="specimen" aria-labelledby="sp-name">
+        <p class="label" data-i18n="specimen">Specimen</p>
+        <div>
+          <h2 id="sp-name">—</h2>
+          <p class="sci" id="sp-sci" hidden></p>
+        </div>
+        <div class="rule"></div>
+        <dl id="sp-facts"></dl>
+      </article>
+
+      <details class="desc" id="desc-details">
+        <summary data-i18n="readDesc">Read the description</summary>
+        <p id="desc-text"></p>
+      </details>
+      <details class="keys">
+        <summary data-i18n="keys">Keys</summary>
+        <dl>
+          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></dt><dd data-i18n-html="kMove">Move your fingertip across the picture (hold <kbd>Shift</kbd> for small steps)</dd>
+          <dt><kbd>Q</kbd> <kbd>E</kbd></dt><dd data-i18n="kTurn">Turn the shell left or right under your fingertip</dd>
+          <dt><kbd>Home</kbd></dt><dd data-i18n="kHome">Back to the middle</dd>
+          <dt><kbd>Enter</kbd></dt><dd data-i18n="kEnter">Describe the spot you are on</dd>
+          <dt data-i18n-html="kDKeys"><kbd>D</kbd> or <kbd>Space</kbd></dt><dd data-i18n="kD">Play or stop the description</dd>
+          <dt><kbd>+</kbd> <kbd>−</kbd></dt><dd data-i18n="kZoom">Move closer or further away</dd>
+          <dt><kbd>Esc</kbd></dt><dd data-i18n="kEsc">Stop all sound</dd>
+          <dt data-i18n="kPad">Gamepad</dt><dd data-i18n="kPadDo">Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle</dd>
+        </dl>
+        <p class="hint" data-i18n="vibeNote">The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.</p>
+      </details>
+    </aside>
+  </main>
+
+  <section class="about glass" id="about" hidden aria-labelledby="about-h">
+    <h2 id="about-h" data-i18n="about">About this room</h2>
+    <div id="about-text"></div>
+    <p class="credits" id="credits"></p>
+  </section>
+</div>
+
+<aside class="studio" id="studio" hidden aria-label="Studio">
+  <div>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px"><h2>Studio <small class="hint" id="studio-version"></small></h2><button type="button" class="sbtn" id="studio-close">Close</button></div>
+    <p class="note">Opens with <span class="mono">#studio</span> at the end of the address. Changes made here stay in this browser only: visitors never see them until you copy them into <span class="mono">room.json</span> and publish it.</p>
+  </div>
+
+  <h3>Model</h3>
+  <div class="drop" id="drop">Drop a <span class="mono">.glb</span> file on the shell, or <label for="file" style="text-decoration: underline; cursor: pointer; color: var(--accent)">choose one</label>.<input id="file" type="file" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" class="sr-only"></div>
+  <div class="row"><label for="model-path">Path in room.json</label><input id="model-path" type="text" placeholder="assets/shell.glb"></div>
+  <p class="note" id="model-stats">—</p>
+  <div class="row"><span>Orientation (quarter turns)</span>
+    <div class="btns"><button type="button" data-rot="0">Turn X</button><button type="button" data-rot="1">Turn Y</button><button type="button" data-rot="2">Turn Z</button><button type="button" id="rot-reset">Reset</button></div>
+    <output id="rot-out" class="mono">0 · 0 · 0</output>
+  </div>
+
+  <h3>Sound</h3>
+  <div class="row"><label for="s-from">Pitch follows</label>
+    <select id="s-from"><option value="bulge">How far the surface sticks out</option><option value="up">Height in the room (up = higher)</option></select></div>
+  <div class="row"><label for="s-low">Lowest note <output id="s-low-out"></output></label><input id="s-low" type="range" min="36" max="72" step="1"></div>
+  <div class="row"><label for="s-high">Highest note <output id="s-high-out"></output></label><input id="s-high" type="range" min="48" max="96" step="1"></div>
+  <label class="check"><input id="s-steps" type="checkbox"> Snap pitch to a five-note scale</label>
+  <div class="row"><label for="s-texture">Ridge sensitivity <output id="s-texture-out"></output></label><input id="s-texture" type="range" min="0" max="1" step="0.05"></div>
+  <div class="row"><label for="s-tone">Tone volume <output id="s-tone-out"></output></label><input id="s-tone" type="range" min="0" max="1" step="0.05"></div>
+  <div class="row"><label for="s-tex">Click volume <output id="s-tex-out"></output></label><input id="s-tex" type="range" min="0" max="1" step="0.05"></div>
+  <div class="row"><label for="s-water">Water volume <output id="s-water-out"></output></label><input id="s-water" type="range" min="0" max="1" step="0.05"></div>
+  <div class="row"><label for="s-smooth">Scan smoothing <output id="s-smooth-out"></output></label><input id="s-smooth" type="range" min="0" max="6" step="1"></div>
+  <div class="row"><label for="s-vibe">Vibration strength <output id="s-vibe-out"></output></label><input id="s-vibe" type="range" min="0" max="1" step="0.05"></div>
+  <p class="note">Vibration works on Android phones and gamepads, not on iPhones. 0% turns it off for everyone.</p>
+  <label class="check"><input id="s-invert" type="checkbox"> Swap ridges and grooves (if they feel reversed)</label>
+  <div class="btns"><button type="button" id="reanalyse">Re-analyse surface</button></div>
+
+  <h3>Landmarks</h3>
+  <p class="note">Touch a spot on the shell, name it, then add it. Visitors hear a soft knock and its name there.</p>
+  <div class="row"><label for="lm-name">Name</label><input id="lm-name" type="text" placeholder="Tip"></div>
+  <div class="btns"><button type="button" id="lm-add">Add at the last touched spot</button></div>
+  <ul id="lm-list"></ul>
+  <div class="row"><label for="lm-radius">Landmark size <output id="lm-radius-out"></output></label><input id="lm-radius" type="range" min="0.04" max="0.3" step="0.01"></div>
+
+  <p class="note" id="edit-lang-note">Label, description, about, credits and new landmark names are edited in the language chosen at the top of the page.</p>
+  <h3>Description</h3>
+  <div class="row"><label for="d-text">Your checked description</label><textarea id="d-text"></textarea></div>
+  <div class="row"><label for="d-audio">Recorded audio file (optional)</label><input id="d-audio" type="text" placeholder="assets/description.mp3"></div>
+  <div class="row"><label for="d-voice">Voice when there is no recording</label><select id="d-voice"><option value="">Browser default</option></select></div>
+  <div class="row"><label for="d-rate">Speaking rate <output id="d-rate-out"></output></label><input id="d-rate" type="range" min="0.6" max="1.4" step="0.05"></div>
+
+  <h3>Label</h3>
+  <div class="row"><label for="l-name">Name</label><input id="l-name" type="text"></div>
+  <div class="row"><label for="l-sci">Scientific name (if checked)</label><input id="l-sci" type="text"></div>
+  <div class="row"><label for="l-place">Found at</label><input id="l-place" type="text"></div>
+  <div class="row"><label for="l-year">Year</label><input id="l-year" type="text"></div>
+  <div class="row"><label for="l-size">Real size</label><input id="l-size" type="text" placeholder="54 × 31 mm"></div>
+  <div class="row"><label for="l-method">Made with</label><input id="l-method" type="text"></div>
+  <div class="row"><label for="l-about">About text</label><textarea id="l-about"></textarea></div>
+  <div class="row"><label for="l-credits">Credits</label><textarea id="l-credits"></textarea></div>
+
+  <h3>Test session</h3>
+  <p class="note">Logs every move with a timestamp. Press <kbd>M</kbd> on the shell when the tester says they found it.</p>
+  <div class="btns">
+    <button type="button" id="t-start">Start test</button>
+    <button type="button" id="t-found" disabled>Mark found (M)</button>
+    <button type="button" id="t-curtain" aria-pressed="false">Hide screen</button>
+  </div>
+  <div class="row"><label for="t-note">Note</label><input id="t-note" type="text" placeholder="Stalled near the opening"></div>
+  <div class="btns"><button type="button" id="t-addnote" disabled>Add note</button><button type="button" id="t-copy" disabled>Copy log (CSV)</button></div>
+  <p class="note mono" id="t-status">No test running</p>
+  <p class="note" id="t-saved">Every test saves itself in this browser as it runs, so a reload doesn't lose it.</p>
+  <div class="btns"><button type="button" id="t-copy-all">Copy all saved logs (CSV)</button><button type="button" id="t-clear">Delete saved logs</button></div>
+
+  <h3>Save</h3>
+  <div class="btns"><button type="button" class="sbtn primary" id="copy-json">Copy room.json</button><button type="button" id="reset-draft">Reset to the published file</button></div>
+  <pre id="json-out" hidden></pre>
+</aside>
+
+<div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+<script>
+  // If the 3D library can't load (offline, blocked CDN), say so instead of spinning forever.
+  setTimeout(function () {
+    if (!window.__tactileRoomReady && !window.__tactileRoomBooting) {
+      var m = document.getElementById('stage-msg');
+      if (m && m.textContent.indexOf('Loading') === 0) {
+        m.textContent = /^pt/.test(document.documentElement.lang) ? 'A biblioteca 3D não carregou. Verifique sua conexão e recarregue a página.' : /^de/.test(document.documentElement.lang) ? 'Die 3D-Bibliothek wurde nicht geladen. Bitte die Verbindung prüfen und die Seite neu laden.' : 'The 3D library didn’t load. Check your connection and reload the page.';
+        m.className = 'stage-msg error';
+      }
+    }
+  }, 15000);
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+    "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.3/build/index.module.js"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+window.__tactileRoomBooting = true; // the imports resolved, so the library loaded
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+/* ------------------------------------------------------------------ */
+/* Config                                                              */
+/* ------------------------------------------------------------------ */
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong
+const VERSION = '1.8';
+const DEFAULTS = {
+  model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
+  orientation: [0, 0, 0],
+  label: { name: '', scientific: '', place: '', year: '', size: '', method: '' },
+  description: { text: '', audio: '', lang: 'en-GB', voice: '', rate: 1 },
+  about: '',
+  credits: '',
+  // v1.2 (10 Nov): five-note scale on and water off by default; both can be changed in the studio
+  sound: { pitchFrom: 'bulge', low: 48, high: 81, steps: true, texture: 0.55, toneVol: 0.7, texVol: 0.55, waterVol: 0, smoothing: 2, invert: false, vibration: 0.7 },
+  landmarks: [],            // points visitors can find, set in room.json or the studio
+  landmarkRadius: 0.12,
+  lang: 'en-GB',
+  strings: {}
+};
+function shown() {
+  return { label: cfg.label, description: loc(cfg.description.text), about: loc(cfg.about), credits: loc(cfg.credits) };
+}
+const STRINGS = {
+  onShell: 'On the shell', offShell: 'Off the shell',
+  low: { bulge: 'close to the centre', up: 'low down' },
+  mid: { bulge: 'sticks out a little', up: 'halfway up' },
+  high: { bulge: 'sticks far out', up: 'high up' },
+  ridge: 'on a ridge', groove: 'in a groove', smooth: 'smooth',
+  near: 'near', soundOn: 'Sound on', soundOff: 'Sound starts when you touch the shell',
+  describe: 'Describe the shell', stop: 'Stop the description', silent: 'Silent',
+  grid: [['upper left', 'top', 'upper right'], ['left', 'centre', 'right'], ['lower left', 'bottom', 'lower right']],
+  dirLeft: 'The shell is to the left.', dirRight: 'The shell is to the right.', dirUp: 'The shell is above.', dirDown: 'The shell is below.',
+  areaOn: 'Touch area.', areaScroll: 'To scroll the page, swipe outside this area.', areaEdge: 'Edge of the touch area.'
+};
+const STRINGS_PT = {
+  onShell: 'Na concha', offShell: 'Fora da concha',
+  low: { bulge: 'perto do centro', up: 'embaixo' },
+  mid: { bulge: 'um pouco saliente', up: 'no meio da altura' },
+  high: { bulge: 'bem saliente', up: 'no alto' },
+  ridge: 'sobre uma nervura', groove: 'num sulco', smooth: 'liso',
+  near: 'perto de', soundOn: 'Som ligado', soundOff: 'O som começa quando você toca a concha',
+  describe: 'Descrever a concha', stop: 'Parar a descrição', silent: 'Silêncio',
+  grid: [['em cima, à esquerda', 'em cima', 'em cima, à direita'], ['à esquerda', 'no centro', 'à direita'], ['embaixo, à esquerda', 'embaixo', 'embaixo, à direita']],
+  dirLeft: 'A concha está à esquerda.', dirRight: 'A concha está à direita.', dirUp: 'A concha está acima.', dirDown: 'A concha está abaixo.',
+  areaOn: 'Área de toque.', areaScroll: 'Para rolar a página, deslize fora desta área.', areaEdge: 'Borda da área de toque.'
+};
+// German (v1.3): a draft. Have a native speaker check it. Neutral infinitive style avoids choosing du or Sie.
+const STRINGS_DE = {
+  onShell: 'Auf der Muschel', offShell: 'Neben der Muschel',
+  low: { bulge: 'nah an der Mitte', up: 'weit unten' },
+  mid: { bulge: 'steht etwas hervor', up: 'auf halber Höhe' },
+  high: { bulge: 'steht weit hervor', up: 'weit oben' },
+  ridge: 'auf einer Rippe', groove: 'in einer Rille', smooth: 'glatt',
+  near: 'nahe bei:', soundOn: 'Ton an', soundOff: 'Der Ton beginnt bei der ersten Berührung der Muschel',
+  describe: 'Muschel beschreiben', stop: 'Beschreibung stoppen', silent: 'Stille',
+  grid: [['oben links', 'oben', 'oben rechts'], ['links', 'in der Mitte', 'rechts'], ['unten links', 'unten', 'unten rechts']],
+  dirLeft: 'Die Muschel ist links.', dirRight: 'Die Muschel ist rechts.', dirUp: 'Die Muschel ist oben.', dirDown: 'Die Muschel ist unten.',
+  areaOn: 'Tastfläche.', areaScroll: 'Zum Scrollen der Seite außerhalb dieser Fläche wischen.', areaEdge: 'Rand der Tastfläche.'
+};
+// Interface text. PT is a draft translation (Brazilian Portuguese): check it before publishing.
+const UI = {
+  en: {
+    title: 'Tactile Room',
+    lede: 'Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys.',
+    secShell: 'The shell',
+    stage: 'Shell. Drag across it, or move with the arrow keys, to hear its shape. Q and E turn it. Enter describes the spot. D plays the description.',
+    turn: 'Turn the shell', turnL: 'Turn the shell left', turnR: 'Turn the shell right',
+    help: 'Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn\'t scroll while you touch this area: scroll outside it.',
+    hear: 'What you hear', secSide: 'Controls and specimen label',
+    map: 'Show the sound map', hints: 'Spoken hints', on: 'on', off: 'off',
+    hintsNote: 'Turn spoken hints off if you use a screen reader. It will read them instead.',
+    lookLabel: 'Background', lookDark: 'Dark', lookLight: 'Light',
+    loadFailed: 'The shell couldn’t load. Check your connection, then reload the page.',
+    lgRidge: 'Ridge: brighter sound, clicks as you cross it', lgGroove: 'Groove: duller sound', lgLight: 'Lighter: higher note',
+    specimen: 'Specimen', readDesc: 'Read the description', keys: 'Keys',
+    kMove: 'Move your fingertip across the picture (hold <kbd>Shift</kbd> for small steps)',
+    kTurn: 'Turn the shell left or right under your fingertip', kHome: 'Back to the middle', kEnter: 'Where you are, or which way the shell is',
+    kDKeys: '<kbd>D</kbd> or <kbd>Space</kbd>', kD: 'Play or stop the description', kZoom: 'Move closer or further away', kEsc: 'Stop all sound',
+    about: 'About this room',
+    fFound: 'Found', fYear: 'Year', fSize: 'Size', fMade: 'Made with', fModel: 'Model', faces: 'faces',
+    loading: 'Loading the shell…', reading: 'Reading the surface…',
+    noWebgl: 'This page needs WebGL, which isn’t available in this browser. Try another browser or device.',
+    rRidge: 'ridge', rGroove: 'groove', rSmooth: 'smooth', water: 'Water', shellFallback: 'Shell',
+    vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Off', vibeLight: 'Light', vibeStrong: 'Strong',
+    kPadDo: 'Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle',
+    vibeNote: 'The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.',
+    padOn: 'Gamepad connected. The left stick explores, the right stick turns the shell, A describes the spot. If you hear nothing, press any key or tap the screen once.'
+  },
+  pt: {
+    title: 'Sala Tátil',
+    lede: 'Explore objetos pelo som e pela vibração, vendo ou não. O primeiro é uma concha de caramujo marinho: toque e arraste sobre ela, ou selecione-a e use as setas do teclado.',
+    secShell: 'A concha',
+    stage: 'Concha. Arraste sobre ela, ou use as setas, para ouvir sua forma. Q e E giram a concha. Enter descreve o ponto. D toca a descrição.',
+    turn: 'Girar a concha', turnL: 'Girar a concha para a esquerda', turnR: 'Girar a concha para a direita',
+    help: 'Notas mais agudas onde a concha se projeta. Um som mais brilhante e crepitante sobre as nervuras. Um som curto e descendente quando você sai da concha. Dois dedos giram a concha (na tela ou no trackpad), ou arraste com o botão direito do mouse; faça pinça para aproximar. A página não rola enquanto você toca esta área: role fora dela.',
+    hear: 'O que você ouve', secSide: 'Controles e etiqueta do espécime',
+    map: 'Mostrar o mapa de som', hints: 'Dicas faladas', on: 'ligado', off: 'desligado',
+    hintsNote: 'Desligue as dicas faladas se você usa um leitor de tela. Ele as lerá no lugar.',
+    lookLabel: 'Fundo', lookDark: 'Escuro', lookLight: 'Claro',
+    loadFailed: 'A concha não carregou. Verifique sua conexão e recarregue a página.',
+    lgRidge: 'Nervura: som mais brilhante, estalos ao cruzá-la', lgGroove: 'Sulco: som mais abafado', lgLight: 'Mais claro: nota mais aguda',
+    specimen: 'Espécime', readDesc: 'Ler a descrição', keys: 'Teclas',
+    kMove: 'Mova a ponta do dedo pela imagem (segure <kbd>Shift</kbd> para passos menores)',
+    kTurn: 'Gira a concha para a esquerda ou para a direita sob o dedo', kHome: 'Volta ao centro', kEnter: 'Onde você está, ou para que lado está a concha',
+    kDKeys: '<kbd>D</kbd> ou <kbd>Espaço</kbd>', kD: 'Toca ou para a descrição', kZoom: 'Aproxima ou afasta', kEsc: 'Para todo o som',
+    about: 'Sobre esta sala',
+    fFound: 'Encontrada em', fYear: 'Ano', fSize: 'Tamanho', fMade: 'Feita com', fModel: 'Modelo', faces: 'faces',
+    loading: 'Carregando a concha…', reading: 'Lendo a superfície…',
+    noWebgl: 'Esta página precisa de WebGL, que não está disponível neste navegador. Tente outro navegador ou aparelho.',
+    rRidge: 'nervura', rGroove: 'sulco', rSmooth: 'liso', water: 'Água', shellFallback: 'Concha',
+    vibe: 'Vibração', kPad: 'Controle de videogame', vibeOff: 'Desligada', vibeLight: 'Leve', vibeStrong: 'Forte',
+    kPadDo: 'O analógico esquerdo move a ponta do dedo (segure o gatilho esquerdo para passos menores), o direito gira a concha, A ou ✕ descreve o ponto, B ou ○ toca a descrição, Y ou △ volta ao centro',
+    vibeNote: 'A concha vibra sob o dedo em celulares Android e com um controle de videogame. Escolha Forte se não sentir nada; celulares mais antigos precisam de pulsos mais longos. iPhones não vibram a partir de uma página da web.',
+    padOn: 'Controle conectado. O analógico esquerdo explora, o direito gira a concha, A descreve o ponto. Se não ouvir nada, aperte qualquer tecla ou toque a tela uma vez.'
+  },
+  de: {
+    title: 'Tastraum',
+    lede: 'Gegenstände über Klang und Vibration erkunden, mit oder ohne Sehen. Der erste ist das Gehäuse einer Meeresschnecke: darauf drücken und darüber ziehen, oder es auswählen und die Pfeiltasten benutzen.',
+    secShell: 'Die Muschel',
+    stage: 'Muschel. Darüber ziehen oder mit den Pfeiltasten bewegen, um ihre Form zu hören. Q und E drehen sie. Enter beschreibt die Stelle. D spielt die Beschreibung ab.',
+    turn: 'Muschel drehen', turnL: 'Muschel nach links drehen', turnR: 'Muschel nach rechts drehen',
+    help: 'Höhere Töne, wo die Muschel hervorsteht. Ein hellerer, knisternder Klang über Rippen. Ein kurzer, fallender Ton, wenn der Finger die Muschel verlässt. Mit zwei Fingern drehen (auf dem Bildschirm oder dem Trackpad) oder mit gedrückter rechter Maustaste ziehen; zum Zoomen zwei Finger spreizen. Beim Berühren dieser Fläche scrollt die Seite nicht: zum Scrollen außerhalb davon wischen.',
+    hear: 'Was zu hören ist', secSide: 'Bedienung und Etikett',
+    map: 'Klangkarte zeigen', hints: 'Gesprochene Hinweise', on: 'an', off: 'aus',
+    hintsNote: 'Gesprochene Hinweise ausschalten, wenn ein Screenreader benutzt wird. Er liest sie dann vor.',
+    lookLabel: 'Hintergrund', lookDark: 'Dunkel', lookLight: 'Hell',
+    loadFailed: 'Die Muschel konnte nicht geladen werden. Bitte die Verbindung prüfen und die Seite neu laden.',
+    lgRidge: 'Rippe: hellerer Klang, Klicken beim Überqueren', lgGroove: 'Rille: dumpferer Klang', lgLight: 'Heller: höherer Ton',
+    specimen: 'Fundstück', readDesc: 'Beschreibung lesen', keys: 'Tasten',
+    kMove: 'Fingerspitze über das Bild bewegen (<kbd>Umschalt</kbd> halten für kleine Schritte)',
+    kTurn: 'Muschel unter der Fingerspitze nach links oder rechts drehen', kHome: 'Zurück zur Mitte', kEnter: 'Wo die Fingerspitze ist, oder in welcher Richtung die Muschel liegt',
+    kDKeys: '<kbd>D</kbd> oder <kbd>Leertaste</kbd>', kD: 'Beschreibung abspielen oder stoppen', kZoom: 'Näher heran oder weiter weg', kEsc: 'Alle Töne stoppen',
+    about: 'Über diesen Raum',
+    fFound: 'Gefunden', fYear: 'Jahr', fSize: 'Größe', fMade: 'Hergestellt mit', fModel: 'Modell', faces: 'Flächen',
+    loading: 'Muschel wird geladen…', reading: 'Oberfläche wird gelesen…',
+    noWebgl: 'Diese Seite braucht WebGL, das in diesem Browser nicht verfügbar ist. Bitte einen anderen Browser oder ein anderes Gerät versuchen.',
+    rRidge: 'Rippe', rGroove: 'Rille', rSmooth: 'glatt', water: 'Wasser', shellFallback: 'Muschel',
+    vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Aus', vibeLight: 'Leicht', vibeStrong: 'Stark',
+    kPadDo: 'Linker Stick bewegt die Fingerspitze (linken Trigger halten für kleine Schritte), rechter Stick dreht die Muschel, A oder ✕ beschreibt die Stelle, B oder ○ spielt die Beschreibung ab, Y oder △ führt zurück zur Mitte',
+    vibeNote: 'Die Muschel vibriert unter dem Finger auf Android-Handys und mit einem Gamepad. Wenn nichts zu spüren ist, „Stark“ wählen: Ältere Handys brauchen längere Impulse. iPhones können auf einer Webseite nicht vibrieren.',
+    padOn: 'Gamepad verbunden. Der linke Stick erkundet, der rechte dreht die Muschel, A beschreibt die Stelle. Falls nichts zu hören ist, einmal eine Taste drücken oder auf den Bildschirm tippen.'
+  }
+};
+const SPEECH_LANG = { en: 'en-GB', pt: 'pt-BR', de: 'de-DE' };
+const LANGS = ['en', 'pt', 'de'];
+const LANG_KEY = 'tactile-room-lang';
+let LANG = 'en';
+function pickLang(cfgLang) {
+  try { const q = new URLSearchParams(location.search).get('lang'); if (LANGS.includes(q)) return q; } catch (e) {}
+  try { const s = localStorage.getItem(LANG_KEY); if (LANGS.includes(s)) return s; } catch (e) {}
+  // the device's languages, in the visitor's order of preference: the first one the room speaks wins
+  const prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+  for (const l of prefs) { const two = String(l || '').toLowerCase().slice(0, 2); if (LANGS.includes(two)) return two; }
+  const c = (cfgLang || 'en').slice(0, 2);
+  return LANGS.includes(c) ? c : 'en';
+}
+const U = (k) => (UI[LANG] && UI[LANG][k]) || UI.en[k] || '';
+// A text field may be a plain string (shown in both languages) or { en, pt }.
+function loc(v) {
+  if (v == null) return '';
+  if (typeof v === 'string') return v;
+  return v[LANG] || v.en || v.pt || v.de || '';
+}
+function setLoc(obj, key, value) {
+  const cur = obj[key];
+  if (LANG === 'en' && (cur == null || typeof cur === 'string')) { obj[key] = value; return; }
+  const o = (cur && typeof cur === 'object') ? { ...cur } : { en: cur || '' };
+  o[LANG] = value;
+  obj[key] = o;
+}
+function applyStaticText() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = U(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach((el) => { el.innerHTML = U(el.dataset.i18nHtml); });
+  document.querySelectorAll('[data-i18n-label]').forEach((el) => { el.setAttribute('aria-label', U(el.dataset.i18nLabel)); });
+  document.getElementById('lang-en').setAttribute('aria-pressed', String(LANG === 'en'));
+  document.getElementById('lang-pt').setAttribute('aria-pressed', String(LANG === 'pt'));
+  document.getElementById('lang-de').setAttribute('aria-pressed', String(LANG === 'de'));
+  document.documentElement.lang = SPEECH_LANG[LANG];
+}
+const isStudio = () => location.hash === '#studio';
+const DRAFT_KEY = 'tactile-room-draft-v1';
+
+function deepMerge(base, over) {
+  if (!over || typeof over !== 'object' || Array.isArray(over)) return over === undefined ? base : over;
+  const out = Array.isArray(base) ? base.slice() : { ...base };
+  for (const k of Object.keys(over)) {
+    const b = base ? base[k] : undefined;
+    out[k] = (b && typeof b === 'object' && !Array.isArray(b) && over[k] && typeof over[k] === 'object' && !Array.isArray(over[k])) ? deepMerge(b, over[k]) : over[k];
+  }
+  return out;
+}
+async function loadConfig() {
+  let fileCfg = {};
+  try {
+    const r = await fetch('room.json', { cache: 'no-store' });
+    if (r.ok) { const t = await r.text(); fileCfg = JSON.parse(t); }
+  } catch (e) { /* no room.json: the built-in settings apply */ }
+  let cfg = deepMerge(structuredClone(DEFAULTS), fileCfg);
+  const published = cfg;
+  if (isStudio()) {
+    try { const d = localStorage.getItem(DRAFT_KEY); if (d) cfg = deepMerge(cfg, JSON.parse(d)); } catch (e) {}
+  }
+  return { cfg, published };
+}
+
+/* ------------------------------------------------------------------ */
+/* DOM                                                                 */
+/* ------------------------------------------------------------------ */
+const $ = (id) => document.getElementById(id);
+{ const v = document.getElementById('studio-version'); if (v) v.textContent = 'v' + VERSION; }
+const stage = $('stage'), glCanvas = $('gl'), fxCanvas = $('fx'), msg = $('stage-msg');
+const live = $('live');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let T = STRINGS;
+
+function setMsg(text, isError = false) {
+  msg.hidden = !text; msg.textContent = text || ''; msg.className = 'stage-msg' + (isError ? ' error' : '');
+}
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+const moreContrast = window.matchMedia('(prefers-contrast: more)');
+const LOOK_KEY = 'tactileRoom.look';
+const isLight = () => document.documentElement.dataset.look === 'light';
+
+/* ------------------------------------------------------------------ */
+/* Speech and announcements                                            */
+/* ------------------------------------------------------------------ */
+const speech = {
+  hints: true, busyWithDescription: false, lastAt: 0, timer: 0,
+  // Rate-limited, but the latest message always gets through once things settle.
+  say(text, { force = false, slow = false } = {}) {
+    if (!text) return;
+    clearTimeout(this.timer);
+    const wait = force ? 0 : Math.max(0, 450 - (performance.now() - this.lastAt));
+    if (wait > 0) { this.timer = setTimeout(() => this.out(text, slow), wait); return; }
+    this.out(text, slow);
+  },
+  out(text, slow = false) {
+    this.lastAt = performance.now();
+    if (this.hints && 'speechSynthesis' in window && !this.busyWithDescription) {
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        // v1.7: landmark names are spoken more slowly (0.85) than other hints (1.0), and full volume
+        u.lang = SPEECH_LANG[LANG]; u.rate = slow ? 0.85 : 1.0; u.volume = 1;
+        const hv = pickVoice(); if (hv) u.voice = hv;
+        u.onstart = () => audio.duck(true);
+        u.onend = u.onerror = () => { if (!speechSynthesis.speaking) audio.duck(false); };
+        audio.duck(true);
+        speechSynthesis.speak(u);
+        // some browsers send no "end" after a cancel: bring the sound back once nothing is being spoken
+        clearInterval(this.duckPoll);
+        this.duckPoll = setInterval(() => { if (!speechSynthesis.speaking && !speechSynthesis.pending) { audio.duck(false); clearInterval(this.duckPoll); } }, 250);
+        return;
+      } catch (e) { /* fall through to the live region */ }
+    }
+    live.textContent = '';
+    setTimeout(() => { live.textContent = text; }, 40);
+  }
+};
+
+/* ------------------------------------------------------------------ */
+/* Sound engine (Web Audio)                                            */
+/* ------------------------------------------------------------------ */
+class Sonifier {
+  constructor() { this.ctx = null; this.ready = false; }
+  unlock() {
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      this.ctx = new AC({ latencyHint: 'interactive' });
+      this.build();
+    }
+    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
+    return true;
+  }
+  get running() { return !!this.ctx && this.ctx.state === 'running'; }
+  build() {
+    const c = this.ctx;
+    this.master = c.createGain(); this.master.gain.value = 0.85;
+    const comp = c.createDynamicsCompressor();
+    comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
+    this.master.connect(comp).connect(c.destination);
+    this.pan = c.createStereoPanner ? c.createStereoPanner() : c.createGain();
+    // v1.7: the surface sound runs through "duck", which drops while a spoken hint plays, so words like "Tip" are heard
+    this.duckGain = c.createGain(); this.duckGain.gain.value = 1;
+    this.pan.connect(this.duckGain).connect(this.master);
+
+    // Tone: two oscillators through a low-pass filter (brightness)
+    this.o1 = c.createOscillator(); this.o1.type = 'sine';
+    this.o2 = c.createOscillator(); this.o2.type = 'triangle';
+    const g1 = c.createGain(); g1.gain.value = 0.62;
+    const g2 = c.createGain(); g2.gain.value = 0.38;
+    this.toneFilter = c.createBiquadFilter(); this.toneFilter.type = 'lowpass'; this.toneFilter.Q.value = 2.2; this.toneFilter.frequency.value = 1200;
+    this.toneGain = c.createGain(); this.toneGain.gain.value = 0;
+    this.o1.connect(g1).connect(this.toneFilter); this.o2.connect(g2).connect(this.toneFilter);
+    this.toneFilter.connect(this.toneGain).connect(this.pan);
+    this.o1.start(); this.o2.start();
+
+    // Noise buffers
+    const n = c.sampleRate * 2;
+    this.white = c.createBuffer(1, n, c.sampleRate);
+    const w = this.white.getChannelData(0);
+    for (let i = 0; i < n; i++) w[i] = Math.random() * 2 - 1;
+    const brown = c.createBuffer(1, n, c.sampleRate);
+    const b = brown.getChannelData(0); let last = 0;
+    for (let i = 0; i < n; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; b[i] = last * 3.2; }
+
+    // Water: brown noise, a slowly wandering low-pass and a gentle swell
+    const src = c.createBufferSource(); src.buffer = brown; src.loop = true;
+    this.waterFilter = c.createBiquadFilter(); this.waterFilter.type = 'lowpass'; this.waterFilter.frequency.value = 520; this.waterFilter.Q.value = 0.9;
+    const lfo = c.createOscillator(); lfo.frequency.value = 0.13;
+    const lfoAmt = c.createGain(); lfoAmt.gain.value = 260;
+    lfo.connect(lfoAmt).connect(this.waterFilter.frequency);
+    const swell = c.createGain(); swell.gain.value = 0.75;
+    const lfo2 = c.createOscillator(); lfo2.frequency.value = 0.31;
+    const lfo2Amt = c.createGain(); lfo2Amt.gain.value = 0.25;
+    lfo2.connect(lfo2Amt).connect(swell.gain);
+    this.waterGain = c.createGain(); this.waterGain.gain.value = 0;
+    src.connect(this.waterFilter).connect(swell).connect(this.waterGain).connect(this.master);
+    src.start(); lfo.start(); lfo2.start();
+    this.ready = true;
+  }
+  tone({ freq, bright, gain, pan, glide = 0.035 }) {
+    if (!this.ready) return;
+    const t = this.ctx.currentTime;
+    this.o1.frequency.setTargetAtTime(freq, t, glide);
+    this.o2.frequency.setTargetAtTime(freq * 1.002, t, glide);
+    const cutoff = Math.min(9000, Math.max(freq * 1.4, 260 * Math.pow(2, bright * 4.6)));
+    this.toneFilter.frequency.setTargetAtTime(cutoff, t, 0.04);
+    this.toneGain.gain.setTargetAtTime(gain, t, gain > this.toneGain.gain.value ? 0.02 : 0.09);
+    if (this.pan.pan) this.pan.pan.setTargetAtTime(pan, t, 0.05);
+  }
+  water(gain) {
+    if (!this.ready) return;
+    this.waterGain.gain.setTargetAtTime(gain, this.ctx.currentTime, gain > this.waterGain.gain.value ? 0.08 : 0.25);
+  }
+  click(intensity, bright, vol) {
+    if (!this.ready || vol <= 0) return;
+    const c = this.ctx, t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.white;
+    s.playbackRate.value = 0.8 + Math.random() * 0.4;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1400 + 4200 * bright; f.Q.value = 3;
+    const g = c.createGain(); const peak = Math.min(1, 0.35 + intensity) * vol * 0.9;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.022 + 0.02 * intensity);
+    s.connect(f).connect(g).connect(this.pan);
+    s.start(t, Math.random() * 1.5, 0.06); s.onended = () => { try { g.disconnect(); } catch (e) {} };
+  }
+  blip(freq, dir) { // edge crossing: up = onto the shell, down = into the water
+    if (!this.ready) return;
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    const g = c.createGain();
+    o.frequency.setValueAtTime(dir > 0 ? freq * 0.75 : freq * 1.2, t);
+    o.frequency.exponentialRampToValueAtTime(dir > 0 ? freq : freq * 0.6, t + 0.09);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.2);
+  }
+  knock() { // landmark (v1.2): a soft, low wooden knock. Short and below most of the voice's range, so spoken hints stay clear.
+    if (!this.ready) return;
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(240, t); o.frequency.exponentialRampToValueAtTime(150, t + 0.12);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.22, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.25);
+    const s = c.createBufferSource(); s.buffer = this.white; // the tap: a very short, dull noise burst
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900;
+    const g2 = c.createGain();
+    g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(0.12, t + 0.002); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
+    s.connect(f).connect(g2).connect(this.master); s.start(t, Math.random(), 0.05);
+  }
+  ping() { // v1.5: touching the area but not the shell: one soft, short sonar ping, as if searching
+    if (!this.ready) return;
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(1250, t); o.frequency.exponentialRampToValueAtTime(1150, t + 0.3);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.07, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.38);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.4);
+  }
+  edge() { // v1.5: the finger slid off the touch area: two short, low ticks
+    if (!this.ready) return;
+    const c = this.ctx, t0 = c.currentTime;
+    for (const t of [t0, t0 + 0.08]) {
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(330, t);
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+      o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.05);
+    }
+  }
+  duck(on) {
+    if (!this.ready) return;
+    const t = this.ctx.currentTime;
+    this.duckGain.gain.cancelScheduledValues(t);
+    this.duckGain.gain.setTargetAtTime(on ? 0.22 : 1, t, on ? 0.03 : 0.12);
+  }
+  silence() { if (this.ready) { this.tone({ freq: 220, bright: 0, gain: 0, pan: 0 }); this.water(0); } }
+}
+const audio = new Sonifier();
+
+/* ------------------------------------------------------------------ */
+/* Music helpers                                                       */
+/* ------------------------------------------------------------------ */
+const NOTE = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const noteName = (m) => { const i = ((Math.round(m) % 12) + 12) % 12; return (LANG === 'de' && i === 11 ? 'H' : NOTE[i]) + (Math.floor(Math.round(m) / 12) - 1); }; // German calls B 'H'
+const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+const PENTA = [0, 2, 4, 7, 9, 12];
+function snapPenta(m) {
+  const o = Math.floor(m / 12), pc = m - o * 12;
+  let best = 0, bd = 99;
+  for (const d of PENTA) { const dd = Math.abs(pc - d); if (dd < bd) { bd = dd; best = d; } }
+  return o * 12 + best;
+}
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* ------------------------------------------------------------------ */
+/* Scene                                                               */
+/* ------------------------------------------------------------------ */
+let cfg, published;
+let renderer, scene, camera, keyLight, rimLight, root, orient, norm, floor, probeMarker, lmGroup;
+let meshes = [];
+let modelInfo = { faces: 0, verts: 0, fileName: '' };
+let worldYRange = [-1, 1];
+const view = { yaw: 0.65, pitch: 0.22, dist: 3.6, tYaw: 0.65, tPitch: 0.22, tDist: 3.6, baseDist: 3.6, lastInput: 0 };
+
+function initScene() {
+  // v1.4: transparent, so the stage's sonar rings show behind the shell
+  renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(32, 1, 0.01, 60);
+  scene.add(new THREE.HemisphereLight(0xf4fbff, 0x5a4a3c, 1.25));
+  keyLight = new THREE.DirectionalLight(0xffffff, 2.1); keyLight.position.set(-1.2, 1.6, 1.4);
+  camera.add(keyLight);
+  rimLight = new THREE.DirectionalLight(0xcfe9ff, 0.8); rimLight.position.set(1.5, 0.6, -2);
+  camera.add(rimLight);
+  scene.add(camera);
+  root = new THREE.Group(); orient = new THREE.Group(); norm = new THREE.Group();
+  root.add(orient); orient.add(norm); scene.add(root);
+  lmGroup = new THREE.Group(); orient.add(lmGroup);
+
+  // soft contact shadow
+  const sc = document.createElement('canvas'); sc.width = sc.height = 128;
+  const sx = sc.getContext('2d'); const gr = sx.createRadialGradient(64, 64, 4, 64, 64, 64);
+  gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  sx.fillStyle = gr; sx.fillRect(0, 0, 128, 128);
+  const tex = new THREE.CanvasTexture(sc);
+  floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0.32 }));
+  floor.rotation.x = -Math.PI / 2; floor.renderOrder = -1; scene.add(floor);
+
+  // probe marker: a dot and a ring that sit on the surface
+  probeMarker = new THREE.Group();
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 12), new THREE.MeshBasicMaterial({ depthTest: false, transparent: true }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.035, 0.05, 40), new THREE.MeshBasicMaterial({ depthTest: false, transparent: true, side: THREE.DoubleSide }));
+  dot.renderOrder = ring.renderOrder = 10;
+  probeMarker.add(dot, ring); probeMarker.userData = { dot, ring }; probeMarker.visible = false;
+  scene.add(probeMarker);
+  applyTheme();
+}
+function applyTheme() {
+  if (!scene) return;
+  scene.background = null;   // the page behind shows through
+  const light = isLight();
+  const acc = new THREE.Color(cssVar('--accent') || '#00F2FE');
+  probeMarker.userData.dot.material.color.copy(acc);
+  probeMarker.userData.ring.material.color.copy(acc);
+  floor.material.color = new THREE.Color(cssVar('--floor') || '#00F2FE');
+  floor.material.opacity = parseFloat(cssVar('--floor-a')) || 0.2;
+  // a cool cyan rim on the dark background, like light from below the water; neutral on the light one
+  rimLight.color.set(light ? 0xcfe9ff : 0x7FF6FF); rimLight.intensity = light ? 0.8 : 1.15;
+  lmGroup.children.forEach((m) => m.material.color = new THREE.Color(cssVar('--landmark') || '#F59E0B'));
+  if (soundMap.on) applySoundMap(true);
+}
+
+function resize() {
+  const r = stage.getBoundingClientRect();
+  const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  // fit a unit sphere in whichever field of view is narrower
+  const vf = THREE.MathUtils.degToRad(camera.fov) / 2;
+  const hf = Math.atan(Math.tan(vf) * camera.aspect);
+  view.baseDist = 1.08 / Math.sin(Math.min(vf, hf));
+  if (!view.userZoomed) { view.tDist = view.baseDist; if (!view.sized) { view.dist = view.baseDist; view.sized = true; } }
+  camera.updateProjectionMatrix();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  fxCanvas.width = w * dpr; fxCanvas.height = h * dpr;
+  const tc = $('trace'); const tr = tc.getBoundingClientRect();
+  tc.width = Math.max(1, tr.width * dpr); tc.height = Math.max(1, tr.height * dpr);
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading models                                                      */
+/* ------------------------------------------------------------------ */
+function makeLoader() {
+  const loader = new GLTFLoader();
+  const draco = new DRACOLoader();
+  draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/');
+  loader.setDRACOLoader(draco);
+  loader.setMeshoptDecoder(MeshoptDecoder);
+  return loader;
+}
+function parseGLTF(buffer) {
+  return new Promise((resolve, reject) => {
+    const loader = makeLoader();
+    // Use <img>-based texture loading: it also works inside sandboxed previews.
+    const saved = window.createImageBitmap;
+    try { window.createImageBitmap = undefined; } catch (e) {}
+    try {
+      loader.parse(buffer, '', (g) => resolve(g), (e) => reject(e));
+    } catch (e) { reject(e); }
+    finally { try { window.createImageBitmap = saved; } catch (e) {} }
+  });
+}
+function explainLoadError(e) {
+  if (e && e.missing) return `The model file wasn’t found (error ${e.missing}). Check the file name in room.json and that the file is uploaded.`;
+  const s = String((e && (e.message || e)) || '');
+  if (/draco/i.test(s)) return 'This file uses Draco compression, which couldn’t be decoded here. Export again from Blender with Compression turned off.';
+  if (/KHR_texture_basisu|ktx2/i.test(s)) return 'This file uses KTX2 textures, which this page doesn’t read. Export again with JPEG or PNG textures.';
+  if (/external|uri|fetch|Failed to load buffer/i.test(s)) return 'This .gltf points to separate files. Export a single .glb file instead (glTF Binary in Blender).';
+  return 'The model couldn’t be read (' + s.slice(0, 120) + '). Export it again as glTF Binary (.glb).';
+}
+
+function clearModel() {
+  for (const m of meshes) { if (m.userData.ownGeometry) m.geometry.dispose(); }
+  while (norm.children.length) norm.remove(norm.children[0]);
+  meshes = [];
+}
+function setModel(object, { fileName = '' } = {}) {
+  clearModel();
+  norm.position.set(0, 0, 0); norm.scale.setScalar(1);
+  orient.quaternion.identity();
+  norm.add(object);
+  root.updateMatrixWorld(true);
+  const found = [];
+  object.traverse((o) => { if (o.isMesh && o.geometry && o.geometry.attributes.position) found.push(o); });
+  if (!found.length) throw new Error('No meshes found in this file');
+  // normalise: centre the bounding box, fit inside a unit sphere
+  const box = new THREE.Box3().setFromObject(object);
+  const c = box.getCenter(new THREE.Vector3());
+  const half = box.getSize(new THREE.Vector3()).length() / 2 || 1;
+  const s = 1 / half;
+  norm.scale.setScalar(s);
+  norm.position.copy(c).multiplyScalar(-s);
+  norm.userData.raw = { c, s };
+  meshes = found;
+  let faces = 0, verts = 0;
+  for (const m of meshes) {
+    const g = m.geometry;
+    verts += g.attributes.position.count;
+    faces += (g.index ? g.index.count : g.attributes.position.count) / 3;
+    if (m.material) {
+      const mats = Array.isArray(m.material) ? m.material : [m.material];
+      mats.forEach((mt) => { mt.side = THREE.DoubleSide; });
+    }
+  }
+  modelInfo = { faces: Math.round(faces), verts, fileName };
+  applyOrientation();
+}
+function applyOrientation() {
+  const o = cfg.orientation || [0, 0, 0];
+  orient.rotation.set(0, 0, 0);
+  const q = new THREE.Quaternion();
+  const ax = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
+  for (let i = 0; i < 3; i++) q.premultiply(new THREE.Quaternion().setFromAxisAngle(ax[i], (o[i] || 0) * Math.PI / 2));
+  orient.quaternion.copy(q);
+  root.updateMatrixWorld(true);
+  const box = new THREE.Box3();
+  meshes.forEach((m) => box.expandByObject(m));
+  if (box.isEmpty()) return;
+  worldYRange = [box.min.y, box.max.y];
+  const size = box.getSize(new THREE.Vector3());
+  floor.position.set(0, box.min.y - 0.04, 0);
+  floor.scale.set(Math.max(size.x, 0.4) * 1.5, Math.max(size.z, 0.4) * 1.5, 1);
+  if (soundMap.on) applySoundMap(true);
+  $('rot-out').textContent = o.join(' · ');
+}
+
+/* ------------------------------------------------------------------ */
+/* Surface analysis: how far each point sticks out, and its ridges     */
+/* ------------------------------------------------------------------ */
+function percentile(arr, q) {
+  const a = Float32Array.from(arr).sort();
+  return a[clamp(Math.floor(q * (a.length - 1)), 0, a.length - 1)];
+}
+async function analyse() {
+  const t0 = performance.now();
+  root.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(orient.matrixWorld).invert();
+  // 1. gather all vertices in model space (normalised, before orientation)
+  let total = 0;
+  for (const m of meshes) total += m.geometry.attributes.position.count;
+  const P = new Float32Array(total * 3);
+  const offsets = []; let off = 0;
+  const v = new THREE.Vector3(), mtx = new THREE.Matrix4();
+  for (const m of meshes) {
+    mtx.multiplyMatrices(inv, m.matrixWorld);
+    const pa = m.geometry.attributes.position;
+    offsets.push(off);
+    for (let i = 0; i < pa.count; i++) { v.fromBufferAttribute(pa, i).applyMatrix4(mtx); P[(off + i) * 3] = v.x; P[(off + i) * 3 + 1] = v.y; P[(off + i) * 3 + 2] = v.z; }
+    off += pa.count;
+  }
+  // 2. weld duplicate positions (texture seams) so neighbours connect
+  const eps = 1e-5, keyMap = new Map();
+  const canon = new Int32Array(total); let nC = 0;
+  for (let i = 0; i < total; i++) {
+    const key = Math.round(P[i * 3] / eps) + ',' + Math.round(P[i * 3 + 1] / eps) + ',' + Math.round(P[i * 3 + 2] / eps);
+    let id = keyMap.get(key);
+    if (id === undefined) { id = nC++; keyMap.set(key, id); }
+    canon[i] = id;
+  }
+  const C = new Float32Array(nC * 3);
+  for (let i = 0; i < total; i++) { const c = canon[i]; C[c * 3] = P[i * 3]; C[c * 3 + 1] = P[i * 3 + 1]; C[c * 3 + 2] = P[i * 3 + 2]; }
+  await new Promise((r) => setTimeout(r, 0));
+  // 3. triangles -> neighbours (CSR) and area-weighted normals
+  const tris = [];
+  meshes.forEach((m, mi) => {
+    const g = m.geometry, o = offsets[mi];
+    const n = g.index ? g.index.count : g.attributes.position.count;
+    const ix = g.index ? g.index.array : null;
+    for (let t = 0; t + 2 < n; t += 3) {
+      tris.push(canon[o + (ix ? ix[t] : t)], canon[o + (ix ? ix[t + 1] : t + 1)], canon[o + (ix ? ix[t + 2] : t + 2)]);
+    }
+  });
+  const nT = tris.length / 3;
+  const deg = new Uint32Array(nC + 1);
+  const N = new Float32Array(nC * 3);
+  for (let t = 0; t < nT; t++) {
+    const a = tris[t * 3], b = tris[t * 3 + 1], c = tris[t * 3 + 2];
+    if (a === b || b === c || a === c) continue;
+    deg[a] += 2; deg[b] += 2; deg[c] += 2;
+    const ax = C[a * 3], ay = C[a * 3 + 1], az = C[a * 3 + 2];
+    const e1x = C[b * 3] - ax, e1y = C[b * 3 + 1] - ay, e1z = C[b * 3 + 2] - az;
+    const e2x = C[c * 3] - ax, e2y = C[c * 3 + 1] - ay, e2z = C[c * 3 + 2] - az;
+    const nx = e1y * e2z - e1z * e2y, ny = e1z * e2x - e1x * e2z, nz = e1x * e2y - e1y * e2x;
+    for (const q of [a, b, c]) { N[q * 3] += nx; N[q * 3 + 1] += ny; N[q * 3 + 2] += nz; }
+  }
+  const start = new Uint32Array(nC + 1);
+  for (let i = 0; i < nC; i++) start[i + 1] = start[i] + deg[i];
+  const fill = start.slice(0, nC);
+  const nbr = new Uint32Array(start[nC]);
+  for (let t = 0; t < nT; t++) {
+    const a = tris[t * 3], b = tris[t * 3 + 1], c = tris[t * 3 + 2];
+    if (a === b || b === c || a === c) continue;
+    nbr[fill[a]++] = b; nbr[fill[a]++] = c; nbr[fill[b]++] = a; nbr[fill[b]++] = c; nbr[fill[c]++] = a; nbr[fill[c]++] = b;
+  }
+  for (let i = 0; i < nC; i++) { const l = Math.hypot(N[i * 3], N[i * 3 + 1], N[i * 3 + 2]) || 1; N[i * 3] /= l; N[i * 3 + 1] /= l; N[i * 3 + 2] /= l; }
+  await new Promise((r) => setTimeout(r, 0));
+  // 4. light smoothing removes scan noise before measuring ridges
+  let S = C.slice();
+  const avgInto = (src, dst, mix) => {
+    for (let i = 0; i < nC; i++) {
+      const s0 = start[i], s1 = start[i + 1];
+      if (s1 === s0) { dst[i * 3] = src[i * 3]; dst[i * 3 + 1] = src[i * 3 + 1]; dst[i * 3 + 2] = src[i * 3 + 2]; continue; }
+      let x = 0, y = 0, z = 0;
+      for (let j = s0; j < s1; j++) { const q = nbr[j]; x += src[q * 3]; y += src[q * 3 + 1]; z += src[q * 3 + 2]; }
+      const d = s1 - s0;
+      dst[i * 3] = lerp(src[i * 3], x / d, mix); dst[i * 3 + 1] = lerp(src[i * 3 + 1], y / d, mix); dst[i * 3 + 2] = lerp(src[i * 3 + 2], z / d, mix);
+    }
+  };
+  const smoothing = clamp(cfg.sound.smoothing | 0, 0, 10);
+  let S2 = new Float32Array(S.length);
+  for (let it = 0; it < smoothing; it++) { avgInto(S, S2, 0.5); [S, S2] = [S2, S]; }
+  // 5. signed curvature: ridges positive, grooves negative (umbrella operator / local edge length²)
+  const K = new Float32Array(nC);
+  for (let i = 0; i < nC; i++) {
+    const s0 = start[i], s1 = start[i + 1]; if (s1 === s0) continue;
+    let x = 0, y = 0, z = 0, el = 0;
+    for (let j = s0; j < s1; j++) {
+      const q = nbr[j]; x += S[q * 3]; y += S[q * 3 + 1]; z += S[q * 3 + 2];
+      el += Math.hypot(S[q * 3] - S[i * 3], S[q * 3 + 1] - S[i * 3 + 1], S[q * 3 + 2] - S[i * 3 + 2]);
+    }
+    const d = s1 - s0; el /= d;
+    const lx = x / d - S[i * 3], ly = y / d - S[i * 3 + 1], lz = z / d - S[i * 3 + 2];
+    K[i] = -(lx * N[i * 3] + ly * N[i * 3 + 1] + lz * N[i * 3 + 2]) / (el * el + 1e-12);
+  }
+  // 6. keep the detail (ridges, spines) and drop the overall form, which "bulge" already covers
+  const smoothScalar = (src, passes) => {
+    let a = src.slice(), b = new Float32Array(nC);
+    for (let p = 0; p < passes; p++) {
+      for (let i = 0; i < nC; i++) {
+        const s0 = start[i], s1 = start[i + 1]; if (s1 === s0) { b[i] = a[i]; continue; }
+        let s = 0; for (let j = s0; j < s1; j++) s += a[nbr[j]];
+        b[i] = 0.5 * a[i] + 0.5 * s / (s1 - s0);
+      }
+      [a, b] = [b, a];
+    }
+    return a;
+  };
+  const Ks = smoothScalar(K, 1);
+  const base = smoothScalar(Ks, 10);
+  const D = new Float32Array(nC);
+  for (let i = 0; i < nC; i++) D[i] = Ks[i] - base[i];
+  const absD = D.map(Math.abs);
+  const scale = percentile(absD, 0.92) || 1;
+  const sign = cfg.sound.invert ? -1 : 1;
+  for (let i = 0; i < nC; i++) D[i] = clamp(sign * D[i] / scale, -1, 1);
+  // 7. bulge: distance from the centre, spread over 0..1
+  const B = new Float32Array(nC);
+  for (let i = 0; i < nC; i++) B[i] = Math.hypot(C[i * 3], C[i * 3 + 1], C[i * 3 + 2]);
+  const b0 = percentile(B, 0.02), b1 = percentile(B, 0.98);
+  for (let i = 0; i < nC; i++) B[i] = clamp((B[i] - b0) / ((b1 - b0) || 1), 0, 1);
+  // 8. write back per original vertex
+  meshes.forEach((m, mi) => {
+    const n = m.geometry.attributes.position.count, o = offsets[mi];
+    const bulge = new Float32Array(n), curv = new Float32Array(n);
+    for (let i = 0; i < n; i++) { const c = canon[o + i]; bulge[i] = B[c]; curv[i] = D[c]; }
+    m.userData.tr = { bulge, curv };
+    if (m.geometry.computeBoundsTree && !m.geometry.boundsTree) { try { m.geometry.computeBoundsTree(); } catch (e) {} }
+  });
+  analysisInfo = { ms: Math.round(performance.now() - t0), points: nC };
+  if (soundMap.on) applySoundMap(true);
+}
+let analysisInfo = { ms: 0, points: 0 };
+
+/* ------------------------------------------------------------------ */
+/* Sound map (vertex colours that show what you hear)                  */
+/* ------------------------------------------------------------------ */
+const soundMap = { on: false, mat: null };
+function pitchValueAt(bulge, worldY) {
+  if (cfg.sound.pitchFrom === 'up') return clamp((worldY - worldYRange[0]) / ((worldYRange[1] - worldYRange[0]) || 1), 0, 1);
+  return bulge;
+}
+function applySoundMap(on) {
+  soundMap.on = on;
+  if (!soundMap.mat) soundMap.mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.75, metalness: 0, side: THREE.DoubleSide });
+  const ridge = new THREE.Color(cssVar('--ridge') || '#00F2FE'), groove = new THREE.Color(cssVar('--groove') || '#FF5A5F');
+  const neutral = new THREE.Color(); neutral.setRGB(0.58, 0.62, 0.60, THREE.SRGBColorSpace);
+  const c = new THREE.Color(), v = new THREE.Vector3();
+  root.updateMatrixWorld(true);
+  for (const m of meshes) {
+    const g = m.geometry, tr = m.userData.tr; if (!tr) continue;
+    if (on) {
+      const n = g.attributes.position.count;
+      const arr = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) {
+        v.fromBufferAttribute(g.attributes.position, i).applyMatrix4(m.matrixWorld);
+        const pv = pitchValueAt(tr.bulge[i], v.y);
+        const k = tr.curv[i];
+        c.copy(neutral);
+        const amt = Math.min(1, Math.pow(Math.abs(k), 0.5) * 1.8);
+        if (k > 0) c.lerp(ridge, amt); else c.lerp(groove, amt);
+        c.multiplyScalar(0.4 + 0.7 * pv);
+        arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b;
+      }
+      if (!m.userData.saved) m.userData.saved = { material: m.material, color: g.getAttribute('color') || null };
+      g.setAttribute('color', new THREE.BufferAttribute(arr, 3));
+      m.material = soundMap.mat;
+    } else if (m.userData.saved) {
+      if (m.userData.saved.color) g.setAttribute('color', m.userData.saved.color); else g.deleteAttribute('color');
+      m.material = m.userData.saved.material; m.userData.saved = null;
+    }
+  }
+  $('map').setAttribute('aria-pressed', String(on));
+  $('map-state').textContent = on ? U('on') : U('off');
+  $('legend').hidden = !on;
+}
+
+/* ------------------------------------------------------------------ */
+/* Landmarks                                                           */
+/* ------------------------------------------------------------------ */
+let landmarks = [];   // { name, at: [x,y,z] } in model space
+function buildLandmarkPins() {
+  while (lmGroup.children.length) lmGroup.remove(lmGroup.children[0]);
+  const col = new THREE.Color(cssVar('--landmark') || '#F59E0B');
+  for (const lm of landmarks) {
+    const pin = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 10), new THREE.MeshBasicMaterial({ color: col, depthTest: false, transparent: true, opacity: 0.85 }));
+    pin.position.fromArray(lm.at); pin.renderOrder = 9; lmGroup.add(pin);
+  }
+  lmGroup.visible = isStudio();
+  renderLandmarkList();
+}
+function renderLandmarkList() {
+  const ul = $('lm-list'); ul.textContent = '';
+  landmarks.forEach((lm, i) => {
+    const li = document.createElement('li'); li.className = 'lm';
+    const span = document.createElement('span'); span.textContent = loc(lm.name);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sbtn'; b.textContent = 'Remove';
+    b.setAttribute('aria-label', 'Remove landmark ' + loc(lm.name));
+    b.addEventListener('click', () => { landmarks.splice(i, 1); cfg.landmarks = landmarks.map((l) => ({ ...l })); buildLandmarkPins(); saveDraft(); });
+    li.append(span, b); ul.append(li);
+  });
+  if (!landmarks.length) { const li = document.createElement('li'); li.textContent = 'None yet'; li.className = 'note'; ul.append(li); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Probe: what is under the finger, the pointer or the keyboard        */
+/* ------------------------------------------------------------------ */
+const raycaster = new THREE.Raycaster(); raycaster.firstHitOnly = true;
+const probe = {
+  on: false, point: new THREE.Vector3(), normal: new THREE.Vector3(0, 1, 0), local: new THREE.Vector3(),
+  bulge: 0, curv: 0, pv: 0, midi: 60, lastCurv: 0, accum: 0, lastPoint: new THREE.Vector3(), speed: 0,
+  activeUntil: 0, mode: 'pointer', insideLm: new Set(), lastTouched: null
+};
+const tri = { a: new THREE.Vector3(), b: new THREE.Vector3(), c: new THREE.Vector3(), bc: new THREE.Vector3() };
+function sampleHit(hit) {
+  const m = hit.object, tr = m.userData.tr, f = hit.face;
+  if (!tr || !f) return null;
+  const pa = m.geometry.attributes.position;
+  const lp = m.worldToLocal(hit.point.clone());
+  tri.a.fromBufferAttribute(pa, f.a); tri.b.fromBufferAttribute(pa, f.b); tri.c.fromBufferAttribute(pa, f.c);
+  THREE.Triangle.getBarycoord(lp, tri.a, tri.b, tri.c, tri.bc);
+  const w = tri.bc;
+  if (!isFinite(w.x)) w.set(1 / 3, 1 / 3, 1 / 3);
+  const bulge = tr.bulge[f.a] * w.x + tr.bulge[f.b] * w.y + tr.bulge[f.c] * w.z;
+  const curv = tr.curv[f.a] * w.x + tr.curv[f.b] * w.y + tr.curv[f.c] * w.z;
+  const n = f.normal.clone().transformDirection(m.matrixWorld);
+  if (n.dot(raycaster.ray.direction) > 0) n.negate();
+  return { point: hit.point.clone(), normal: n, bulge, curv };
+}
+function castFromScreen(nx, ny) {
+  raycaster.setFromCamera({ x: nx, y: ny }, camera);
+  const hits = raycaster.intersectObjects(meshes, false);
+  return hits.length ? sampleHit(hits[0]) : null;
+}
+// keyboard and gamepad move a fingertip in steps, so they get the same timing and spoken hints
+const stepped = (input) => input === 'keys' || input === 'pad';
+function updateProbe(sample, { now, input, screenX = 0.5 }) {
+  const wasOn = probe.on;
+  probe.mode = input;
+  probe.activeUntil = now + (stepped(input) ? 320 : 160);
+  if (sample) {
+    const moved = wasOn ? sample.point.distanceTo(probe.lastPoint) : 0;
+    probe.on = true;
+    probe.point.copy(sample.point); probe.normal.copy(sample.normal);
+    probe.bulge = sample.bulge; probe.curv = sample.curv;
+    probe.pv = pitchValueAt(sample.bulge, sample.point.y);
+    const s = cfg.sound;
+    let m = lerp(s.low, Math.max(s.high, s.low + 1), probe.pv);
+    if (s.steps) m = snapPenta(Math.round(m));
+    probe.midi = m;
+    // texture: crossing ridges and grooves produces clicks, scaled by how fast you move
+    const dC = Math.abs(sample.curv - probe.lastCurv);
+    probe.accum += wasOn ? dC : 0;
+    const thr = lerp(0.9, 0.12, clamp(s.texture, 0, 1));
+    let clicks = 0;
+    while (probe.accum > thr && clicks < 3) { probe.accum -= thr; clicks++; audio.click(Math.min(1, dC), (sample.curv + 1) / 2, s.texVol); }
+    if (clicks) { haptics.event('ridge', Math.min(1, dC * 1.5)); fx.spark(screenX); }
+    probe.lastCurv = sample.curv;
+    probe.lastPoint.copy(sample.point);
+    const dtp = Math.max(0.008, (now - (probe.lastT || now)) / 1000);
+    probe.speed = moved / dtp;
+    probe.local.copy(sample.point); orient.worldToLocal(probe.local);
+    probe.lastTouched = probe.local.toArray().map((x) => +x.toFixed(4));
+    if (!wasOn) { audio.blip(mtof(probe.midi), 1); haptics.event('enter'); logEvent('enter-shell', input); if (stepped(input)) speech.say(T.onShell); }
+    checkLandmarks();
+  } else {
+    if (wasOn) { audio.blip(mtof(probe.midi), -1); haptics.event('leave'); logEvent('leave-shell', input); if (stepped(input)) { const d = shellDirection(); speech.say(d ? `${T.offShell}. ${d}` : T.offShell); } }
+    probe.on = false; probe.accum = 0;
+    probe.insideLm.clear();
+  }
+  probe.lastT = now;
+}
+function checkLandmarks() {
+  const r = cfg.landmarkRadius || 0.12;
+  landmarks.forEach((lm, i) => {
+    const d = probe.local.distanceTo(new THREE.Vector3().fromArray(lm.at));
+    if (d < r && !probe.insideLm.has(i)) {
+      probe.insideLm.add(i); audio.knock(); haptics.event('landmark');
+      speech.say(loc(lm.name), { force: true, slow: true }); logEvent('landmark:' + loc(lm.name), probe.mode);
+    } else if (d > r * 1.35 && probe.insideLm.has(i)) probe.insideLm.delete(i);
+  });
+}
+// where things are on screen, in words (x, y in -1..1, y up)
+function screenWords(x, y) {
+  const h = x < -0.33 ? 0 : x > 0.33 ? 2 : 1, v = y > 0.33 ? 0 : y < -0.33 ? 2 : 1;
+  return T.grid[v][h];
+}
+function shellDirection() {
+  // from the keyboard fingertip (or the last pointer spot) towards the middle of the shell on screen
+  const box = new THREE.Box3(); meshes.forEach((m) => box.expandByObject(m));
+  if (box.isEmpty()) return '';
+  const c = box.getCenter(new THREE.Vector3()).project(camera);
+  const dx = c.x - kb.x, dy = c.y - kb.y;
+  if (Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05) return '';
+  return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? T.dirRight : T.dirLeft) : (dy > 0 ? T.dirUp : T.dirDown);
+}
+function describeSpot() {
+  if (!probe.on) { const d = shellDirection(); return d ? `${T.offShell}. ${d}` : T.offShell; }
+  const sp = probe.point.clone().project(camera);
+  const where = screenWords(sp.x, sp.y);
+  const key = cfg.sound.pitchFrom === 'up' ? 'up' : 'bulge';
+  const level = probe.pv < 0.34 ? T.low[key] : probe.pv < 0.67 ? T.mid[key] : T.high[key];
+  const tex = probe.curv > 0.33 ? T.ridge : probe.curv < -0.33 ? T.groove : T.smooth;
+  let near = '';
+  let best = Infinity;
+  landmarks.forEach((lm) => { const d = probe.local.distanceTo(new THREE.Vector3().fromArray(lm.at)); if (d < best) { best = d; near = loc(lm.name); } });
+  const nearText = best < (cfg.landmarkRadius || 0.12) * 2.5 ? ', ' + T.near + ' ' + near : '';
+  return `${T.onShell}, ${where}: ${level}, ${tex}${nearText}.`;
+}
+/* ------------------------------------------------------------------ */
+/* Haptics: vibration that follows the surface                         */
+/* ------------------------------------------------------------------ */
+// Phones (Android Chrome): navigator.vibrate, on/off timing only, no strength.
+// Gamepads (Chromium): two motors with strength 0–1. The high-frequency motor carries
+// ridges and grooves, the low one how far the surface sticks out, so it reads like the tone.
+// iPhones have no vibration for web pages, so nothing happens there.
+const haptics = {
+  // v1.8: level = 'strong' (default), 'light' (the short taps of 1.1–1.7) or 'off'
+  level: 'strong', get user() { return this.level !== 'off'; }, padIndex: -1, lastPad: 0, lastRhythm: 0,
+  phone: typeof navigator.vibrate === 'function' && (navigator.maxTouchPoints || 0) > 0,
+  strength() { return this.level === 'off' ? 0 : clamp(cfg.sound.vibration ?? 0.7, 0, 1); },
+  actuator() {
+    if (this.padIndex < 0 || !navigator.getGamepads) return null;
+    const gp = navigator.getGamepads()[this.padIndex];
+    return gp && gp.vibrationActuator && typeof gp.vibrationActuator.playEffect === 'function' ? gp.vibrationActuator : null;
+  },
+  available() { return this.phone || !!this.actuator(); },
+  buzz(pattern) { if (!this.phone) return; try { navigator.vibrate(pattern); } catch (e) {} },
+  rumble(strong, weak, ms) {
+    const a = this.actuator(); if (!a) return;
+    try {
+      const p = a.playEffect('dual-rumble', { startDelay: 0, duration: ms, strongMagnitude: clamp(strong, 0, 1), weakMagnitude: clamp(weak, 0, 1) });
+      if (p && p.catch) p.catch(() => {});
+    } catch (e) {}
+  },
+  // Strong: pulses 2.5 times longer and never under 30 ms, which cheaper vibration motors need before you feel anything
+  ms(x, floor = 30) { return this.level === 'strong' ? Math.max(floor, Math.round(x * 2.5)) : Math.max(1, Math.round(x)); },
+  // single moments: crossing a ridge, entering or leaving the shell, a landmark
+  event(kind, amount = 1) {
+    const k = this.strength(); if (!k) return;
+    if (kind === 'ridge') { this.buzz(this.ms(lerp(8, 20, amount) * k)); this.rumble(0.2 * k * amount, k * (0.5 + 0.5 * amount), 40); this.lastRhythm = performance.now(); }
+    else if (kind === 'enter') { this.buzz(this.ms(18 * k)); this.rumble(0.6 * k, 0.3 * k, 70); }
+    else if (kind === 'leave') { this.buzz(this.ms(12 * k)); this.rumble(0.15 * k, 0.45 * k, 45); }
+    else if (kind === 'landmark') { const d = this.ms(16 * k); this.buzz([d, 50, d]); this.rumble(0.9 * k, 0.6 * k, 160); }
+    else if (kind === 'area') { this.buzz(this.ms(10 * k)); this.rumble(0.1 * k, 0.25 * k, 30); }
+    else if (kind === 'edge') { const d = this.ms(14 * k); this.buzz([d, 60, d]); this.rumble(0.3 * k, 0.5 * k, 90); }
+  },
+  // every frame while exploring; finger still = no vibration, like the sound
+  texture(now, { onShell, moving, curv, pv, speedK, water }) {
+    const k = this.strength(); if (!k) return;
+    if (this.padIndex >= 0 && now - this.lastPad > 70) {
+      if (onShell && moving) {
+        this.lastPad = now;
+        const rough = Math.min(1, Math.abs(curv));
+        const weak = curv > 0 ? 0.12 + 0.6 * rough : 0.04 + 0.12 * rough; // ridges buzz, grooves go quiet
+        this.rumble(k * (0.05 + 0.3 * pv) * (0.5 + 0.5 * speedK), k * weak * (0.4 + 0.6 * speedK), 110);
+      } else if (water && moving && cfg.sound.waterVol > 0) { // the swell only when the water sound is on
+        this.lastPad = now;
+        const swell = 0.5 + 0.5 * Math.sin(now / 1000 * Math.PI); // a slow swell, about one every two seconds
+        this.rumble(k * 0.2 * swell, 0, 110);
+      }
+    }
+    // phone: on a sharp ridge, a fine rhythm between the single ridge pulses
+    if (this.phone && onShell && moving && curv > 0.45 && now - this.lastRhythm > 130) {
+      this.lastRhythm = now;
+      const on = this.ms(7 * k, 20), off = Math.round(lerp(40, 18, Math.min(1, curv)));
+      this.buzz([on, off, on, off, on]);
+    }
+  },
+  stop() {
+    this.buzz(0);
+    const a = this.actuator(); if (a && typeof a.reset === 'function') { try { const p = a.reset(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+  }
+};
+function updateVibeToggle() {
+  const b = $('vibe'); if (!b) return;
+  b.hidden = !haptics.available() || !(cfg.sound.vibration > 0);
+  for (const l of ['off', 'light', 'strong']) $('vibe-' + l).setAttribute('aria-pressed', String(haptics.level === l));
+}
+
+/* ------------------------------------------------------------------ */
+/* Visual feedback: ripples on the stage, the sound trace below        */
+/* ------------------------------------------------------------------ */
+const fx = {
+  ctx: fxCanvas.getContext('2d'), rings: [], sparks: [], lastRing: 0, screen: { x: 0, y: 0 },
+  spark() { if (!reduceMotion.matches) this.sparks.push({ x: this.screen.x, y: this.screen.y, t: performance.now() }); },
+  draw(now) {
+    const c = this.ctx, w = fxCanvas.width, h = fxCanvas.height, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.clearRect(0, 0, w, h);
+    const acc = cssVar('--accent'), rid = cssVar('--ridge'), gro = cssVar('--groove');
+    const active = probe.on && now < probe.activeUntil && !reduceMotion.matches;
+    if (active) {
+      const v = new THREE.Vector3().copy(probe.point).project(camera);
+      this.screen.x = (v.x * 0.5 + 0.5) * w; this.screen.y = (-v.y * 0.5 + 0.5) * h;
+      const period = lerp(260, 70, probe.pv);
+      if (now - this.lastRing > period) { this.rings.push({ x: this.screen.x, y: this.screen.y, t: now, wdt: 1 + 2.5 * Math.max(0, probe.curv), col: probe.curv > 0.33 ? rid : probe.curv < -0.33 ? gro : acc }); this.lastRing = now; }
+    }
+    c.lineCap = 'round';
+    if (kb.active && (document.activeElement === stage || kb.input === 'pad')) {
+      const kx = (kb.x * 0.5 + 0.5) * w, ky = (-kb.y * 0.5 + 0.5) * h, r = 9 * dpr;
+      c.globalAlpha = 0.9; c.strokeStyle = acc; c.lineWidth = 1.5 * dpr;
+      c.beginPath(); c.moveTo(kx - r * 1.6, ky); c.lineTo(kx - r * 0.6, ky); c.moveTo(kx + r * 0.6, ky); c.lineTo(kx + r * 1.6, ky);
+      c.moveTo(kx, ky - r * 1.6); c.lineTo(kx, ky - r * 0.6); c.moveTo(kx, ky + r * 0.6); c.lineTo(kx, ky + r * 1.6); c.stroke();
+    }
+    this.rings = this.rings.filter((r) => now - r.t < 900);
+    for (const r of this.rings) {
+      const k = (now - r.t) / 900;
+      c.globalAlpha = (1 - k) * 0.7; c.strokeStyle = r.col || acc; c.lineWidth = r.wdt * dpr;
+      c.beginPath(); c.arc(r.x, r.y, (6 + 38 * k) * dpr, 0, Math.PI * 2); c.stroke();
+    }
+    this.sparks = this.sparks.filter((s) => now - s.t < 220);
+    for (const s of this.sparks) {
+      const k = (now - s.t) / 220;
+      c.globalAlpha = 1 - k; c.fillStyle = rid;
+      c.beginPath(); c.arc(s.x + (Math.random() - 0.5) * 14 * dpr, s.y + (Math.random() - 0.5) * 14 * dpr, 2 * dpr, 0, Math.PI * 2); c.fill();
+    }
+    c.globalAlpha = 1;
+  }
+};
+const trace = {
+  canvas: $('trace'), samples: [], lastPush: 0,
+  push(now, on, midi, bright, water) { if (now - this.lastPush < 33) return; this.lastPush = now; this.samples.push({ t: now, on, midi, bright, water }); while (this.samples.length && now - this.samples[0].t > 8000) this.samples.shift(); },
+  draw(now) {
+    const cv = this.canvas, c = cv.getContext('2d'), w = cv.width, h = cv.height, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.clearRect(0, 0, w, h);
+    const s = cfg.sound, lo = Math.min(s.low, s.high) - 2, hi = Math.max(s.high, s.low + 1) + 2;
+    const y = (m) => h - 6 * dpr - (m - lo) / (hi - lo) * (h - 12 * dpr);
+    const left = 34 * dpr;
+    c.font = `${10 * dpr}px ${getComputedStyle(document.body).getPropertyValue('--f-mono') || 'monospace'}`;
+    c.fillStyle = cssVar('--muted'); c.strokeStyle = cssVar('--line'); c.lineWidth = 1;
+    for (let m = Math.ceil(lo / 12) * 12; m <= hi; m += 12) {
+      c.globalAlpha = 0.9; c.beginPath(); c.moveTo(left, y(m)); c.lineTo(w, y(m)); c.stroke();
+      c.fillText(noteName(m), 0, y(m) + 3 * dpr);
+    }
+    const x = (t) => left + (1 - (now - t) / 8000) * (w - left);
+    c.strokeStyle = cssVar('--accent'); c.lineCap = 'round';
+    if (!moreContrast.matches) { c.shadowColor = cssVar('--accent'); c.shadowBlur = (isLight() ? 3 : 8) * dpr; }
+    for (let i = 1; i < this.samples.length; i++) {
+      const a = this.samples[i - 1], b = this.samples[i];
+      if (a.on && b.on) { c.lineWidth = (1.2 + 3.2 * Math.max(0, b.bright)) * dpr; c.globalAlpha = 1; c.beginPath(); c.moveTo(x(a.t), y(a.midi)); c.lineTo(x(b.t), y(b.midi)); c.stroke(); }
+      if (b.water) { c.globalAlpha = 0.35; c.fillStyle = cssVar('--accent'); c.fillRect(x(b.t), h - 3 * dpr, 2 * dpr, 2 * dpr); }
+    }
+    c.shadowBlur = 0; c.globalAlpha = 1;
+  }
+};
+
+/* ------------------------------------------------------------------ */
+/* Input                                                               */
+/* ------------------------------------------------------------------ */
+const pointers = new Map();
+let exploringId = null, rotating = null, pendingScreen = null;
+function ndcFromEvent(e) {
+  const r = glCanvas.getBoundingClientRect();
+  return { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1, fx: (e.clientX - r.left) / r.width, fresh: true };
+}
+function startAudioFromGesture() {
+  const ok = audio.unlock();
+  if (ok) setTimeout(updateSoundChip, 60);
+}
+function updateSoundChip() {
+  const on = audio.running;
+  $('sound-chip').classList.toggle('on', on);
+  $('sound-chip-text').textContent = on ? T.soundOn : T.soundOff;
+}
+stage.addEventListener('contextmenu', (e) => e.preventDefault());
+stage.addEventListener('pointerdown', (e) => {
+  if (e.target.closest('button')) return;
+  startAudioFromGesture();
+  stage.focus({ preventScroll: true, focusVisible: false });
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+  view.lastInput = performance.now();
+  const wantsRotate = e.pointerType === 'mouse' && (e.button === 2 || e.shiftKey || e.button === 1);
+  if (pointers.size >= 2 || wantsRotate) {
+    exploringId = null; pendingScreen = null;
+    rotating = { x: e.clientX, y: e.clientY, d: pinchDist() };
+  } else if (e.button === 0 || e.pointerType !== 'mouse') {
+    exploringId = e.pointerId; pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; kb.active = false;
+    area.firstSample = true; area.out = false; area.touch = e.pointerType !== 'mouse';
+    stage.classList.add('touching');
+    logEvent('touch-start', 'pointer');
+  }
+});
+// v1.5: the touch area. Touching it but not the shell pings; sliding off it ticks. The first touch explains why the page doesn't scroll.
+const area = { firstSample: false, out: false, touch: false, explained: false };
+function areaAfterFirstSample() {
+  area.firstSample = false;
+  if (!probe.on) { audio.ping(); haptics.event('area'); logEvent('touch-area', 'pointer'); }
+  if (area.touch && !area.explained) {
+    area.explained = true;
+    if (probe.on) speech.say(T.areaScroll);
+    else { const d = shellDirection(); speech.say([T.areaOn, d, T.areaScroll].filter(Boolean).join(' ')); }
+  }
+}
+function areaEdgeCheck(e) {
+  const r = stage.getBoundingClientRect();
+  const out = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  if (out && !area.out) { area.out = true; audio.edge(); haptics.event('edge'); speech.say(T.areaEdge); logEvent('touch-edge', 'pointer'); }
+  else if (!out && area.out) area.out = false;
+}
+function pinchDist() {
+  const p = [...pointers.values()]; if (p.length < 2) return 0;
+  return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+}
+stage.addEventListener('pointermove', (e) => {
+  if (!pointers.has(e.pointerId)) return;
+  const prev = pointers.get(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  view.lastInput = performance.now();
+  if (rotating) {
+    if (pointers.size >= 2) {
+      const ps = [...pointers.values()];
+      const mx = (ps[0].x + ps[1].x) / 2, my = (ps[0].y + ps[1].y) / 2;
+      view.tYaw -= (mx - rotating.x) * 0.008; view.tPitch = clamp(view.tPitch + (my - rotating.y) * 0.006, -1.2, 1.2);
+      const d = pinchDist(); if (rotating.d && d) { view.tDist = clamp(view.tDist * rotating.d / d, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; }
+      rotating = { x: mx, y: my, d };
+    } else {
+      view.tYaw -= (e.clientX - prev.x) * 0.008; view.tPitch = clamp(view.tPitch + (e.clientY - prev.y) * 0.006, -1.2, 1.2);
+    }
+    return;
+  }
+  if (e.pointerId === exploringId) { pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; areaEdgeCheck(e); }
+});
+function endPointer(e) {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  const wasRunning = audio.running;
+  startAudioFromGesture(); // touch devices only unlock audio when the finger lifts
+  if (!wasRunning && audio.ctx) {
+    // answer the very first tap, which happened before sound was allowed
+    audio.ctx.resume().then(() => { audio.blip(probe.on ? mtof(probe.midi) : 330, probe.on ? 1 : -1); updateSoundChip(); }).catch(() => {});
+  }
+  if (e.pointerId === exploringId) { exploringId = null; pendingScreen = null; logEvent('touch-end', 'pointer'); }
+  if (pointers.size === 0) { rotating = null; stage.classList.remove('touching'); }
+  else if (rotating) rotating = { ...[...pointers.values()][0], d: 0 };
+}
+stage.addEventListener('pointerup', endPointer);
+stage.addEventListener('pointercancel', endPointer);
+// v1.5: over the shell's area, a two-finger swipe on a trackpad (or the mouse wheel) turns the shell; pinching (or Ctrl + wheel) zooms
+stage.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  view.lastInput = performance.now();
+  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+  const dx = clamp(e.deltaX * unit, -120, 120), dy = clamp(e.deltaY * unit, -120, 120);
+  if (e.ctrlKey) { view.tDist = clamp(view.tDist * Math.exp(dy * 0.01), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; return; }
+  view.tYaw += dx * 0.005;
+  view.tPitch = clamp(view.tPitch - dy * 0.003, -1.2, 1.2);
+}, { passive: false });
+// Safari on a Mac reports trackpad pinch and twist as "gesture" events instead (and would zoom the whole page)
+let macGesture = null;
+stage.addEventListener('gesturestart', (e) => { e.preventDefault(); macGesture = pointers.size ? null : { dist: view.tDist, yaw: view.tYaw }; });
+stage.addEventListener('gesturechange', (e) => {
+  e.preventDefault();
+  if (!macGesture || pointers.size) return; // touch screens already turn and zoom through pointer events
+  view.tDist = clamp(macGesture.dist / (e.scale || 1), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true;
+  view.tYaw = macGesture.yaw - (e.rotation || 0) * Math.PI / 180; view.lastInput = performance.now();
+});
+stage.addEventListener('gestureend', (e) => { e.preventDefault(); macGesture = null; });
+
+// keyboard probe: a fingertip that moves across the picture, like a finger on the screen
+const kb = { x: 0, y: 0, active: false, turningUntil: 0, input: 'keys' };
+function keyProbe(now) {
+  const s = castFromScreen(kb.x, kb.y);
+  updateProbe(s, { now, input: kb.input, screenX: (kb.x + 1) / 2 });
+  probe.pan = clamp(kb.x, -1, 1) * 0.6;
+}
+stage.addEventListener('keydown', (e) => {
+  if (e.altKey || e.metaKey || e.ctrlKey) return;
+  const now = performance.now();
+  kb.input = 'keys';
+  const r = stage.getBoundingClientRect();
+  const step = e.shiftKey ? 0.015 : 0.05;
+  const stepY = step * (r.width / Math.max(1, r.height));
+  let moved = false;
+  switch (e.key) {
+    case 'ArrowLeft': kb.x -= step; moved = true; break;
+    case 'ArrowRight': kb.x += step; moved = true; break;
+    case 'ArrowUp': kb.y += stepY; moved = true; break;
+    case 'ArrowDown': kb.y -= stepY; moved = true; break;
+    case 'Home': kb.x = 0; kb.y = 0; moved = true; break;
+    case 'q': case 'Q': case 'e': case 'E':
+      startAudioFromGesture(); kb.active = true;
+      view.tYaw += (e.key.toLowerCase() === 'q' ? -1 : 1) * Math.PI / 6; view.lastInput = now; kb.turningUntil = now + 900;
+      logEvent('turn', 'keys'); e.preventDefault(); return;
+    case 'Enter': startAudioFromGesture(); speech.say(describeSpot(), { force: true }); logEvent('spot-description', 'keys'); e.preventDefault(); return;
+    case ' ': case 'd': case 'D': if ($('describe').hidden) return; startAudioFromGesture(); toggleDescription(); e.preventDefault(); return;
+    case '+': case '=': view.tDist = clamp(view.tDist * 0.85, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; e.preventDefault(); return;
+    case '-': case '_': view.tDist = clamp(view.tDist / 0.85, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; e.preventDefault(); return;
+    case 'Escape': stopAll(); return;
+    case 'm': case 'M': if (isStudio() && test.running) { markFound(); e.preventDefault(); } return;
+    default: return;
+  }
+  if (moved) {
+    e.preventDefault();
+    startAudioFromGesture();
+    kb.active = true;
+    kb.x = clamp(kb.x, -0.98, 0.98); kb.y = clamp(kb.y, -0.98, 0.98);
+    view.lastInput = now;
+    keyProbe(now);
+    logEvent('key-step', 'keys');
+  }
+});
+stage.addEventListener('blur', () => { if (kb.input === 'keys') kb.active = false; });
+
+// gamepad: the left stick moves the same fingertip as the arrow keys, the right stick turns the shell
+const pad = { index: -1, prev: [], latched: new Set(), timer: 0, lastLog: 0 };
+// button presses are caught between frames too, so a quick tap isn't lost on a slow device
+function latchPad() {
+  if (pad.index < 0 || !navigator.getGamepads) return;
+  const gp = navigator.getGamepads()[pad.index]; if (!gp) return;
+  gp.buttons.forEach((b, i) => { const down = !!(b && b.pressed); if (down && !pad.prev[i]) pad.latched.add(i); pad.prev[i] = down; });
+}
+function padConnected(gp) {
+  if (!gp || pad.index >= 0) return;
+  pad.index = gp.index; haptics.padIndex = gp.index; pad.prev = []; pad.latched.clear();
+  clearInterval(pad.timer); pad.timer = setInterval(latchPad, 16);
+  startAudioFromGesture();
+  updateVibeToggle();
+  speech.say(U('padOn'), { force: true });
+  logEvent('gamepad-connected', 'pad', gp.id);
+}
+window.addEventListener('gamepadconnected', (e) => padConnected(e.gamepad));
+window.addEventListener('gamepaddisconnected', (e) => {
+  if (!e.gamepad || e.gamepad.index !== pad.index) return;
+  pad.index = -1; haptics.padIndex = -1; clearInterval(pad.timer); pad.latched.clear(); updateVibeToggle();
+});
+function pollPad(now) {
+  if (pad.index < 0 || !navigator.getGamepads) return;
+  const gp = navigator.getGamepads()[pad.index]; if (!gp) return;
+  const dt = Math.min(0.15, (now - (pad.lastT || now)) / 1000); pad.lastT = now; // same speed on slow devices
+  const dz = (v) => (Math.abs(v || 0) < 0.18 ? 0 : (v - Math.sign(v) * 0.18) / 0.82);
+  const lx = dz(gp.axes[0]), ly = dz(gp.axes[1]), rx = dz(gp.axes[2]), ry = dz(gp.axes[3]);
+  latchPad();
+  const held = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
+  const pressed = (i) => pad.latched.has(i);
+  let moved = false;
+  if (lx || ly) {
+    const speed = held(6) ? 0.25 : 0.85; // left trigger: small, careful steps
+    kb.x += lx * dt * speed; kb.y -= ly * dt * speed * (stage.clientWidth / Math.max(1, stage.clientHeight));
+    moved = true;
+  }
+  const step = 0.02; // d-pad: one small step per press
+  if (pressed(14)) { kb.x -= step; moved = true; }
+  if (pressed(15)) { kb.x += step; moved = true; }
+  if (pressed(12)) { kb.y += step; moved = true; }
+  if (pressed(13)) { kb.y -= step; moved = true; }
+  if (pressed(3)) { kb.x = 0; kb.y = 0; moved = true; }
+  if (rx || ry) {
+    view.tYaw += rx * dt * 1.6; view.tPitch = clamp(view.tPitch + ry * dt * 1.2, -1.2, 1.2);
+    view.lastInput = now; kb.active = true; kb.input = 'pad'; kb.turningUntil = now + 300;
+  }
+  if (pressed(4) || pressed(5)) {
+    view.tYaw += (pressed(4) ? -1 : 1) * Math.PI / 6; view.lastInput = now;
+    kb.active = true; kb.input = 'pad'; kb.turningUntil = now + 900; logEvent('turn', 'pad');
+  }
+  if (pressed(0)) { speech.say(describeSpot(), { force: true }); logEvent('spot-description', 'pad'); }
+  if (pressed(1)) toggleDescription();
+  if (pressed(9)) stopAll();
+  if (pressed(2) && isStudio() && test.running) markFound();
+  pad.latched.clear();
+  if (moved && meshes.length) {
+    kb.active = true; kb.input = 'pad';
+    kb.x = clamp(kb.x, -0.98, 0.98); kb.y = clamp(kb.y, -0.98, 0.98);
+    view.lastInput = now;
+    keyProbe(now);
+    if (now - pad.lastLog > 250) { logEvent('pad-step', 'pad'); pad.lastLog = now; }
+  }
+}
+
+$('turn-l').addEventListener('click', () => { startAudioFromGesture(); view.tYaw -= Math.PI / 4; view.lastInput = performance.now(); });
+$('turn-r').addEventListener('click', () => { startAudioFromGesture(); view.tYaw += Math.PI / 4; view.lastInput = performance.now(); });
+
+function stopAll() {
+  audio.silence(); probe.activeUntil = 0; stopDescription(); haptics.stop();
+  try { speechSynthesis.cancel(); } catch (e) {}
+}
+
+/* ------------------------------------------------------------------ */
+/* Description                                                          */
+/* ------------------------------------------------------------------ */
+let descAudio = null, descPlaying = false;
+function setDescribeButton(playing) {
+  descPlaying = playing; speech.busyWithDescription = playing;
+  $('describe').setAttribute('aria-pressed', String(playing));
+  $('describe-label').textContent = playing ? T.stop : T.describe;
+}
+function stopDescription() {
+  if (descAudio) { descAudio.pause(); descAudio.currentTime = 0; }
+  try { if (descPlaying) speechSynthesis.cancel(); } catch (e) {}
+  setDescribeButton(false);
+}
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = speechSynthesis.getVoices();
+  const d = cfg.description;
+  const want = SPEECH_LANG[LANG];
+  const named = loc(d.voice);
+  const byName = named && voices.find((v) => v.name === named);
+  if (byName && (byName.lang || '').slice(0, 2) === want.slice(0, 2)) return byName;
+  return voices.find((v) => v.lang === want) || voices.find((v) => (v.lang || '').replace('_', '-').startsWith(want.slice(0, 2))) || null;
+}
+function toggleDescription() {
+  if (descPlaying) { stopDescription(); return; }
+  const d = cfg.description;
+  if (shown().description) $('desc-details').open = true;
+  logEvent('description', probe.mode);
+  const audioSrc = loc(d.audio);
+  if (audioSrc) {
+    if (!descAudio || descAudio.dataset.src !== audioSrc) {
+      descAudio = new Audio(audioSrc); descAudio.dataset.src = audioSrc; descAudio.preload = 'auto';
+      descAudio.addEventListener('ended', () => setDescribeButton(false));
+      descAudio.addEventListener('error', () => { setDescribeButton(false); speakDescriptionText(); });
+    }
+    setDescribeButton(true);
+    descAudio.play().catch(() => { setDescribeButton(false); speakDescriptionText(); });
+    return;
+  }
+  speakDescriptionText();
+}
+function speakDescriptionText() {
+  const d = cfg.description, text = shown().description;
+  if (!('speechSynthesis' in window) || !text) { $('desc-details').open = true; return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = pickVoice(); if (v) u.voice = v;
+  u.lang = SPEECH_LANG[LANG]; u.rate = d.rate || 1;
+  u.onend = () => setDescribeButton(false);
+  u.onerror = () => { setDescribeButton(false); $('desc-details').open = true; };
+  setDescribeButton(true);
+  speechSynthesis.speak(u);
+}
+$('describe').addEventListener('click', () => { startAudioFromGesture(); toggleDescription(); });
+$('map').addEventListener('click', () => applySoundMap(!soundMap.on));
+$('hints').addEventListener('click', () => {
+  speech.hints = !speech.hints;
+  $('hints').setAttribute('aria-pressed', String(speech.hints));
+  $('hints-state').textContent = speech.hints ? U('on') : U('off');
+  if (!speech.hints) try { speechSynthesis.cancel(); } catch (e) {}
+});
+// v1.4: dark by default (the deep-sea look); visitors can switch to light, remembered in this browser
+{
+  // v1.6: two buttons, Dark and Light; the one in use is filled
+  const syncLook = () => { $('look-dark').setAttribute('aria-pressed', String(!isLight())); $('look-light').setAttribute('aria-pressed', String(isLight())); };
+  const setLook = (light) => {
+    if (light) document.documentElement.dataset.look = 'light'; else delete document.documentElement.dataset.look;
+    try { localStorage.setItem(LOOK_KEY, light ? 'light' : 'dark'); } catch (e) {}
+    syncLook();
+  };
+  syncLook();
+  $('look-dark').addEventListener('click', () => setLook(false));
+  $('look-light').addEventListener('click', () => setLook(true));
+}
+// the visitor's own vibration switch, remembered in this browser only
+const VIBE_KEY = 'tactileRoom.vibration';
+try { const v = localStorage.getItem(VIBE_KEY); if (v === 'off' || v === 'light') haptics.level = v; } catch (e) {}
+for (const l of ['off', 'light', 'strong']) {
+  $('vibe-' + l).addEventListener('click', () => {
+    haptics.level = l;
+    try { localStorage.setItem(VIBE_KEY, l); } catch (e) {}
+    // a test buzz right away, so you know at once whether this phone vibrates
+    if (l === 'off') haptics.stop(); else { haptics.buzz(l === 'strong' ? 160 : 60); haptics.rumble(0.6, 0.4, l === 'strong' ? 160 : 60); }
+    updateVibeToggle();
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* Page text from the config                                           */
+/* ------------------------------------------------------------------ */
+// cfg.strings may be flat (English overrides, as before) or { en: {...}, pt: {...} }
+function stringsFor(st) {
+  if (!st || typeof st !== 'object') return {};
+  if (st.en || st.pt) return st[LANG] || {};
+  return LANG === 'en' ? st : {};
+}
+function renderText() {
+  const txt = shown();
+  const L = txt.label || {};
+  $('sp-name').textContent = loc(L.name) || U('shellFallback');
+  const sci = $('sp-sci'); sci.hidden = !loc(L.scientific); sci.textContent = loc(L.scientific);
+  const facts = [[U('fFound'), loc(L.place)], [U('fYear'), loc(L.year)], [U('fSize'), loc(L.size)], [U('fMade'), loc(L.method)],
+    [U('fModel'), modelInfo.faces ? `${modelInfo.faces.toLocaleString(SPEECH_LANG[LANG])} ${U('faces')}` : '']];
+  const dl = $('sp-facts'); dl.textContent = '';
+  for (const [k, v] of facts) { if (!v) continue; const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); }
+  $('desc-text').textContent = txt.description || '';
+  $('desc-details').hidden = !txt.description;
+  // v1.6: no description written yet (room.json) = no Describe button, rather than a button that does nothing
+  $('describe').hidden = !(txt.description || loc(cfg.description.audio));
+  const about = $('about'), at = $('about-text');
+  at.textContent = '';
+  (txt.about || '').split(/\n\s*\n/).filter(Boolean).forEach((para) => { const p = document.createElement('p'); p.textContent = para.trim(); at.append(p); });
+  $('credits').textContent = txt.credits || '';
+  about.hidden = !(txt.about || txt.credits);
+  T = deepMerge(({ en: STRINGS, pt: STRINGS_PT, de: STRINGS_DE })[LANG] || STRINGS, stringsFor(cfg.strings));
+  applyStaticText();
+  $('map-state').textContent = soundMap.on ? U('on') : U('off');
+  $('hints-state').textContent = speech.hints ? U('on') : U('off');
+  updateVibeToggle();
+  updateSoundChip();
+  if (!descPlaying) $('describe-label').textContent = T.describe;
+}
+
+/* ------------------------------------------------------------------ */
+/* Studio                                                              */
+/* ------------------------------------------------------------------ */
+function saveDraft() {
+  if (!isStudio()) return;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(exportConfig())); } catch (e) {}
+}
+function exportConfig() {
+  return {
+    model: cfg.model || null,
+    orientation: cfg.orientation,
+    label: cfg.label,
+    description: cfg.description,
+    about: cfg.about,
+    credits: cfg.credits,
+    sound: cfg.sound,
+    landmarks: landmarks.map((l) => ({ name: l.name, at: l.at.map((x) => +(+x).toFixed(4)) })),
+    landmarkRadius: cfg.landmarkRadius,
+    lang: cfg.lang,
+    strings: cfg.strings || {}
+  };
+}
+function bindRange(id, get, set, fmt, after) {
+  const el = $(id), out = $(id + '-out');
+  el.value = get();
+  const show = () => { if (out) out.textContent = fmt ? fmt(+el.value) : el.value; };
+  show();
+  el.addEventListener('input', () => { set(+el.value); show(); saveDraft(); if (after) after(); });
+}
+const studioRefreshers = [];
+function bindText(id, get, set, after) {
+  const el = $(id); el.value = get() || '';
+  studioRefreshers.push(() => { el.value = get() || ''; });
+  el.addEventListener('input', () => { set(el.value); saveDraft(); if (after) after(); });
+}
+let studioBound = false;
+function openStudio(open) {
+  $('studio').hidden = !open;
+  document.body.classList.toggle('studio-open', open);
+  lmGroup.visible = open;
+  if (open && !studioBound) { bindStudio(); studioBound = true; }
+  setTimeout(resize, 30);
+}
+function bindStudio() {
+  const s = cfg.sound;
+  const pct = (v) => Math.round(v * 100) + '%';
+  bindRange('s-low', () => s.low, (v) => { s.low = v; }, noteName);
+  bindRange('s-high', () => s.high, (v) => { s.high = v; }, noteName);
+  bindRange('s-texture', () => s.texture, (v) => { s.texture = v; }, pct);
+  bindRange('s-tone', () => s.toneVol, (v) => { s.toneVol = v; }, pct);
+  bindRange('s-tex', () => s.texVol, (v) => { s.texVol = v; }, pct);
+  bindRange('s-water', () => s.waterVol, (v) => { s.waterVol = v; }, pct);
+  bindRange('s-smooth', () => s.smoothing, (v) => { s.smoothing = v; }, (v) => v + ' passes');
+  bindRange('s-vibe', () => s.vibration ?? 0.7, (v) => { s.vibration = v; }, (v) => (v > 0 ? pct(v) : 'off'), () => { updateVibeToggle(); haptics.event('ridge', 1); });
+  bindRange('lm-radius', () => cfg.landmarkRadius, (v) => { cfg.landmarkRadius = v; }, (v) => v.toFixed(2));
+  bindRange('d-rate', () => cfg.description.rate || 1, (v) => { cfg.description.rate = v; }, (v) => v.toFixed(2) + '×');
+  const from = $('s-from'); from.value = s.pitchFrom;
+  from.addEventListener('change', () => { s.pitchFrom = from.value; saveDraft(); if (soundMap.on) applySoundMap(true); });
+  const steps = $('s-steps'); steps.checked = !!s.steps; steps.addEventListener('change', () => { s.steps = steps.checked; saveDraft(); });
+  const inv = $('s-invert'); inv.checked = !!s.invert; inv.addEventListener('change', () => { s.invert = inv.checked; saveDraft(); reanalyse(); });
+  $('reanalyse').addEventListener('click', reanalyse);
+  document.querySelectorAll('[data-rot]').forEach((b) => b.addEventListener('click', () => {
+    const i = +b.dataset.rot; cfg.orientation = cfg.orientation.slice(); cfg.orientation[i] = ((cfg.orientation[i] || 0) + 1) % 4;
+    applyOrientation(); saveDraft();
+  }));
+  $('rot-reset').addEventListener('click', () => { cfg.orientation = [0, 0, 0]; applyOrientation(); saveDraft(); });
+  bindText('model-path', () => cfg.model, (v) => { cfg.model = v.trim() || null; });
+  bindText('d-text', () => loc(cfg.description.text), (v) => { setLoc(cfg.description, 'text', v); }, renderText);
+  bindText('d-audio', () => loc(cfg.description.audio), (v) => { setLoc(cfg.description, 'audio', v.trim()); });
+  const L = cfg.label;
+  [['l-name', 'name'], ['l-sci', 'scientific'], ['l-place', 'place'], ['l-year', 'year'], ['l-size', 'size'], ['l-method', 'method']]
+    .forEach(([id, k]) => bindText(id, () => loc(L[k]), (v) => { setLoc(L, k, v); }, renderText));
+  bindText('l-about', () => loc(cfg.about), (v) => { setLoc(cfg, 'about', v); }, renderText);
+  bindText('l-credits', () => loc(cfg.credits), (v) => { setLoc(cfg, 'credits', v); }, renderText);
+  const vs = $('d-voice');
+  const fillVoices = () => {
+    if (!('speechSynthesis' in window)) return;
+    const cur = cfg.description.voice || '';
+    vs.textContent = ''; const o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Browser default'; vs.append(o0);
+    speechSynthesis.getVoices().forEach((v) => { const o = document.createElement('option'); o.value = v.name; o.textContent = `${v.name} (${v.lang})`; vs.append(o); });
+    vs.value = cur;
+  };
+  fillVoices(); try { speechSynthesis.addEventListener('voiceschanged', fillVoices); } catch (e) {}
+  vs.addEventListener('change', () => { cfg.description.voice = vs.value; saveDraft(); });
+  $('lm-add').addEventListener('click', () => {
+    if (!probe.lastTouched) { $('lm-name').placeholder = 'Touch the shell first'; return; }
+    const name = $('lm-name').value.trim() || 'Landmark ' + (landmarks.length + 1);
+    landmarks.push({ name: LANG === 'en' ? name : { pt: name }, at: probe.lastTouched.slice() }); cfg.landmarks = landmarks.map((l) => ({ ...l }));
+    $('lm-name').value = ''; buildLandmarkPins(); saveDraft();
+  });
+  $('file').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (f) loadFile(f); });
+  stage.addEventListener('dragover', (e) => { e.preventDefault(); });
+  stage.addEventListener('drop', (e) => { e.preventDefault(); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) loadFile(f); });
+  $('copy-json').addEventListener('click', async () => {
+    const text = JSON.stringify(exportConfig(), null, 2);
+    const pre = $('json-out'); pre.hidden = false; pre.textContent = text;
+    try { await navigator.clipboard.writeText(text); $('copy-json').textContent = 'Copied'; setTimeout(() => { $('copy-json').textContent = 'Copy room.json'; }, 1600); }
+    catch (err) { const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copy-json').textContent = 'Selected: press Cmd+C'; }
+  });
+  $('reset-draft').addEventListener('click', () => { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} location.reload(); });
+  // test session
+  $('t-start').addEventListener('click', () => { test.running ? endTest() : startTest(); });
+  $('t-found').addEventListener('click', markFound);
+  $('t-addnote').addEventListener('click', () => { const v = $('t-note').value.trim(); if (v) { logEvent('note', '', v); $('t-note').value = ''; } });
+  $('t-curtain').addEventListener('click', () => { const c = $('curtain'); c.hidden = !c.hidden; $('t-curtain').setAttribute('aria-pressed', String(!c.hidden)); $('t-curtain').textContent = c.hidden ? 'Hide screen' : 'Show screen'; });
+  renderSavedLogs();
+  window.addEventListener('pagehide', () => { if (test.running) saveLogNow(); });
+  $('t-copy-all').addEventListener('click', async () => {
+    const csv = savedLogsCSV();
+    const pre = $('json-out'); pre.hidden = false; pre.textContent = csv;
+    try { await navigator.clipboard.writeText(csv); $('t-copy-all').textContent = 'Copied'; setTimeout(() => { $('t-copy-all').textContent = 'Copy all saved logs (CSV)'; }, 1600); }
+    catch (err) { const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
+  $('t-clear').addEventListener('click', () => {
+    if ($('t-clear').dataset.armed !== '1') { $('t-clear').dataset.armed = '1'; $('t-clear').textContent = 'Press again to delete all saved logs'; setTimeout(() => { $('t-clear').dataset.armed = ''; $('t-clear').textContent = 'Delete saved logs'; }, 4000); return; }
+    try { localStorage.removeItem(LOG_KEY); } catch (e) {}
+    $('t-clear').dataset.armed = ''; $('t-clear').textContent = 'Delete saved logs'; renderSavedLogs();
+  });
+  $('t-copy').addEventListener('click', async () => {
+    const csv = test.toCSV();
+    const pre = $('json-out'); pre.hidden = false; pre.textContent = csv;
+    try { await navigator.clipboard.writeText(csv); $('t-copy').textContent = 'Copied'; setTimeout(() => { $('t-copy').textContent = 'Copy log (CSV)'; }, 1600); }
+    catch (err) { const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
+  updateModelStats();
+}
+function updateModelStats() {
+  const el = $('model-stats'); if (!el) return;
+  const warn = modelInfo.faces > 150000 ? ' Phones may struggle above about 100,000 faces: reduce it in Blender (Decimate).' : '';
+  el.textContent = `${modelInfo.fileName || cfg.model || 'Your model'} · ${modelInfo.faces.toLocaleString('en-GB')} faces · surface analysed in ${analysisInfo.ms} ms.${warn}`;
+  el.className = 'note' + (warn ? ' warn' : '');
+}
+async function reanalyse() { setMsg(U('reading')); await new Promise((r) => setTimeout(r, 20)); await analyse(); setMsg(''); updateModelStats(); }
+async function loadFile(file) {
+  if (!/\.(glb|gltf)$/i.test(file.name)) { setMsg('Use a .glb file (glTF Binary).', true); return; }
+  setMsg('Reading ' + file.name + '…');
+  try {
+    const buf = await file.arrayBuffer();
+    const g = await parseGLTF(buf);
+    setModel(g.scene, { fileName: file.name });
+    const sameFile = cfg.model === 'assets/' + file.name;
+    cfg.model = 'assets/' + file.name; $('model-path').value = cfg.model;
+    // keep landmarks only if they were made for this same file
+    landmarks = (sameFile && cfg.landmarks) ? cfg.landmarks.map((l) => ({ ...l })) : [];
+    cfg.landmarks = landmarks.map((l) => ({ ...l }));
+    buildLandmarkPins();
+    setMsg(U('reading')); await new Promise((r) => setTimeout(r, 20));
+    await analyse(); setMsg(''); renderText(); updateModelStats(); saveDraft();
+  } catch (e) { console.warn(e); setMsg(explainLoadError(e), true); }
+}
+
+/* test session log */
+const LOG_KEY = 'tactile-room-test-logs';
+const test = {
+  running: false, t0: 0, rows: [], foundAt: null, id: null, started: null, saveTimer: 0,
+  toCSV() {
+    const head = 'seconds,event,input,x,y,z,pitch_note,ridge,detail';
+    return [head, ...this.rows.map((r) => [r.s, r.ev, r.input, r.x, r.y, r.z, r.note, r.ridge, JSON.stringify(r.detail || '')].join(','))].join('\n');
+  }
+};
+function savedLogs() { try { const a = JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function saveLogNow() {
+  clearTimeout(test.saveTimer);
+  if (!test.id) return;
+  try {
+    const all = savedLogs().filter((x) => x.id !== test.id);
+    all.push({ id: test.id, started: test.started, version: VERSION, foundAt: test.foundAt, rows: test.rows });
+    while (all.length > 30) all.shift();
+    localStorage.setItem(LOG_KEY, JSON.stringify(all));
+  } catch (e) {}
+  renderSavedLogs();
+}
+function saveLogSoon() { clearTimeout(test.saveTimer); test.saveTimer = setTimeout(saveLogNow, 600); }
+function savedLogsCSV() {
+  const head = 'session,started,version,seconds,event,input,x,y,z,pitch_note,ridge,detail';
+  const lines = [head];
+  savedLogs().forEach((x, n) => x.rows.forEach((r) => lines.push([n + 1, x.started, x.version, r.s, r.ev, r.input, r.x, r.y, r.z, r.note, r.ridge, JSON.stringify(r.detail || '')].join(','))));
+  return lines.join('\n');
+}
+function renderSavedLogs() {
+  const el = $('t-saved'); if (!el) return;
+  const all = savedLogs();
+  if (!all.length) { el.textContent = 'Every test saves itself in this browser as it runs, so a reload doesn\'t lose it. No saved tests yet.'; return; }
+  const last = all[all.length - 1];
+  let when = last.started || ''; try { when = new Date(last.started).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) {}
+  el.textContent = `Saved in this browser: ${all.length} test${all.length > 1 ? 's' : ''}. Latest: ${when}, ${last.rows.length} events. Copy them before you clear this browser's data.`;
+}
+function logEvent(ev, input, detail) {
+  if (!test.running) return;
+  if (ev === 'key-step' && test.rows.length && test.rows[test.rows.length - 1].ev === 'key-step' && performance.now() - test.lastStep < 250) return;
+  if (ev === 'key-step') test.lastStep = performance.now();
+  const p = probe.on ? probe.local : null;
+  test.rows.push({ s: ((performance.now() - test.t0) / 1000).toFixed(2), ev, input, x: p ? p.x.toFixed(3) : '', y: p ? p.y.toFixed(3) : '', z: p ? p.z.toFixed(3) : '', note: probe.on ? noteName(probe.midi) : '', ridge: probe.on ? probe.curv.toFixed(2) : '', detail });
+  $('t-status').textContent = `Test running · ${test.rows.length} events`;
+  if (ev === 'start' || ev === 'end' || ev === 'found' || ev === 'note') saveLogNow(); else saveLogSoon();
+}
+function startTest() {
+  test.running = true; test.t0 = performance.now(); test.rows = []; test.foundAt = null;
+  test.id = Date.now().toString(36); test.started = new Date().toISOString();
+  logEvent('start', '', 'Tactile Room v' + VERSION + ' · ' + new Date().toISOString());
+  $('t-start').textContent = 'End test'; $('t-found').disabled = false; $('t-addnote').disabled = false; $('t-copy').disabled = false;
+  stage.focus({ preventScroll: true, focusVisible: false });
+}
+function endTest() {
+  logEvent('end', ''); test.running = false;
+  $('t-start').textContent = 'Start test'; $('t-found').disabled = true;
+  $('t-status').textContent = `Test ended · ${test.rows.length} events${test.foundAt ? ' · found at ' + test.foundAt + ' s' : ''}`;
+}
+function markFound() {
+  if (!test.running) return;
+  test.foundAt = ((performance.now() - test.t0) / 1000).toFixed(1);
+  logEvent('found', probe.mode, describeSpot());
+  audio.knock();
+  $('t-status').textContent = `Found at ${test.foundAt} s · ${test.rows.length} events`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Frame loop                                                          */
+/* ------------------------------------------------------------------ */
+let lastFrame = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (document.hidden) return;
+  const dt = Math.min(0.05, (now - lastFrame) / 1000); lastFrame = now;
+  // pointer exploring: one raycast per frame
+  if (pendingScreen && pendingScreen.fresh && exploringId !== null && meshes.length) {
+    pendingScreen.fresh = false;
+    const s = castFromScreen(pendingScreen.x, pendingScreen.y);
+    updateProbe(s, { now, input: 'pointer', screenX: pendingScreen.fx });
+    probe.pan = clamp(pendingScreen.fx * 2 - 1, -1, 1) * 0.6;
+    if (area.firstSample) areaAfterFirstSample();
+  }
+  pollPad(now);
+  if (kb.active && now < kb.turningUntil && meshes.length) keyProbe(now);
+  const touching = exploringId !== null || (stepped(probe.mode) && now < probe.activeUntil);
+  const moving = now < probe.activeUntil;
+  const speedK = stepped(probe.mode) ? 1 : clamp(probe.speed / 1.4, 0, 1);
+  haptics.texture(now, { onShell: probe.on, moving, curv: probe.curv, pv: probe.pv, speedK, water: !probe.on && touching });
+  // sound
+  const s = cfg.sound;
+  if (audio.ready) {
+    if (probe.on && moving) {
+      audio.tone({ freq: mtof(probe.midi), bright: (probe.curv + 1) / 2, gain: s.toneVol * 0.32 * (0.6 + 0.4 * speedK), pan: stepped(probe.mode) ? 0 : (probe.pan || 0) });
+      audio.water(0);
+    } else {
+      audio.tone({ freq: mtof(probe.midi), bright: 0, gain: 0, pan: 0 });
+      audio.water(!probe.on && touching && moving ? s.waterVol * 0.55 : 0);
+    }
+  }
+  // readout + trace
+  const sounding = probe.on && moving;
+  const ro = $('readout');
+  const txt = sounding ? `${noteName(probe.midi)} · ${Math.round(mtof(probe.midi))} Hz · ${probe.curv > 0.33 ? U('rRidge') : probe.curv < -0.33 ? U('rGroove') : U('rSmooth')}` : (touching && !probe.on && cfg.sound.waterVol > 0 ? U('water') : T.silent);
+  if (ro.textContent !== txt) ro.textContent = txt;
+  trace.push(now, sounding, probe.midi, probe.curv, touching && !probe.on && moving);
+  // camera
+  const idle = now - view.lastInput > 5000 && exploringId === null && !kb.active;
+  if (idle && !reduceMotion.matches) view.tYaw += dt * 0.12;
+  const k = reduceMotion.matches ? 1 : 1 - Math.pow(0.0015, dt);
+  view.yaw = lerp(view.yaw, view.tYaw, k); view.pitch = lerp(view.pitch, view.tPitch, k); view.dist = lerp(view.dist, view.tDist, k);
+  camera.position.set(Math.sin(view.yaw) * Math.cos(view.pitch), Math.sin(view.pitch), Math.cos(view.yaw) * Math.cos(view.pitch)).multiplyScalar(view.dist);
+  camera.lookAt(0, 0, 0);
+  // probe marker
+  probeMarker.visible = probe.on && (moving || exploringId !== null);
+  if (probeMarker.visible) {
+    probeMarker.position.copy(probe.point).addScaledVector(probe.normal, 0.004);
+    probeMarker.userData.ring.lookAt(probeMarker.position.clone().add(probe.normal));
+  }
+  renderer.render(scene, camera);
+  fx.draw(now);
+  trace.draw(now);
+}
+
+/* ------------------------------------------------------------------ */
+/* Boot                                                                */
+/* ------------------------------------------------------------------ */
+async function boot() {
+  ({ cfg, published } = await loadConfig());
+  LANG = pickLang(cfg.lang);
+  T = deepMerge(({ en: STRINGS, pt: STRINGS_PT, de: STRINGS_DE })[LANG] || STRINGS, stringsFor(cfg.strings));
+  applyStaticText();
+  setMsg(U('loading'));
+  try { initScene(); }
+  catch (e) { setMsg(U('noWebgl'), true); return; }
+  // faster raycasting on big scans, if the helper loads
+  try {
+    const bvh = await import('three-mesh-bvh');
+    THREE.BufferGeometry.prototype.computeBoundsTree = bvh.computeBoundsTree;
+    THREE.BufferGeometry.prototype.disposeBoundsTree = bvh.disposeBoundsTree;
+    THREE.Mesh.prototype.raycast = bvh.acceleratedRaycast;
+  } catch (e) { /* plain raycasting still works */ }
+  const ro = new ResizeObserver(resize); ro.observe(stage); ro.observe($('trace'));
+  resize();
+  requestAnimationFrame(frame);
+  speech.hints = true;
+
+  // v1.6: the scanned shell is the only shell. If it can't load, say so (the studio can still load a file)
+  let loaded = false;
+  setMsg(U('loading'));
+  try {
+    if (!cfg.model) throw Object.assign(new Error('missing'), { missing: 404 });
+    const r = await fetch(cfg.model);
+    if (!r.ok) { const er = new Error('missing'); er.missing = r.status; throw er; }
+    const g = await parseGLTF(await r.arrayBuffer());
+    setModel(g.scene, { fileName: cfg.model.split('/').pop() });
+    landmarks = (cfg.landmarks || []).map((l) => ({ ...l }));
+    loaded = true;
+  } catch (e) {
+    console.warn(e);
+    setMsg(isStudio() ? explainLoadError(e) + (cfg.model ? ' (' + cfg.model + ')' : '') : U('loadFailed'), true);
+    renderText(); openStudio(isStudio());
+    window.addEventListener('hashchange', () => openStudio(isStudio()));
+    window.__tactileRoomReady = true;
+    return;
+  }
+  buildLandmarkPins();
+  if (!msg.classList.contains('error')) setMsg(U('reading'));
+  await new Promise((r) => setTimeout(r, 20));
+  await analyse();
+  if (!msg.classList.contains('error')) setMsg('');
+  renderText();
+  openStudio(isStudio());
+  window.addEventListener('hashchange', () => openStudio(isStudio()));
+  $('studio-close').addEventListener('click', () => { history.replaceState(null, '', location.pathname + location.search); openStudio(false); });
+  // theme changes
+  reduceMotion.addEventListener?.('change', () => {});
+  moreContrast.addEventListener?.('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-look'] });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopAll(); });
+  const editNote = () => { const n = $('edit-lang-note'); if (n) n.textContent = 'Editing the ' + ({ en: 'English', pt: 'Portuguese', de: 'German' })[LANG] + ' text. Switch with EN / PT / DE at the top of the page.'; };
+  const setLang = (l) => {
+    if (l === LANG) return;
+    LANG = l;
+    try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+    if (descPlaying) stopDescription();
+    try { speechSynthesis.cancel(); } catch (e) {}
+    renderText(); renderLandmarkList();
+    studioRefreshers.forEach((f) => f());
+    editNote();
+  };
+  $('lang-en').addEventListener('click', () => setLang('en'));
+  $('lang-pt').addEventListener('click', () => setLang('pt'));
+  $('lang-de').addEventListener('click', () => setLang('de'));
+  editNote();
+  window.__tactileRoomReady = true;
+  // a small read-only hook for automated checks
+  window.tactileRoom = {
+    state: () => ({ on: probe.on, midi: probe.midi, curv: probe.curv, pv: probe.pv, mode: probe.mode, local: probe.local.toArray(),
+      audio: audio.ready ? { running: audio.running, tone: audio.toneGain.gain.value, water: audio.waterGain.gain.value, duck: audio.duckGain.gain.value } : null,
+      landmarks: landmarks.map((l) => loc(l.name)), version: VERSION, lang: LANG, landmarkAt: landmarks.map((l) => l.at), kb: { x: kb.x, y: kb.y }, faces: modelInfo.faces, analysis: analysisInfo, live: live.textContent,
+      textured: meshes.some((m) => { const mt = (m.userData.saved && m.userData.saved.material) || m.material; return !!(mt && mt.map && mt.map.image); }),
+      view: { yaw: view.yaw, pitch: view.pitch, dist: view.dist },
+      haptics: { phone: haptics.phone, pad: pad.index, user: haptics.user, strength: haptics.strength(), toggleShown: !$('vibe').hidden },
+      fit: (() => { const bx = new THREE.Box3(); meshes.forEach((m) => bx.expandByObject(m)); const sp = bx.getBoundingSphere(new THREE.Sphere()); return [+sp.center.length().toFixed(3), +sp.radius.toFixed(3)]; })(),
+      test: { running: test.running, rows: test.rows.length } }),
+    exportConfig, toCSV: () => test.toCSV(), project: (arr) => { const v = new THREE.Vector3().fromArray(arr); orient.localToWorld(v); v.project(camera); return [v.x, v.y]; },
+    setView: (yaw, pitch) => { view.yaw = view.tYaw = yaw; view.pitch = view.tPitch = pitch; view.lastInput = performance.now(); }
+  };
+}
+boot().catch((e) => { console.error(e); setMsg('Something went wrong while starting: ' + (e.message || e), true); });
+</script>
+
+</body>
+</html>

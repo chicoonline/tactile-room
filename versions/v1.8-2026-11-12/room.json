@@ -1,0 +1,102 @@
+{
+  "model": "../../assets/shell.glb",
+  "orientation": [
+    0,
+    0,
+    0
+  ],
+  "label": {
+    "name": {
+      "en": "Sea snail shell",
+      "pt": "Concha de caramujo marinho",
+      "de": "Gehäuse einer Meeresschnecke"
+    },
+    "scientific": "",
+    "place": "",
+    "year": "",
+    "size": {
+      "en": "About 7 cm long",
+      "pt": "Cerca de 7 cm de comprimento",
+      "de": "Etwa 7 cm lang"
+    },
+    "method": {
+      "en": "Photogrammetry: photographed and built by Chico Morais",
+      "pt": "Fotogrametria: fotografada e modelada por Chico Morais",
+      "de": "Photogrammetrie: fotografiert und erstellt von Chico Morais"
+    }
+  },
+  "description": {
+    "text": {
+      "en": "",
+      "pt": "",
+      "de": ""
+    },
+    "audio": {
+      "en": "",
+      "pt": "",
+      "de": ""
+    },
+    "lang": "en-GB",
+    "voice": "",
+    "rate": 1
+  },
+  "about": "",
+  "credits": {
+    "en": "Concept and scan: Chico Morais. Code written with AI assistance (Claude). 3D: three.js. Fonts: Syne, Inclusive Sans and Martian Mono (SIL Open Font License).",
+    "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA (Claude). 3D: three.js. Fontes: Syne, Inclusive Sans e Martian Mono (SIL Open Font License).",
+    "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben (Claude). 3D: three.js. Schriften: Syne, Inclusive Sans und Martian Mono (SIL Open Font License)."
+  },
+  "sound": {
+    "pitchFrom": "bulge",
+    "low": 48,
+    "high": 81,
+    "steps": true,
+    "texture": 0.55,
+    "toneVol": 0.7,
+    "texVol": 0.55,
+    "waterVol": 0,
+    "smoothing": 2,
+    "invert": false,
+    "vibration": 0.7
+  },
+  "landmarks": [
+    {
+      "name": {
+        "en": "Spiral tip",
+        "pt": "Ponta da espiral",
+        "de": "Spitze der Spirale"
+      },
+      "at": [
+        -0.0469,
+        0.1291,
+        0.6866
+      ]
+    },
+    {
+      "name": {
+        "en": "Back tip",
+        "pt": "Ponta de trás",
+        "de": "Hintere Spitze"
+      },
+      "at": [
+        -0.0523,
+        -0.2547,
+        -0.7103
+      ]
+    },
+    {
+      "name": {
+        "en": "Opening",
+        "pt": "Abertura",
+        "de": "Öffnung"
+      },
+      "at": [
+        0.0135,
+        0.0375,
+        -0.3468
+      ]
+    }
+  ],
+  "landmarkRadius": 0.12,
+  "strings": {}
+}

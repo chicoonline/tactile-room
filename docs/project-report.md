@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.7 (12 Nov 2026): your scanned shell, three landmarks, clearer spoken names.
+- Current version: 1.9 (12 Nov 2026): your scanned shell, three landmarks, vibration levels, and a feedback form for people you can't meet.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -84,6 +84,10 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | — | Framing: the Tactile Room makes objects explorable through sound and vibration; the shell is the first object, not the subject. No session length in the invitation | Chico | "Only a shell" diminishes it; the method can work for any object, and is what a master's or fellowship would develop |
 | 12 Nov | 1.8 | Intro about objects, the shell as the first; vibration Off \| Light \| Strong with a test buzz, Strong by default | Chico (framing; no vibration felt on an LG K9); Claude (cause and fix) | Short taps (5–15 ms) are likely below what older phones' motors can produce (INFERENCE; check on the K9) |
 | 12 Nov | — | Testers open the room for the first time during the session; the link only on request | Chico (question), Claude (recommendation) | First contact is data you only get once |
+| 12 Nov | — | Tester invitation: your own intro, how you know Oliver, "du" | Chico | Personal and informal fits how Oliver knows them |
+| 12 Nov | 1.9 | Feedback form at the end of the page (EN/PT/DE), answers to a Google Sheet; device details in the test log | Chico (in case no blind testers can meet before the deadline); Claude (build) | Remote people can try it and answer; the log shows the device without asking |
+| 12 Nov | 1.9 | First form question: "How do you describe yourself?" (blind, partially sighted, sighted, prefer not to say), not how much someone sees | Chico | "How much do you see" can feel offensive; self-description is optional and respectful |
+| 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, on Bürgergeld, no fee possible, results may support a fellowship or master's | Chico (who to ask; that they know you're an immigrant on Bürgergeld, doing it out of love); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 
 - Every version is kept in the package (`versions/`, CHANGELOG.md).
 
@@ -151,6 +155,19 @@ Working record of the whole process: research, decisions, versions, tests and id
 
 - Keep per session: your notes (what they did, what they said, and your interpretation kept separate), the saved test log, and audio transcribed locally (MacWhisper).
 - Data protection (INFERENCE, not legal advice): a disability is health data under GDPR. Get explicit consent, collect only what you need, store it locally, and name participants P1 and P2.
+- **Session guide in German** (12 Nov): projects/tactile-room-session-guide.md. Same nine questions as the online form, so the two can be compared.
+
+### 5.6 Online feedback (v1.9, 12 Nov)
+- A form at the end of the page, in the visitor's language. Nine short questions, all optional except the agreement; a second box (unticked) adds anonymous visit details: device, system, browser, minutes, how they explored, landmarks found, settings.
+- Answers go to a Google Sheet in your account through `docs/feedback-receiver.gs` (setup: build guide, "Feedback form"). The form stays hidden until room.json has the script's address.
+- What a page can't know (FACT): whether a screen reader is on, or how much someone sees. Those stay questions.
+- With few answers, quote people; don't turn two answers into percentages.
+
+### 5.7 Associations (12 Nov)
+- **ABSV**, Allgemeiner Blinden- und Sehbehindertenverein Berlin (Berlin's local association): Auerbachstraße 7, 14193 Berlin; 030 895 88-0; info@absv.de. Open Mon–Thu 9:30–12:30 and 13:00–15:00 (Wed until 17:00), Fri 9:30–12:30. Its site lists "Digitale Barrierefreiheit" as an area. Ask: visit a group, or forward the link.
+- **DBSV**, Deutscher Blinden- und Sehbehindertenverband (national federation, also in Berlin): Rungestraße 19, 10179 Berlin; 030 285387-0; info@dbsv.org. Ask: forward a call (newsletter or regional associations), or present it in person.
+- Evidence that associations pass study calls on (FACT): the Lower Saxony association's newsletter (#42/2026) shared a University of Zurich interview study, with a 25 CHF voucher as thanks. So payment is common; your email says openly that you can't pay.
+- Status: two Gmail drafts (12 Nov), not sent. Send after the form is live. A phone call to the ABSV gets a faster answer than an email (INFERENCE).
 
 ## 6. Ideas backlog (not built)
 - **Asking AI about the spot you touched** (yours, 10 Nov): "In this area I felt a rough texture the description didn't mention. Can you describe it?" The room knows the finger's spot, so it could send a close-up from the scan photos plus the question to a vision model. Mark the answer as AI and possibly wrong; a local model keeps it private. Supported by the 2026 finding that vibration gives shape but not material.
@@ -173,12 +190,13 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 11 Nov | Claude | v1.5: fonts, trackpad turning, touch-area cues, layout fixes | [to fill after you've tried it] | [to fill] |
 | 12 Nov | Google (AI search) | Identified the shell as a mutable conch, about 35–40 mm | Wrong size (your ruler: 7 cm); species very likely wrong (4 cm maximum; Indo-Pacific, not the Black Sea) | You checked WoRMS (name superseded); Claude checked size and range. Label keeps no species until iNaturalist |
 | 12 Nov | Claude | v1.6: removed the generated shell, set up your scan, placed two landmarks, Dark \| Light, device language | Didn't send a zip of 1.5 (its files went straight into your folder) | [to fill] |
+| 12 Nov | Claude | v1.7–1.9: clearer names, vibration levels, feedback form and receiver script; session guide; tester and association emails | [to fill after testing] | [to fill] |
 | [Sat] | [local model] | Draft shell description | [to fill] | [to fill] |
 
 ## 8. Open questions
 - Does silence off the shell make it harder to find the shell again?
 - Is the knock right, or should the landmark sound come from the real shell?
-- Which phones do the testers use?
+- Which phones do the testers use? (Since 1.9 the log and the form's visit box record it.)
 - Is the "gap" real after a proper literature search?
 - Are Spiral tip, Back tip and Opening where you'd put them? Other spots worth naming (the shoulder knobs)?
 - Which species is it? (iNaturalist.) Was it found on the Corbu–Midia beach, and may shells be taken there?

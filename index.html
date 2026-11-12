@@ -170,6 +170,33 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
 .about h2 { font-size: var(--s1); }
 .about .credits { color: var(--muted); font-size: var(--s-1); }
 
+/* v1.9 feedback form: large targets, labels on every field, no grids or sliders (hard with a screen reader) */
+a.btn { text-decoration: none; }
+.feedback { display: grid; gap: 12px; padding: 18px 20px; }
+.feedback > *, .feedback form > * { max-width: 70ch; }
+.feedback h2 { font-size: var(--s2); }
+.feedback > p { color: var(--muted); }
+.feedback form { display: grid; gap: 14px; }
+.fb-q { border: 0; border-top: 1px solid var(--hair); margin: 0; padding: 12px 0 0; display: grid; gap: 2px; min-width: 0; }
+.fb-q legend { font-family: var(--f-display); font-weight: 700; padding: 0; margin-bottom: 6px; float: left; width: 100%; } /* floated: the divider runs above it, not through it */
+.fb-q > label:not(.fb-text), .fb-check { display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
+.feedback input[type="radio"], .feedback input[type="checkbox"] { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--accent); }
+.fb-text { display: grid; gap: 8px; font-family: var(--f-display); font-weight: 700; }
+.fb-sub { font-family: var(--f-body); font-weight: 400; margin-top: 8px; }
+.feedback textarea, .feedback input[type="text"] { font: inherit; font-family: var(--f-body); font-weight: 400; width: 100%; min-height: 44px; padding: 10px 12px; color: var(--ink); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 10px; }
+.feedback textarea { min-height: 88px; resize: vertical; }
+.fb-check { align-items: flex-start; border-top: 1px solid var(--hair); padding-top: 12px; }
+.fb-check input { margin-top: 2px; }
+.fb-err { color: var(--warn); font-weight: 600; }
+.fb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.fb-privacy p { color: var(--muted); font-size: var(--s-1); }
+.fb-send { justify-self: start; }
+.fb-send[aria-disabled="true"] { opacity: 0.6; cursor: progress; }
+.fb-status:empty { display: none; }
+.fb-status { font-weight: 600; }
+.fb-status.ok { color: var(--accent); }
+.fb-status.bad { color: var(--warn); }
+
 @media (min-width: 600px) and (max-width: 1023px) { .stage { aspect-ratio: 4 / 3; max-height: 70svh; } }
 
 /* Wide screens: the stage fills the screen beside one floating control panel */
@@ -178,7 +205,7 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
   .bench { grid-template-columns: minmax(0, 1fr) 360px; }
   .stage { aspect-ratio: auto; height: calc(100svh - 300px); max-height: none; min-height: 460px; }
   /* v1.5: the panel grows with its content (no scroll box inside the page), and About lines up with the shell's column */
-  .about { margin-right: calc(360px + 16px); }
+  .about, .feedback { margin-right: calc(360px + 16px); }
   body.studio-open .page { margin-right: 380px; }
 }
 
@@ -288,6 +315,7 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
             <button type="button" id="vibe-strong" aria-pressed="true" data-i18n="vibeStrong">Strong</button>
           </div>
         </div>
+        <a class="btn" id="fb-link" href="#feedback" hidden><span data-i18n="fbLink">Tell me how it went</span><span class="state" aria-hidden="true">↓</span></a>
       </div>
       <div class="legend" id="legend" hidden>
         <span><i style="background: var(--ridge)"></i><span data-i18n="lgRidge">Ridge: brighter sound, clicks as you cross it</span></span>
@@ -330,6 +358,61 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
     <h2 id="about-h" data-i18n="about">About this room</h2>
     <div id="about-text"></div>
     <p class="credits" id="credits"></p>
+  </section>
+
+  <!-- v1.9: feedback. Shown only when room.json names an endpoint. Answers are stored as language-independent codes. -->
+  <section class="feedback glass" id="feedback" hidden aria-labelledby="fb-h">
+    <h2 id="fb-h" data-i18n="fbTitle">How was it?</h2>
+    <p data-i18n="fbIntro">About five minutes. Answer only what you want to; I don’t ask for your name.</p>
+    <form id="fb-form" novalidate>
+      <fieldset class="fb-q"><legend data-i18n="fbWho">How do you describe yourself?</legend>
+        <label><input type="radio" name="who" value="blind"> <span data-i18n="fbWhoBlind">Blind</span></label>
+        <label><input type="radio" name="who" value="partially-sighted"> <span data-i18n="fbWhoLow">Partially sighted</span></label>
+        <label><input type="radio" name="who" value="sighted"> <span data-i18n="fbWhoSighted">Sighted</span></label>
+        <label><input type="radio" name="who" value="prefer-not-to-say"> <span data-i18n="fbNoSay">Prefer not to say</span></label>
+      </fieldset>
+      <fieldset class="fb-q"><legend data-i18n="fbAids">Did you use a screen reader or magnification?</legend>
+        <label><input type="radio" name="aids" value="screen-reader"> <span data-i18n="fbAidsSR">Screen reader</span></label>
+        <label><input type="radio" name="aids" value="magnification"> <span data-i18n="fbAidsMag">Magnification</span></label>
+        <label><input type="radio" name="aids" value="both"> <span data-i18n="fbAidsBoth">Both</span></label>
+        <label><input type="radio" name="aids" value="neither"> <span data-i18n="fbAidsNone">Neither</span></label>
+        <label class="fb-text fb-sub"><span data-i18n="fbAidsWhich">Which one? (optional)</span><input type="text" name="aidsWhich" maxlength="200" autocomplete="off"></label>
+      </fieldset>
+      <label class="fb-q fb-text"><span data-i18n="fbNoticed">What did you notice first about the object?</span><textarea name="noticed" rows="3" maxlength="2000"></textarea></label>
+      <fieldset class="fb-q"><legend data-i18n="fbSounds">Did the sounds help you understand the shape?</legend>
+        <label><input type="radio" name="sounds" value="yes"> <span data-i18n="fbYes">Yes</span></label>
+        <label><input type="radio" name="sounds" value="partly"> <span data-i18n="fbPartly">Partly</span></label>
+        <label><input type="radio" name="sounds" value="no"> <span data-i18n="fbNo">No</span></label>
+        <label class="fb-text fb-sub"><span data-i18n="fbSoundsWhich">Which sounds confused you? (optional)</span><textarea name="soundsConfusing" rows="2" maxlength="2000"></textarea></label>
+      </fieldset>
+      <fieldset class="fb-q"><legend data-i18n="fbVibe">Did you feel the vibration?</legend>
+        <label><input type="radio" name="vibration" value="yes-helped"> <span data-i18n="fbVibeHelped">Yes, and it helped</span></label>
+        <label><input type="radio" name="vibration" value="yes-not-helpful"> <span data-i18n="fbVibeNotHelp">Yes, but it didn’t help</span></label>
+        <label><input type="radio" name="vibration" value="no"> <span data-i18n="fbNo">No</span></label>
+        <label><input type="radio" name="vibration" value="device-cannot"> <span data-i18n="fbVibeCant">My device doesn’t vibrate (an iPhone, for example)</span></label>
+        <label><input type="radio" name="vibration" value="turned-off"> <span data-i18n="fbVibeOff">I turned it off</span></label>
+      </fieldset>
+      <fieldset class="fb-q"><legend data-i18n="fbHints">Were the spoken hints clear?</legend>
+        <label><input type="radio" name="hints" value="yes"> <span data-i18n="fbYes">Yes</span></label>
+        <label><input type="radio" name="hints" value="partly"> <span data-i18n="fbPartly">Partly</span></label>
+        <label><input type="radio" name="hints" value="no"> <span data-i18n="fbNo">No</span></label>
+        <label><input type="radio" name="hints" value="none-heard"> <span data-i18n="fbHintsNone">I didn’t hear any</span></label>
+      </fieldset>
+      <label class="fb-q fb-text"><span data-i18n="fbChange">What should I change first?</span><textarea name="change" rows="3" maxlength="2000"></textarea></label>
+      <label class="fb-q fb-text"><span data-i18n="fbObjects">Which other objects would you like to explore this way?</span><textarea name="objects" rows="3" maxlength="2000"></textarea></label>
+      <fieldset class="fb-q"><legend data-i18n="fbQuote">May I quote your answers, without your name?</legend>
+        <label><input type="radio" name="quote" value="yes"> <span data-i18n="fbYes">Yes</span></label>
+        <label><input type="radio" name="quote" value="no"> <span data-i18n="fbNo">No</span></label>
+      </fieldset>
+      <label class="fb-q fb-text"><span data-i18n="fbContact">If you’d like to try the next version or talk with me: your email or phone number (optional)</span><input type="text" name="contact" maxlength="200" autocomplete="off"></label>
+      <div class="fb-hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <label class="fb-check"><input type="checkbox" id="fb-visit" name="visit"> <span data-i18n="fbVisit">Also send anonymous details about this visit.</span></label>
+      <label class="fb-check"><input type="checkbox" id="fb-consent" name="consent" aria-describedby="fb-consent-err"> <span data-i18n="fbConsent">I agree that my answers are stored.</span></label>
+      <p class="fb-err" id="fb-consent-err" hidden data-i18n="fbConsentErr">Please tick this box to send your answers.</p>
+      <details class="fb-privacy"><summary data-i18n="fbPrivacy">How your answers are stored</summary><p id="fb-privacy-text"></p></details>
+      <button class="btn primary fb-send" type="submit"><span data-i18n="fbSend">Send</span></button>
+      <p class="fb-status" id="fb-status" role="status"></p>
+    </form>
   </section>
 </div>
 
@@ -439,8 +522,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong
-const VERSION = '1.8';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log
+const VERSION = '1.9';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -453,7 +536,9 @@ const DEFAULTS = {
   landmarks: [],            // points visitors can find, set in room.json or the studio
   landmarkRadius: 0.12,
   lang: 'en-GB',
-  strings: {}
+  strings: {},
+  // v1.9: where the feedback form sends answers (a Google Apps Script web app). No endpoint = no form.
+  feedback: { endpoint: '', contact: '' }
 };
 function shown() {
   return { label: cfg.label, description: loc(cfg.description.text), about: loc(cfg.about), credits: loc(cfg.credits) };
@@ -522,7 +607,50 @@ const UI = {
     vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Off', vibeLight: 'Light', vibeStrong: 'Strong',
     kPadDo: 'Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle',
     vibeNote: 'The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.',
-    padOn: 'Gamepad connected. The left stick explores, the right stick turns the shell, A describes the spot. If you hear nothing, press any key or tap the screen once.'
+    padOn: 'Gamepad connected. The left stick explores, the right stick turns the shell, A describes the spot. If you hear nothing, press any key or tap the screen once.',
+    // v1.9 feedback form
+    fbLink: "Tell me how it went",
+    fbTitle: "How was it?",
+    fbIntro: "About five minutes. Answer only what you want to; I don’t ask for your name. Your answers help me make the Tactile Room work for blind and partially sighted people.",
+    fbWho: "How do you describe yourself?",
+    fbWhoBlind: "Blind",
+    fbWhoLow: "Partially sighted",
+    fbWhoSighted: "Sighted",
+    fbNoSay: "Prefer not to say",
+    fbAids: "Did you use a screen reader or magnification?",
+    fbAidsSR: "Screen reader",
+    fbAidsMag: "Magnification",
+    fbAidsBoth: "Both",
+    fbAidsNone: "Neither",
+    fbAidsWhich: "Which one? (optional)",
+    fbNoticed: "What did you notice first about the object?",
+    fbSounds: "Did the sounds help you understand the shape?",
+    fbYes: "Yes",
+    fbPartly: "Partly",
+    fbNo: "No",
+    fbSoundsWhich: "Which sounds confused you? (optional)",
+    fbVibe: "Did you feel the vibration?",
+    fbVibeHelped: "Yes, and it helped",
+    fbVibeNotHelp: "Yes, but it didn’t help",
+    fbVibeCant: "My device doesn’t vibrate (an iPhone, for example)",
+    fbVibeOff: "I turned it off",
+    fbHints: "Were the spoken hints clear?",
+    fbHintsNone: "I didn’t hear any",
+    fbChange: "What should I change first?",
+    fbObjects: "Which other objects would you like to explore this way?",
+    fbQuote: "May I quote your answers, without your name?",
+    fbContact: "If you’d like to try the next version or talk with me: your email or phone number (optional)",
+    fbVisit: "Also send anonymous details about this visit: device and browser, how long you stayed, how you explored and which places you found.",
+    fbConsent: "I agree that Chico Morais stores and uses my answers to improve the Tactile Room and to write about it.",
+    fbConsentErr: "Please tick this box to send your answers.",
+    fbEmpty: "Please answer at least one question.",
+    fbPrivacy: "How your answers are stored",
+    fbPrivacyText: "Your answers go to a spreadsheet in Chico Morais’s Google account, which Google stores on its servers. The Tactile Room doesn’t ask for your name and doesn’t save your IP address. Details about your visit are only sent if you tick that box. I keep the answers while I work on the Tactile Room. Because they are anonymous, I can only find yours if you left a contact.",
+    fbPrivacyContact: "To see or delete your answers, write to {c}.",
+    fbSend: "Send",
+    fbSending: "Sending…",
+    fbThanks: "Thank you! Your answers were sent.",
+    fbFailed: "Sending didn’t work. Please check your connection and try again."
   },
   pt: {
     title: 'Sala Tátil',
@@ -549,7 +677,50 @@ const UI = {
     vibe: 'Vibração', kPad: 'Controle de videogame', vibeOff: 'Desligada', vibeLight: 'Leve', vibeStrong: 'Forte',
     kPadDo: 'O analógico esquerdo move a ponta do dedo (segure o gatilho esquerdo para passos menores), o direito gira a concha, A ou ✕ descreve o ponto, B ou ○ toca a descrição, Y ou △ volta ao centro',
     vibeNote: 'A concha vibra sob o dedo em celulares Android e com um controle de videogame. Escolha Forte se não sentir nada; celulares mais antigos precisam de pulsos mais longos. iPhones não vibram a partir de uma página da web.',
-    padOn: 'Controle conectado. O analógico esquerdo explora, o direito gira a concha, A descreve o ponto. Se não ouvir nada, aperte qualquer tecla ou toque a tela uma vez.'
+    padOn: 'Controle conectado. O analógico esquerdo explora, o direito gira a concha, A descreve o ponto. Se não ouvir nada, aperte qualquer tecla ou toque a tela uma vez.',
+    // v1.9 feedback form
+    fbLink: "Conte como foi",
+    fbTitle: "Como foi?",
+    fbIntro: "Cerca de cinco minutos. Responda só o que quiser; não peço seu nome. Suas respostas me ajudam a fazer a Sala Tátil funcionar para pessoas cegas e com baixa visão.",
+    fbWho: "Como você se descreve?",
+    fbWhoBlind: "Pessoa cega",
+    fbWhoLow: "Pessoa com baixa visão",
+    fbWhoSighted: "Pessoa que enxerga",
+    fbNoSay: "Prefiro não dizer",
+    fbAids: "Você usou leitor de tela ou ampliação?",
+    fbAidsSR: "Leitor de tela",
+    fbAidsMag: "Ampliação",
+    fbAidsBoth: "Os dois",
+    fbAidsNone: "Nenhum",
+    fbAidsWhich: "Qual? (opcional)",
+    fbNoticed: "O que você notou primeiro no objeto?",
+    fbSounds: "Os sons ajudaram você a entender a forma?",
+    fbYes: "Sim",
+    fbPartly: "Em parte",
+    fbNo: "Não",
+    fbSoundsWhich: "Quais sons confundiram você? (opcional)",
+    fbVibe: "Você sentiu a vibração?",
+    fbVibeHelped: "Sim, e ajudou",
+    fbVibeNotHelp: "Sim, mas não ajudou",
+    fbVibeCant: "Meu aparelho não vibra (um iPhone, por exemplo)",
+    fbVibeOff: "Eu desliguei",
+    fbHints: "As dicas faladas foram claras?",
+    fbHintsNone: "Não ouvi nenhuma",
+    fbChange: "O que eu deveria mudar primeiro?",
+    fbObjects: "Que outros objetos você gostaria de explorar assim?",
+    fbQuote: "Posso citar suas respostas, sem o seu nome?",
+    fbContact: "Se quiser testar a próxima versão ou conversar comigo: seu e-mail ou telefone (opcional)",
+    fbVisit: "Enviar também dados anônimos sobre esta visita: aparelho e navegador, quanto tempo você ficou, como explorou e quais pontos encontrou.",
+    fbConsent: "Concordo que Chico Morais guarde e use minhas respostas para melhorar a Sala Tátil e escrever sobre ela.",
+    fbConsentErr: "Marque esta caixa para enviar suas respostas.",
+    fbEmpty: "Responda pelo menos uma pergunta.",
+    fbPrivacy: "Como suas respostas são guardadas",
+    fbPrivacyText: "Suas respostas vão para uma planilha na conta Google de Chico Morais, que o Google guarda em seus servidores. A Sala Tátil não pede seu nome nem guarda seu endereço IP. Os dados sobre sua visita só são enviados se você marcar essa caixa. Guardo as respostas enquanto trabalho na Sala Tátil. Como são anônimas, só consigo encontrar as suas se você deixou um contato.",
+    fbPrivacyContact: "Para ver ou apagar suas respostas, escreva para {c}.",
+    fbSend: "Enviar",
+    fbSending: "Enviando…",
+    fbThanks: "Obrigado! Suas respostas foram enviadas.",
+    fbFailed: "O envio não funcionou. Verifique sua conexão e tente de novo."
   },
   de: {
     title: 'Tastraum',
@@ -576,7 +747,50 @@ const UI = {
     vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Aus', vibeLight: 'Leicht', vibeStrong: 'Stark',
     kPadDo: 'Linker Stick bewegt die Fingerspitze (linken Trigger halten für kleine Schritte), rechter Stick dreht die Muschel, A oder ✕ beschreibt die Stelle, B oder ○ spielt die Beschreibung ab, Y oder △ führt zurück zur Mitte',
     vibeNote: 'Die Muschel vibriert unter dem Finger auf Android-Handys und mit einem Gamepad. Wenn nichts zu spüren ist, „Stark“ wählen: Ältere Handys brauchen längere Impulse. iPhones können auf einer Webseite nicht vibrieren.',
-    padOn: 'Gamepad verbunden. Der linke Stick erkundet, der rechte dreht die Muschel, A beschreibt die Stelle. Falls nichts zu hören ist, einmal eine Taste drücken oder auf den Bildschirm tippen.'
+    padOn: 'Gamepad verbunden. Der linke Stick erkundet, der rechte dreht die Muschel, A beschreibt die Stelle. Falls nichts zu hören ist, einmal eine Taste drücken oder auf den Bildschirm tippen.',
+    // v1.9 feedback form
+    fbLink: "Rückmeldung geben",
+    fbTitle: "Wie war es?",
+    fbIntro: "Etwa fünf Minuten. Beantworten Sie nur, was Sie möchten; nach Ihrem Namen frage ich nicht. Ihre Antworten helfen mir, den Tastraum so zu gestalten, dass er für blinde und sehbehinderte Menschen funktioniert.",
+    fbWho: "Wie beschreiben Sie sich?",
+    fbWhoBlind: "Blind",
+    fbWhoLow: "Sehbehindert",
+    fbWhoSighted: "Sehend",
+    fbNoSay: "Möchte ich nicht sagen",
+    fbAids: "Haben Sie einen Screenreader oder eine Vergrößerung benutzt?",
+    fbAidsSR: "Screenreader",
+    fbAidsMag: "Vergrößerung",
+    fbAidsBoth: "Beides",
+    fbAidsNone: "Nichts davon",
+    fbAidsWhich: "Welches Programm? (freiwillig)",
+    fbNoticed: "Was ist Ihnen an dem Gegenstand zuerst aufgefallen?",
+    fbSounds: "Haben die Klänge geholfen, die Form zu verstehen?",
+    fbYes: "Ja",
+    fbPartly: "Teilweise",
+    fbNo: "Nein",
+    fbSoundsWhich: "Welche Klänge waren verwirrend? (freiwillig)",
+    fbVibe: "Haben Sie die Vibration gespürt?",
+    fbVibeHelped: "Ja, und sie hat geholfen",
+    fbVibeNotHelp: "Ja, aber sie hat nicht geholfen",
+    fbVibeCant: "Mein Gerät vibriert nicht (zum Beispiel ein iPhone)",
+    fbVibeOff: "Ich habe sie ausgeschaltet",
+    fbHints: "Waren die gesprochenen Hinweise verständlich?",
+    fbHintsNone: "Ich habe keine gehört",
+    fbChange: "Was sollte ich als Erstes ändern?",
+    fbObjects: "Welche anderen Gegenstände würden Sie gern so erkunden?",
+    fbQuote: "Darf ich Ihre Antworten ohne Ihren Namen zitieren?",
+    fbContact: "Falls Sie die nächste Version ausprobieren oder mit mir sprechen möchten: Ihre E-Mail-Adresse oder Telefonnummer (freiwillig)",
+    fbVisit: "Auch anonyme Angaben zu diesem Besuch mitschicken: Gerät und Browser, wie lange Sie hier waren, wie Sie erkundet haben und welche Stellen Sie gefunden haben.",
+    fbConsent: "Ich bin einverstanden, dass Chico Morais meine Antworten speichert und nutzt, um den Tastraum zu verbessern und darüber zu berichten.",
+    fbConsentErr: "Bitte setzen Sie hier ein Häkchen, um Ihre Antworten zu senden.",
+    fbEmpty: "Bitte beantworten Sie mindestens eine Frage.",
+    fbPrivacy: "Wie Ihre Antworten gespeichert werden",
+    fbPrivacyText: "Ihre Antworten landen in einer Tabelle im Google-Konto von Chico Morais; Google speichert sie auf seinen Servern. Der Tastraum fragt nicht nach Ihrem Namen und speichert Ihre IP-Adresse nicht. Angaben zu Ihrem Besuch werden nur gesendet, wenn Sie das Kästchen dafür ankreuzen. Ich bewahre die Antworten auf, solange ich am Tastraum arbeite. Da sie anonym sind, kann ich Ihre nur finden, wenn Sie einen Kontakt angegeben haben.",
+    fbPrivacyContact: "Um Ihre Antworten einzusehen oder löschen zu lassen, schreiben Sie an {c}.",
+    fbSend: "Senden",
+    fbSending: "Wird gesendet…",
+    fbThanks: "Vielen Dank! Ihre Antworten wurden gesendet.",
+    fbFailed: "Das Senden hat nicht geklappt. Bitte prüfen Sie die Verbindung und versuchen Sie es noch einmal."
   }
 };
 const SPEECH_LANG = { en: 'en-GB', pt: 'pt-BR', de: 'de-DE' };
@@ -1301,6 +1515,7 @@ function checkLandmarks() {
     if (d < r && !probe.insideLm.has(i)) {
       probe.insideLm.add(i); audio.knock(); haptics.event('landmark');
       speech.say(loc(lm.name), { force: true, slow: true }); logEvent('landmark:' + loc(lm.name), probe.mode);
+      visit.landmarks.add((lm.name && lm.name.en) || loc(lm.name));
     } else if (d > r * 1.35 && probe.insideLm.has(i)) probe.insideLm.delete(i);
   });
 }
@@ -1497,13 +1712,14 @@ stage.addEventListener('pointerdown', (e) => {
   const wantsRotate = e.pointerType === 'mouse' && (e.button === 2 || e.shiftKey || e.button === 1);
   if (pointers.size >= 2 || wantsRotate) {
     exploringId = null; pendingScreen = null;
-    rotating = { x: e.clientX, y: e.clientY, d: pinchDist() };
+    rotating = { x: e.clientX, y: e.clientY, d: pinchDist() }; noteTurn();
   } else if (e.button === 0 || e.pointerType !== 'mouse') {
     exploringId = e.pointerId; pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; kb.active = false;
     area.firstSample = true; area.out = false; area.touch = e.pointerType !== 'mouse';
     stage.classList.add('touching');
     logEvent('touch-start', 'pointer');
   }
+  visit.inputs.add(e.pointerType || 'pointer');
 });
 // v1.5: the touch area. Touching it but not the shell pings; sliding off it ticks. The first touch explains why the page doesn't scroll.
 const area = { firstSample: false, out: false, touch: false, explained: false };
@@ -1532,6 +1748,7 @@ stage.addEventListener('pointermove', (e) => {
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   view.lastInput = performance.now();
   if (rotating) {
+    noteTurn();
     if (pointers.size >= 2) {
       const ps = [...pointers.values()];
       const mx = (ps[0].x + ps[1].x) / 2, my = (ps[0].y + ps[1].y) / 2;
@@ -1567,6 +1784,7 @@ stage.addEventListener('wheel', (e) => {
   const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
   const dx = clamp(e.deltaX * unit, -120, 120), dy = clamp(e.deltaY * unit, -120, 120);
   if (e.ctrlKey) { view.tDist = clamp(view.tDist * Math.exp(dy * 0.01), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; return; }
+  noteTurn(); visit.inputs.add('trackpad or wheel');
   view.tYaw += dx * 0.005;
   view.tPitch = clamp(view.tPitch - dy * 0.003, -1.2, 1.2);
 }, { passive: false });
@@ -1783,7 +2001,7 @@ for (const l of ['off', 'light', 'strong']) {
     try { localStorage.setItem(VIBE_KEY, l); } catch (e) {}
     // a test buzz right away, so you know at once whether this phone vibrates
     if (l === 'off') haptics.stop(); else { haptics.buzz(l === 'strong' ? 160 : 60); haptics.rumble(0.6, 0.4, l === 'strong' ? 160 : 60); }
-    updateVibeToggle();
+    updateVibeToggle(); logEvent('vibration', '', l);
   });
 }
 
@@ -1819,6 +2037,7 @@ function renderText() {
   $('map-state').textContent = soundMap.on ? U('on') : U('off');
   $('hints-state').textContent = speech.hints ? U('on') : U('off');
   updateVibeToggle();
+  renderFeedback();
   updateSoundChip();
   if (!descPlaying) $('describe-label').textContent = T.describe;
 }
@@ -1974,6 +2193,81 @@ async function loadFile(file) {
   } catch (e) { console.warn(e); setMsg(explainLoadError(e), true); }
 }
 
+/* ------------------------------------------------------------------ */
+/* v1.9: this visit, the device, and the feedback form                 */
+/* ------------------------------------------------------------------ */
+// A summary of this visit, kept in memory only. It leaves the page only if the visitor sends the form and ticks that box.
+const visit = { t0: performance.now(), inputs: new Set(), entries: 0, landmarks: new Set(), turns: 0, spots: 0, description: false, lastTurn: 0 };
+function noteTurn() { const n = performance.now(); if (n - visit.lastTurn > 1500) visit.turns++; visit.lastTurn = n; }
+function noteVisit(ev, input) {
+  if (input && input !== 'pointer') visit.inputs.add(input === 'keys' ? 'keyboard' : input === 'pad' ? 'gamepad' : input);
+  if (ev === 'enter-shell') visit.entries++;
+  else if (ev === 'turn') noteTurn();
+  else if (ev === 'spot-description') visit.spots++;
+  else if (ev === 'description') visit.description = true;
+}
+// What the browser says about the device. It can't tell whether a screen reader is on: browsers keep that private.
+function deviceInfo() {
+  const ua = navigator.userAgent || '', tp = navigator.maxTouchPoints || 0;
+  const iPadDesk = /Macintosh/.test(ua) && tp > 1;
+  const os = /Android/.test(ua) ? 'Android' : /iPhone|iPod/.test(ua) ? 'iOS' : (/iPad/.test(ua) || iPadDesk) ? 'iPadOS'
+    : /CrOS/.test(ua) ? 'ChromeOS' : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'other';
+  const device = (/iPad/.test(ua) || iPadDesk || (/Android/.test(ua) && !/Mobile/.test(ua))) ? 'tablet' : /Mobi|iPhone|iPod/.test(ua) ? 'phone' : 'computer';
+  const m = (re) => { const r = re.exec(ua); return r ? ' ' + r[1] : ''; };
+  const browser = /SamsungBrowser\//.test(ua) ? 'Samsung Internet' + m(/SamsungBrowser\/(\d+)/)
+    : /Edg(?:A|iOS)?\//.test(ua) ? 'Edge' + m(/Edg(?:A|iOS)?\/(\d+)/)
+    : /OPR\//.test(ua) ? 'Opera' + m(/OPR\/(\d+)/)
+    : /Firefox\/|FxiOS\//.test(ua) ? 'Firefox' + m(/(?:Firefox|FxiOS)\/(\d+)/)
+    : /CriOS\/|Chrome\//.test(ua) ? 'Chrome' + m(/(?:CriOS|Chrome)\/(\d+)/)
+    : (/Safari\//.test(ua) && /Version\//.test(ua)) ? 'Safari' + m(/Version\/(\d+)/) : 'other';
+  const mq = (q) => { try { return matchMedia(q).matches; } catch (e) { return false; } };
+  return {
+    device, os, browser, inApp: /; wv\)|FBAN|FBAV|Instagram|WhatsApp/.test(ua),
+    screen: `${screen.width}x${screen.height}`, touch: tp > 0,
+    canVibrate: typeof navigator.vibrate === 'function', vibration: haptics.level,
+    look: document.documentElement.dataset.look === 'light' ? 'light' : 'dark',
+    reducedMotion: mq('(prefers-reduced-motion: reduce)'), moreContrast: mq('(prefers-contrast: more)'), forcedColors: mq('(forced-colors: active)'),
+    language: LANG, deviceLanguage: navigator.language || ''
+  };
+}
+function deviceLine() { return Object.entries(deviceInfo()).map(([k, v]) => k + '=' + v).join('; '); }
+function visitSummary() {
+  return { ...deviceInfo(), minutes: +((performance.now() - visit.t0) / 60000).toFixed(1), inputs: [...visit.inputs].join(', '),
+    shellEntries: visit.entries, landmarks: [...visit.landmarks].join('; '), turns: visit.turns, spots: visit.spots, description: visit.description };
+}
+
+const FB_FIELDS = ['who', 'aids', 'aidsWhich', 'noticed', 'sounds', 'soundsConfusing', 'vibration', 'hints', 'change', 'objects', 'quote', 'contact'];
+function feedbackEndpoint() { const e = String((cfg.feedback && cfg.feedback.endpoint) || '').trim(); return /^https:\/\/\S+$/.test(e) ? e : ''; }
+function renderFeedback() {
+  const on = !!feedbackEndpoint();
+  $('feedback').hidden = !on; $('fb-link').hidden = !on;
+  const c = String((cfg.feedback && cfg.feedback.contact) || '').trim();
+  $('fb-privacy-text').textContent = U('fbPrivacyText') + (c ? ' ' + U('fbPrivacyContact').replace('{c}', c) : '');
+}
+let fbSending = false;
+$('fb-consent').addEventListener('change', (e) => { if (e.target.checked) { $('fb-consent-err').hidden = true; e.target.removeAttribute('aria-invalid'); } });
+$('fb-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (fbSending || !feedbackEndpoint()) return;
+  const form = e.currentTarget, data = new FormData(form), status = $('fb-status'), consent = $('fb-consent'), send = form.querySelector('.fb-send');
+  status.className = 'fb-status'; status.textContent = '';
+  const answers = {};
+  for (const k of FB_FIELDS) { const v = String(data.get(k) || '').trim(); if (v) answers[k] = v.slice(0, 2000); }
+  if (!Object.keys(answers).length) { status.classList.add('bad'); status.textContent = U('fbEmpty'); return; }
+  if (!consent.checked) { $('fb-consent-err').hidden = false; consent.setAttribute('aria-invalid', 'true'); consent.focus(); return; }
+  const body = { version: VERSION, lang: LANG, ...answers, website: String(data.get('website') || '') };
+  if ($('fb-visit').checked) body.visit = visitSummary();
+  fbSending = true; send.setAttribute('aria-disabled', 'true'); status.textContent = U('fbSending');
+  const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 15000);
+  try {
+    // Google's script answers from another address, so the reply can't be read here ("no-cors"); a network error still shows
+    await fetch(feedbackEndpoint(), { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctl.signal });
+    form.reset(); status.classList.add('ok'); status.textContent = U('fbThanks');
+  } catch (er) {
+    status.classList.add('bad'); status.textContent = U('fbFailed');
+  } finally { clearTimeout(timer); fbSending = false; send.removeAttribute('aria-disabled'); }
+});
+
 /* test session log */
 const LOG_KEY = 'tactile-room-test-logs';
 const test = {
@@ -2011,6 +2305,7 @@ function renderSavedLogs() {
   el.textContent = `Saved in this browser: ${all.length} test${all.length > 1 ? 's' : ''}. Latest: ${when}, ${last.rows.length} events. Copy them before you clear this browser's data.`;
 }
 function logEvent(ev, input, detail) {
+  noteVisit(ev, input);
   if (!test.running) return;
   if (ev === 'key-step' && test.rows.length && test.rows[test.rows.length - 1].ev === 'key-step' && performance.now() - test.lastStep < 250) return;
   if (ev === 'key-step') test.lastStep = performance.now();
@@ -2023,6 +2318,7 @@ function startTest() {
   test.running = true; test.t0 = performance.now(); test.rows = []; test.foundAt = null;
   test.id = Date.now().toString(36); test.started = new Date().toISOString();
   logEvent('start', '', 'Tactile Room v' + VERSION + ' · ' + new Date().toISOString());
+  logEvent('device', '', deviceLine());
   $('t-start').textContent = 'End test'; $('t-found').disabled = false; $('t-addnote').disabled = false; $('t-copy').disabled = false;
   stage.focus({ preventScroll: true, focusVisible: false });
 }

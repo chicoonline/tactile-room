@@ -98,5 +98,9 @@
     }
   ],
   "landmarkRadius": 0.12,
-  "strings": {}
+  "strings": {},
+  "feedback": {
+    "endpoint": "",
+    "contact": ""
+  }
 }

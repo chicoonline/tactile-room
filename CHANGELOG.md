@@ -2,10 +2,21 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
-## Unreleased
+## 1.5 · 11 Nov 2026
 - Published on GitHub Pages at https://tactileroom.chicomorais.com (11 Nov).
 - Studio note no longer says "Only you see this": anyone who adds `#studio` to the address can open it, but changes made there stay in their own browser.
 - New `docs/` folder for the project report, so the record lives with the code. `.DS_Store` removed and ignored.
+- Fonts (Chico, 11 Nov: the old ones looked like generic AI-made pages): Syne for headings and buttons (made for Synesthésies, an art centre in Paris); Inclusive Sans for reading text (designed for accessibility); Martian Mono, narrowed, for notes, numbers and labels. They are kept in `fonts/` on this site, so visitors' browsers never contact Google (in Germany, loading Google Fonts from Google's servers was ruled a GDPR breach: LG München, 2022). All three are under the SIL Open Font License; the licences are in `fonts/`.
+- Turning (Chico, 11 Nov): over the shell's area, a two-finger swipe on a trackpad turns it (sideways) and tilts it (up and down); the mouse wheel does the same. Pinch on a trackpad, or Ctrl + wheel, zooms. Safari's own trackpad pinch and twist work too. Elsewhere on the page, scrolling works as before.
+- The touch area (Chico, 11 Nov: the page doesn't scroll while a finger is on the shell's area, which could confuse blind visitors):
+  - touching the area but not the shell: one soft sonar ping and a short vibration;
+  - the first touch explains, spoken: "Touch area. The shell is to the left. To scroll the page, swipe outside this area." (in EN, PT and DE);
+  - sliding off the area: two low ticks, a double vibration and "Edge of the touch area.";
+  - for sighted visitors, the area's edge lights up while it is touched;
+  - the help text under the shell says how to turn, zoom and scroll.
+- Layout: "About this room" now lines up with the shell's column; the control panel grows with its content instead of scrolling inside the page; the sound chip and the stand-in label no longer wrap on phones.
+- Tests: new v1.5 suite (fonts, trackpad, touch area, translations). 24 + 62 + 28 + 17 automated checks pass; axe finds no problems in either look, on desktop, tablet and phone, or in the studio.
+- 1.4 saved in `versions/v1.4-2026-11-11/`.
 
 ## 1.4 · 11 Nov 2026
 - New look, "deep-sea sonar studio" (Chico's direction, 11 Nov): dark background (#050B14) with faint sonar rings; the shell sits in an open, borderless stage with a still cyan-and-coral halo and a faint cyan pool of light under it; controls in one floating glass panel beside the shell (below it on phones); the sound trace glows. Headings in Space Grotesk, numbers and labels in JetBrains Mono.

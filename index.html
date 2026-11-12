@@ -6,11 +6,10 @@
 <title>Tactile Room</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Hear the shape of a shell: a 3D scan you explore by touch and sound, with or without looking.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<!-- fonts: kept on this site (fonts/), see fonts/fonts.css -->
+<link rel="preload" href="fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inclusive-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 /* v1.4 · "Deep-sea sonar studio" (Chico's direction, 11 Nov 2026).
    Dark by default, with a visible light option. The shell sits in an open, borderless stage with sonar rings;
@@ -38,9 +37,11 @@
   --scene: #050B14;
   --shadow: #000000;
   --focus: #00F2FE;
-  --f-display: "Space Grotesk", "Atkinson Hyperlegible Next", system-ui, sans-serif;
-  --f-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* v1.5 type: Syne (made for Synesthésies, an art centre in Paris) for headings and buttons;
+     Inclusive Sans (designed for accessibility) for reading; Martian Mono for notes, numbers and labels */
+  --f-display: "Syne", "Inclusive Sans", system-ui, sans-serif;
+  --f-body: "Inclusive Sans", "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "Martian Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --s-1: 0.8125rem; --s0: 1rem; --s1: 1.1875rem; --s2: 1.5rem; --s3: 2.25rem;
   --r: 16px;
   color-scheme: dark;
@@ -64,8 +65,8 @@ body { color: var(--ink); font-family: var(--f-body); font-size: var(--s0); line
   padding-block: 18px 40px;
   display: grid; gap: 16px;
 }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15; letter-spacing: -0.01em; }
-h1 { font-size: var(--s3); color: var(--accent); text-shadow: 0 0 24px var(--glow); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; line-height: 1.1; letter-spacing: -0.015em; }
+h1 { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); font-weight: 800; color: var(--accent); text-shadow: 0 0 24px var(--glow); }
 h2 { font-size: var(--s2); }
 p { margin: 0; }
 a { color: var(--accent); text-underline-offset: 3px; }
@@ -73,6 +74,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* Martian Mono is wide: a narrower cut for the small labels and readouts */
+.label, .mono, .lang button, .pill-btn, .badge, .trace output, .btn .state, .specimen dt, kbd, .studio h3, .studio .row output, .studio pre { font-stretch: 87.5%; }
 
 /* glass panels */
 .glass { background: var(--panel); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--hair); border-radius: var(--r); }
@@ -85,7 +88,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
 .pill-btn { font: inherit; font-family: var(--f-mono); font-size: var(--s-1); min-height: 44px; padding: 4px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); cursor: pointer; }
 .pill-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
-.sound-chip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: var(--s-1); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: var(--panel); }
+.sound-chip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-body); font-size: var(--s-1); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: var(--panel); }
 .sound-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
 .sound-chip.on { color: var(--ink); }
 .sound-chip.on .dot { background: var(--accent); box-shadow: 0 0 10px var(--glow); }
@@ -113,6 +116,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
   opacity: 0.55; filter: drop-shadow(0 0 10px var(--glow));
 }
 .stage:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* v1.5: the touch area lights up while a finger is on it, so sighted people see why the page doesn't scroll */
+.stage.touching { box-shadow: inset 0 0 0 2px var(--accent), 0 0 28px var(--glow); }
 .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .stage #fx { pointer-events: none; }
 .stage-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); font-size: var(--s1); pointer-events: none; }
@@ -135,7 +140,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 /* the side panel: one glass panel, sections divided by hairlines, no boxes inside */
 .side { display: grid; gap: 16px; min-width: 0; padding: 16px; }
 .actions { display: grid; gap: 8px; }
-.btn { font: inherit; font-size: var(--s0); min-height: 44px; padding: 8px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btn { font: inherit; font-family: var(--f-display); font-weight: 600; font-size: var(--s0); min-height: 44px; padding: 8px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; box-shadow: 0 0 18px var(--glow); }
 .btn .state { font-family: var(--f-mono); font-size: var(--s-1); opacity: 0.9; }
@@ -155,12 +160,14 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .specimen .rule { display: none; }
 
 details { border-top: 1px solid var(--hair); padding-top: 12px; }
-summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; }
+summary { cursor: pointer; font-family: var(--f-display); font-weight: 700; min-height: 44px; display: flex; align-items: center; }
 details p { margin-top: 8px; max-width: 65ch; }
 .keys dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 8px 0 0; font-size: var(--s-1); }
 kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel-solid); color: var(--ink); white-space: nowrap; }
 
-.about { display: grid; gap: 10px; max-width: 70ch; padding: 18px 20px; }
+.about { display: grid; gap: 10px; padding: 18px 20px; }
+.about > * { max-width: 70ch; }
+@media (max-width: 599px) { .badge { font-stretch: 75%; } }
 .about h2 { font-size: var(--s1); }
 .about .credits { color: var(--muted); font-size: var(--s-1); }
 
@@ -171,7 +178,8 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
   .page { padding-inline: max(24px, env(safe-area-inset-left, 0px)); }
   .bench { grid-template-columns: minmax(0, 1fr) 360px; }
   .stage { aspect-ratio: auto; height: calc(100svh - 300px); max-height: none; min-height: 460px; }
-  .side { position: sticky; top: 16px; max-height: calc(100svh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+  /* v1.5: the panel grows with its content (no scroll box inside the page), and About lines up with the shell's column */
+  .about { margin-right: calc(360px + 16px); }
   body.studio-open .page { margin-right: 380px; }
 }
 
@@ -258,7 +266,7 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
         </div>
         <div class="curtain" id="curtain" hidden><p>Screen hidden for the test</p></div>
       </div>
-      <p id="stage-help" class="hint" data-i18n="help">Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers, or right-drag with a mouse, turns it.</p>
+      <p id="stage-help" class="hint" data-i18n="help">Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn't scroll while you touch this area: scroll outside it.</p>
       <div class="trace glass">
         <div class="trace-head"><span class="label" data-i18n="hear">What you hear</span><output id="readout" class="mono" aria-live="off">Silent</output></div>
         <canvas id="trace" aria-hidden="true"></canvas>
@@ -423,8 +431,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option
-const VERSION = '1.4';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues
+const VERSION = '1.5';
 const DEFAULTS = {
   model: null,
   orientation: [0, 0, 0],
@@ -472,7 +480,8 @@ const STRINGS = {
   near: 'near', soundOn: 'Sound on', soundOff: 'Sound starts when you touch the shell',
   describe: 'Describe the shell', stop: 'Stop the description', silent: 'Silent',
   grid: [['upper left', 'top', 'upper right'], ['left', 'centre', 'right'], ['lower left', 'bottom', 'lower right']],
-  dirLeft: 'The shell is to the left.', dirRight: 'The shell is to the right.', dirUp: 'The shell is above.', dirDown: 'The shell is below.'
+  dirLeft: 'The shell is to the left.', dirRight: 'The shell is to the right.', dirUp: 'The shell is above.', dirDown: 'The shell is below.',
+  areaOn: 'Touch area.', areaScroll: 'To scroll the page, swipe outside this area.', areaEdge: 'Edge of the touch area.'
 };
 const STRINGS_PT = {
   onShell: 'Na concha', offShell: 'Fora da concha',
@@ -483,7 +492,8 @@ const STRINGS_PT = {
   near: 'perto de', soundOn: 'Som ligado', soundOff: 'O som começa quando você toca a concha',
   describe: 'Descrever a concha', stop: 'Parar a descrição', silent: 'Silêncio',
   grid: [['em cima, à esquerda', 'em cima', 'em cima, à direita'], ['à esquerda', 'no centro', 'à direita'], ['embaixo, à esquerda', 'embaixo', 'embaixo, à direita']],
-  dirLeft: 'A concha está à esquerda.', dirRight: 'A concha está à direita.', dirUp: 'A concha está acima.', dirDown: 'A concha está abaixo.'
+  dirLeft: 'A concha está à esquerda.', dirRight: 'A concha está à direita.', dirUp: 'A concha está acima.', dirDown: 'A concha está abaixo.',
+  areaOn: 'Área de toque.', areaScroll: 'Para rolar a página, deslize fora desta área.', areaEdge: 'Borda da área de toque.'
 };
 // German (v1.3): a draft. Have a native speaker check it. Neutral infinitive style avoids choosing du or Sie.
 const STRINGS_DE = {
@@ -495,7 +505,8 @@ const STRINGS_DE = {
   near: 'nahe bei:', soundOn: 'Ton an', soundOff: 'Der Ton beginnt bei der ersten Berührung der Muschel',
   describe: 'Muschel beschreiben', stop: 'Beschreibung stoppen', silent: 'Stille',
   grid: [['oben links', 'oben', 'oben rechts'], ['links', 'in der Mitte', 'rechts'], ['unten links', 'unten', 'unten rechts']],
-  dirLeft: 'Die Muschel ist links.', dirRight: 'Die Muschel ist rechts.', dirUp: 'Die Muschel ist oben.', dirDown: 'Die Muschel ist unten.'
+  dirLeft: 'Die Muschel ist links.', dirRight: 'Die Muschel ist rechts.', dirUp: 'Die Muschel ist oben.', dirDown: 'Die Muschel ist unten.',
+  areaOn: 'Tastfläche.', areaScroll: 'Zum Scrollen der Seite außerhalb dieser Fläche wischen.', areaEdge: 'Rand der Tastfläche.'
 };
 // Interface text. PT is a draft translation (Brazilian Portuguese): check it before publishing.
 const UI = {
@@ -505,7 +516,7 @@ const UI = {
     secShell: 'The shell',
     stage: 'Shell. Drag across it, or move with the arrow keys, to hear its shape. Q and E turn it. Enter describes the spot. D plays the description.',
     turn: 'Turn the shell', turnL: 'Turn the shell left', turnR: 'Turn the shell right',
-    help: 'Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers, or right-drag with a mouse, turns it.',
+    help: 'Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn\'t scroll while you touch this area: scroll outside it.',
     hear: 'What you hear', secSide: 'Controls and specimen label',
     map: 'Show the sound map', hints: 'Spoken hints', on: 'on', off: 'off',
     hintsNote: 'Turn spoken hints off if you use a screen reader. It will read them instead.',
@@ -532,7 +543,7 @@ const UI = {
     secShell: 'A concha',
     stage: 'Concha. Arraste sobre ela, ou use as setas, para ouvir sua forma. Q e E giram a concha. Enter descreve o ponto. D toca a descrição.',
     turn: 'Girar a concha', turnL: 'Girar a concha para a esquerda', turnR: 'Girar a concha para a direita',
-    help: 'Notas mais agudas onde a concha se projeta. Um som mais brilhante e crepitante sobre as nervuras. Um som curto e descendente quando você sai da concha. Dois dedos, ou arrastar com o botão direito do mouse, giram a concha.',
+    help: 'Notas mais agudas onde a concha se projeta. Um som mais brilhante e crepitante sobre as nervuras. Um som curto e descendente quando você sai da concha. Dois dedos giram a concha (na tela ou no trackpad), ou arraste com o botão direito do mouse; faça pinça para aproximar. A página não rola enquanto você toca esta área: role fora dela.',
     hear: 'O que você ouve', secSide: 'Controles e etiqueta do espécime',
     map: 'Mostrar o mapa de som', hints: 'Dicas faladas', on: 'ligado', off: 'desligado',
     hintsNote: 'Desligue as dicas faladas se você usa um leitor de tela. Ele as lerá no lugar.',
@@ -559,7 +570,7 @@ const UI = {
     secShell: 'Die Muschel',
     stage: 'Muschel. Darüber ziehen oder mit den Pfeiltasten bewegen, um ihre Form zu hören. Q und E drehen sie. Enter beschreibt die Stelle. D spielt die Beschreibung ab.',
     turn: 'Muschel drehen', turnL: 'Muschel nach links drehen', turnR: 'Muschel nach rechts drehen',
-    help: 'Höhere Töne, wo die Muschel hervorsteht. Ein hellerer, knisternder Klang über Rippen. Ein kurzer, fallender Ton, wenn der Finger die Muschel verlässt. Mit zwei Fingern oder mit gedrückter rechter Maustaste ziehen, um sie zu drehen.',
+    help: 'Höhere Töne, wo die Muschel hervorsteht. Ein hellerer, knisternder Klang über Rippen. Ein kurzer, fallender Ton, wenn der Finger die Muschel verlässt. Mit zwei Fingern drehen (auf dem Bildschirm oder dem Trackpad) oder mit gedrückter rechter Maustaste ziehen; zum Zoomen zwei Finger spreizen. Beim Berühren dieser Fläche scrollt die Seite nicht: zum Scrollen außerhalb davon wischen.',
     hear: 'Was zu hören ist', secSide: 'Bedienung und Etikett',
     map: 'Klangkarte zeigen', hints: 'Gesprochene Hinweise', on: 'an', off: 'aus',
     hintsNote: 'Gesprochene Hinweise ausschalten, wenn ein Screenreader benutzt wird. Er liest sie dann vor.',
@@ -800,6 +811,25 @@ class Sonifier {
     const g2 = c.createGain();
     g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(0.12, t + 0.002); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
     s.connect(f).connect(g2).connect(this.master); s.start(t, Math.random(), 0.05);
+  }
+  ping() { // v1.5: touching the area but not the shell: one soft, short sonar ping, as if searching
+    if (!this.ready) return;
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(1250, t); o.frequency.exponentialRampToValueAtTime(1150, t + 0.3);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.07, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.38);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.4);
+  }
+  edge() { // v1.5: the finger slid off the touch area: two short, low ticks
+    if (!this.ready) return;
+    const c = this.ctx, t0 = c.currentTime;
+    for (const t of [t0, t0 + 0.08]) {
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(330, t);
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+      o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.05);
+    }
   }
   silence() { if (this.ready) { this.tone({ freq: 220, bright: 0, gain: 0, pan: 0 }); this.water(0); } }
 }
@@ -1388,6 +1418,8 @@ const haptics = {
     else if (kind === 'enter') { this.buzz(this.ms(18 * k)); this.rumble(0.6 * k, 0.3 * k, 70); }
     else if (kind === 'leave') { this.buzz(this.ms(12 * k)); this.rumble(0.15 * k, 0.45 * k, 45); }
     else if (kind === 'landmark') { const d = this.ms(16 * k); this.buzz([d, 50, d]); this.rumble(0.9 * k, 0.6 * k, 160); }
+    else if (kind === 'area') { this.buzz(this.ms(10 * k)); this.rumble(0.1 * k, 0.25 * k, 30); }
+    else if (kind === 'edge') { const d = this.ms(14 * k); this.buzz([d, 60, d]); this.rumble(0.3 * k, 0.5 * k, 90); }
   },
   // every frame while exploring; finger still = no vibration, like the sound
   texture(now, { onShell, moving, curv, pv, speedK, water }) {
@@ -1521,9 +1553,28 @@ stage.addEventListener('pointerdown', (e) => {
     rotating = { x: e.clientX, y: e.clientY, d: pinchDist() };
   } else if (e.button === 0 || e.pointerType !== 'mouse') {
     exploringId = e.pointerId; pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; kb.active = false;
+    area.firstSample = true; area.out = false; area.touch = e.pointerType !== 'mouse';
+    stage.classList.add('touching');
     logEvent('touch-start', 'pointer');
   }
 });
+// v1.5: the touch area. Touching it but not the shell pings; sliding off it ticks. The first touch explains why the page doesn't scroll.
+const area = { firstSample: false, out: false, touch: false, explained: false };
+function areaAfterFirstSample() {
+  area.firstSample = false;
+  if (!probe.on) { audio.ping(); haptics.event('area'); logEvent('touch-area', 'pointer'); }
+  if (area.touch && !area.explained) {
+    area.explained = true;
+    if (probe.on) speech.say(T.areaScroll);
+    else { const d = shellDirection(); speech.say([T.areaOn, d, T.areaScroll].filter(Boolean).join(' ')); }
+  }
+}
+function areaEdgeCheck(e) {
+  const r = stage.getBoundingClientRect();
+  const out = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  if (out && !area.out) { area.out = true; audio.edge(); haptics.event('edge'); speech.say(T.areaEdge); logEvent('touch-edge', 'pointer'); }
+  else if (!out && area.out) area.out = false;
+}
 function pinchDist() {
   const p = [...pointers.values()]; if (p.length < 2) return 0;
   return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
@@ -1545,7 +1596,7 @@ stage.addEventListener('pointermove', (e) => {
     }
     return;
   }
-  if (e.pointerId === exploringId) { pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; }
+  if (e.pointerId === exploringId) { pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; areaEdgeCheck(e); }
 });
 function endPointer(e) {
   if (!pointers.has(e.pointerId)) return;
@@ -1557,16 +1608,31 @@ function endPointer(e) {
     audio.ctx.resume().then(() => { audio.blip(probe.on ? mtof(probe.midi) : 330, probe.on ? 1 : -1); updateSoundChip(); }).catch(() => {});
   }
   if (e.pointerId === exploringId) { exploringId = null; pendingScreen = null; logEvent('touch-end', 'pointer'); }
-  if (pointers.size === 0) rotating = null;
+  if (pointers.size === 0) { rotating = null; stage.classList.remove('touching'); }
   else if (rotating) rotating = { ...[...pointers.values()][0], d: 0 };
 }
 stage.addEventListener('pointerup', endPointer);
 stage.addEventListener('pointercancel', endPointer);
+// v1.5: over the shell's area, a two-finger swipe on a trackpad (or the mouse wheel) turns the shell; pinching (or Ctrl + wheel) zooms
 stage.addEventListener('wheel', (e) => {
-  if (!e.ctrlKey) return; // plain scrolling still scrolls the page; pinch on a trackpad zooms
   e.preventDefault();
-  view.tDist = clamp(view.tDist * Math.exp(e.deltaY * 0.01), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true;
+  view.lastInput = performance.now();
+  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+  const dx = clamp(e.deltaX * unit, -120, 120), dy = clamp(e.deltaY * unit, -120, 120);
+  if (e.ctrlKey) { view.tDist = clamp(view.tDist * Math.exp(dy * 0.01), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; return; }
+  view.tYaw += dx * 0.005;
+  view.tPitch = clamp(view.tPitch - dy * 0.003, -1.2, 1.2);
 }, { passive: false });
+// Safari on a Mac reports trackpad pinch and twist as "gesture" events instead (and would zoom the whole page)
+let macGesture = null;
+stage.addEventListener('gesturestart', (e) => { e.preventDefault(); macGesture = pointers.size ? null : { dist: view.tDist, yaw: view.tYaw }; });
+stage.addEventListener('gesturechange', (e) => {
+  e.preventDefault();
+  if (!macGesture || pointers.size) return; // touch screens already turn and zoom through pointer events
+  view.tDist = clamp(macGesture.dist / (e.scale || 1), view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true;
+  view.tYaw = macGesture.yaw - (e.rotation || 0) * Math.PI / 180; view.lastInput = performance.now();
+});
+stage.addEventListener('gestureend', (e) => { e.preventDefault(); macGesture = null; });
 
 // keyboard probe: a fingertip that moves across the picture, like a finger on the screen
 const kb = { x: 0, y: 0, active: false, turningUntil: 0, input: 'keys' };
@@ -2038,6 +2104,7 @@ function frame(now) {
     const s = castFromScreen(pendingScreen.x, pendingScreen.y);
     updateProbe(s, { now, input: 'pointer', screenX: pendingScreen.fx });
     probe.pan = clamp(pendingScreen.fx * 2 - 1, -1, 1) * 0.6;
+    if (area.firstSample) areaAfterFirstSample();
   }
   pollPad(now);
   if (kb.active && now < kb.turningUntil && meshes.length) keyProbe(now);

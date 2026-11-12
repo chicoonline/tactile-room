@@ -37,7 +37,7 @@
   --scene: #050B14;
   --shadow: #000000;
   --focus: #00F2FE;
-  /* v1.5 type: Syne (made for Synesthésies, an art centre in Paris) for headings and buttons;
+  /* v1.5 type: Syne (made for Synesthésie, an art centre in Saint-Denis, near Paris) for headings and buttons;
      Inclusive Sans (designed for accessibility) for reading; Martian Mono for notes, numbers and labels */
   --f-display: "Syne", "Inclusive Sans", system-ui, sans-serif;
   --f-body: "Inclusive Sans", "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -75,7 +75,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 /* Martian Mono is wide: a narrower cut for the small labels and readouts */
-.label, .mono, .lang button, .pill-btn, .badge, .trace output, .btn .state, .specimen dt, kbd, .studio h3, .studio .row output, .studio pre { font-stretch: 87.5%; }
+.label, .mono, .lang button, .pill-btn, .trace output, .btn .state, .specimen dt, kbd, .studio h3, .studio .row output, .studio pre { font-stretch: 87.5%; }
 
 /* glass panels */
 .glass { background: var(--panel); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--hair); border-radius: var(--r); }
@@ -122,8 +122,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .stage #fx { pointer-events: none; }
 .stage-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); font-size: var(--s1); pointer-events: none; }
 .stage-msg.error { color: var(--warn); }
-/* over the moving 3D image: no blur (it would be redrawn every frame), and solid where there is text */
-.badge { position: absolute; left: 12px; top: 12px; font-family: var(--f-mono); font-size: var(--s-1); color: var(--muted); background: var(--panel-solid); border: 1px solid var(--hair); border-radius: 999px; padding: 4px 12px; pointer-events: none; }
+/* over the moving 3D image: no blur (it would be redrawn every frame) */
 .turn { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; }
 .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; padding: 0; }
 .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -167,7 +166,6 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
 
 .about { display: grid; gap: 10px; padding: 18px 20px; }
 .about > * { max-width: 70ch; }
-@media (max-width: 599px) { .badge { font-stretch: 75%; } }
 .about h2 { font-size: var(--s1); }
 .about .credits { color: var(--muted); font-size: var(--s-1); }
 
@@ -217,11 +215,11 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
 
 /* People who ask for less transparency or more contrast get solid panels, stronger edges and no glow */
 @media (prefers-reduced-transparency: reduce) {
-  .glass, .badge, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 @media (prefers-contrast: more) {
   :root { --hair: var(--line); --glow: transparent; --muted: var(--ink); }
-  .glass, .badge, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass, .icon-btn, .lang, .pill-btn, .sound-chip { background: var(--panel-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .stage::before { display: none; }
 }
 @media (forced-colors: active) { .stage::before { display: none; } .btn, .pill-btn, .icon-btn { border: 1px solid ButtonText; } }
@@ -242,7 +240,10 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
         <button type="button" id="lang-pt" lang="pt" aria-pressed="false">PT</button>
         <button type="button" id="lang-de" lang="de" aria-pressed="false">DE</button>
       </div>
-      <button type="button" class="pill-btn" id="look" aria-pressed="false" data-i18n="lookLight">Light background</button>
+      <div class="lang" role="group" id="look" aria-label="Background" data-i18n-label="lookLabel">
+        <button type="button" id="look-dark" aria-pressed="true" data-i18n="lookDark">Dark</button>
+        <button type="button" id="look-light" aria-pressed="false" data-i18n="lookLight">Light</button>
+      </div>
       <p class="sound-chip" id="sound-chip"><span class="dot" aria-hidden="true"></span><span id="sound-chip-text">Sound starts when you touch the shell</span></p>
     </div>
   </header>
@@ -255,7 +256,6 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
         <canvas id="gl" aria-hidden="true"></canvas>
         <canvas id="fx" aria-hidden="true"></canvas>
         <div class="stage-msg" id="stage-msg">Loading the shell…</div>
-        <p class="badge" id="badge" hidden></p>
         <div class="turn" role="group" aria-label="Turn the shell" data-i18n-label="turn">
           <button class="icon-btn" id="turn-l" type="button" aria-label="Turn the shell left" data-i18n-label="turnL">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
@@ -431,10 +431,10 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues
-const VERSION = '1.5';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size
+const VERSION = '1.7';
 const DEFAULTS = {
-  model: null,
+  model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
   label: { name: '', scientific: '', place: '', year: '', size: '', method: '' },
   description: { text: '', audio: '', lang: 'en-GB', voice: '', rate: 1 },
@@ -442,34 +442,13 @@ const DEFAULTS = {
   credits: '',
   // v1.2 (10 Nov): five-note scale on and water off by default; both can be changed in the studio
   sound: { pitchFrom: 'bulge', low: 48, high: 81, steps: true, texture: 0.55, toneVol: 0.7, texVol: 0.55, waterVol: 0, smoothing: 2, invert: false, vibration: 0.7 },
-  landmarks: null,          // null = use the stand-in's own landmarks
+  landmarks: [],            // points visitors can find, set in room.json or the studio
   landmarkRadius: 0.12,
   lang: 'en-GB',
   strings: {}
 };
-// Text for the stand-in only. A real model shows only what room.json (or the studio) gives it.
-const STANDIN_TEXT = {
-  label: {
-    name: { en: 'Stand-in shell', pt: 'Concha provisória', de: 'Platzhalter-Muschel' }, scientific: '',
-    place: { en: 'Generated, not found', pt: 'Gerada, não encontrada', de: 'Erzeugt, nicht gefunden' }, year: '', size: '',
-    method: { en: 'Logarithmic growth spiral, after David Raup (1966)', pt: 'Espiral de crescimento logarítmica, segundo David Raup (1966)', de: 'Logarithmische Wachstumsspirale, nach David Raup (1966)' }
-  },
-  description: { en: 'This is a stand-in, drawn by a formula, until the scanned shell replaces it. It is a spiral of about eight turns that widens from a sharp tip to a round opening. Low ridges run across each turn like the rungs of a ladder.',
-    pt: 'Esta é uma concha provisória, desenhada por uma fórmula, até que a concha escaneada a substitua. É uma espiral de cerca de oito voltas que se alarga de uma ponta fina até uma abertura redonda. Nervuras baixas atravessam cada volta como os degraus de uma escada.',
-    de: 'Dies ist ein Platzhalter, mit einer Formel gezeichnet, bis die gescannte Muschel ihn ersetzt. Es ist eine Spirale mit etwa acht Windungen, die sich von einer feinen Spitze zu einer runden Öffnung weitet. Flache Rippen laufen quer über jede Windung wie die Sprossen einer Leiter.' },
-  about: { en: 'This preview uses a stand-in shell built from a growth formula. The scanned shell, its checked description and its landmarks replace it once they are ready.',
-    pt: 'Esta prévia usa uma concha provisória construída a partir de uma fórmula de crescimento. A concha escaneada, sua descrição verificada e seus pontos de referência a substituirão quando estiverem prontos.',
-    de: 'Diese Vorschau benutzt eine Platzhalter-Muschel, die aus einer Wachstumsformel erzeugt wurde. Die gescannte Muschel, ihre geprüfte Beschreibung und ihre Orientierungspunkte ersetzen sie, sobald sie fertig sind.' },
-  credits: '3D: three.js.'
-};
 function shown() {
-  const si = modelInfo.isStandIn;
-  return {
-    label: si && !(cfg.label && loc(cfg.label.name)) ? STANDIN_TEXT.label : cfg.label,
-    description: loc(si && !loc(cfg.description.text) ? STANDIN_TEXT.description : cfg.description.text),
-    about: loc(si && !loc(cfg.about) ? STANDIN_TEXT.about : cfg.about),
-    credits: loc(si && !loc(cfg.credits) ? STANDIN_TEXT.credits : cfg.credits)
-  };
+  return { label: cfg.label, description: loc(cfg.description.text), about: loc(cfg.about), credits: loc(cfg.credits) };
 }
 const STRINGS = {
   onShell: 'On the shell', offShell: 'Off the shell',
@@ -520,7 +499,8 @@ const UI = {
     hear: 'What you hear', secSide: 'Controls and specimen label',
     map: 'Show the sound map', hints: 'Spoken hints', on: 'on', off: 'off',
     hintsNote: 'Turn spoken hints off if you use a screen reader. It will read them instead.',
-    lookLight: 'Light background',
+    lookLabel: 'Background', lookDark: 'Dark', lookLight: 'Light',
+    loadFailed: 'The shell couldn’t load. Check your connection, then reload the page.',
     lgRidge: 'Ridge: brighter sound, clicks as you cross it', lgGroove: 'Groove: duller sound', lgLight: 'Lighter: higher note',
     specimen: 'Specimen', readDesc: 'Read the description', keys: 'Keys',
     kMove: 'Move your fingertip across the picture (hold <kbd>Shift</kbd> for small steps)',
@@ -528,7 +508,6 @@ const UI = {
     kDKeys: '<kbd>D</kbd> or <kbd>Space</kbd>', kD: 'Play or stop the description', kZoom: 'Move closer or further away', kEsc: 'Stop all sound',
     about: 'About this room',
     fFound: 'Found', fYear: 'Year', fSize: 'Size', fMade: 'Made with', fModel: 'Model', faces: 'faces',
-    badge: 'Stand-in shell · generated, not scanned',
     loading: 'Loading the shell…', reading: 'Reading the surface…',
     noWebgl: 'This page needs WebGL, which isn’t available in this browser. Try another browser or device.',
     rRidge: 'ridge', rGroove: 'groove', rSmooth: 'smooth', water: 'Water', shellFallback: 'Shell',
@@ -547,7 +526,8 @@ const UI = {
     hear: 'O que você ouve', secSide: 'Controles e etiqueta do espécime',
     map: 'Mostrar o mapa de som', hints: 'Dicas faladas', on: 'ligado', off: 'desligado',
     hintsNote: 'Desligue as dicas faladas se você usa um leitor de tela. Ele as lerá no lugar.',
-    lookLight: 'Fundo claro',
+    lookLabel: 'Fundo', lookDark: 'Escuro', lookLight: 'Claro',
+    loadFailed: 'A concha não carregou. Verifique sua conexão e recarregue a página.',
     lgRidge: 'Nervura: som mais brilhante, estalos ao cruzá-la', lgGroove: 'Sulco: som mais abafado', lgLight: 'Mais claro: nota mais aguda',
     specimen: 'Espécime', readDesc: 'Ler a descrição', keys: 'Teclas',
     kMove: 'Mova a ponta do dedo pela imagem (segure <kbd>Shift</kbd> para passos menores)',
@@ -555,7 +535,6 @@ const UI = {
     kDKeys: '<kbd>D</kbd> ou <kbd>Espaço</kbd>', kD: 'Toca ou para a descrição', kZoom: 'Aproxima ou afasta', kEsc: 'Para todo o som',
     about: 'Sobre esta sala',
     fFound: 'Encontrada em', fYear: 'Ano', fSize: 'Tamanho', fMade: 'Feita com', fModel: 'Modelo', faces: 'faces',
-    badge: 'Concha provisória · gerada, não escaneada',
     loading: 'Carregando a concha…', reading: 'Lendo a superfície…',
     noWebgl: 'Esta página precisa de WebGL, que não está disponível neste navegador. Tente outro navegador ou aparelho.',
     rRidge: 'nervura', rGroove: 'sulco', rSmooth: 'liso', water: 'Água', shellFallback: 'Concha',
@@ -574,7 +553,8 @@ const UI = {
     hear: 'Was zu hören ist', secSide: 'Bedienung und Etikett',
     map: 'Klangkarte zeigen', hints: 'Gesprochene Hinweise', on: 'an', off: 'aus',
     hintsNote: 'Gesprochene Hinweise ausschalten, wenn ein Screenreader benutzt wird. Er liest sie dann vor.',
-    lookLight: 'Heller Hintergrund',
+    lookLabel: 'Hintergrund', lookDark: 'Dunkel', lookLight: 'Hell',
+    loadFailed: 'Die Muschel konnte nicht geladen werden. Bitte die Verbindung prüfen und die Seite neu laden.',
     lgRidge: 'Rippe: hellerer Klang, Klicken beim Überqueren', lgGroove: 'Rille: dumpferer Klang', lgLight: 'Heller: höherer Ton',
     specimen: 'Fundstück', readDesc: 'Beschreibung lesen', keys: 'Tasten',
     kMove: 'Fingerspitze über das Bild bewegen (<kbd>Umschalt</kbd> halten für kleine Schritte)',
@@ -582,7 +562,6 @@ const UI = {
     kDKeys: '<kbd>D</kbd> oder <kbd>Leertaste</kbd>', kD: 'Beschreibung abspielen oder stoppen', kZoom: 'Näher heran oder weiter weg', kEsc: 'Alle Töne stoppen',
     about: 'Über diesen Raum',
     fFound: 'Gefunden', fYear: 'Jahr', fSize: 'Größe', fMade: 'Hergestellt mit', fModel: 'Modell', faces: 'Flächen',
-    badge: 'Platzhalter-Muschel · erzeugt, nicht gescannt',
     loading: 'Muschel wird geladen…', reading: 'Oberfläche wird gelesen…',
     noWebgl: 'Diese Seite braucht WebGL, das in diesem Browser nicht verfügbar ist. Bitte einen anderen Browser oder ein anderes Gerät versuchen.',
     rRidge: 'Rippe', rGroove: 'Rille', rSmooth: 'glatt', water: 'Wasser', shellFallback: 'Muschel',
@@ -599,8 +578,9 @@ let LANG = 'en';
 function pickLang(cfgLang) {
   try { const q = new URLSearchParams(location.search).get('lang'); if (LANGS.includes(q)) return q; } catch (e) {}
   try { const s = localStorage.getItem(LANG_KEY); if (LANGS.includes(s)) return s; } catch (e) {}
-  const nav = (navigator.language || '').toLowerCase().slice(0, 2);
-  if (nav === 'pt' || nav === 'de') return nav;
+  // the device's languages, in the visitor's order of preference: the first one the room speaks wins
+  const prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+  for (const l of prefs) { const two = String(l || '').toLowerCase().slice(0, 2); if (LANGS.includes(two)) return two; }
   const c = (cfgLang || 'en').slice(0, 2);
   return LANGS.includes(c) ? c : 'en';
 }
@@ -644,7 +624,7 @@ async function loadConfig() {
   try {
     const r = await fetch('room.json', { cache: 'no-store' });
     if (r.ok) { const t = await r.text(); fileCfg = JSON.parse(t); }
-  } catch (e) { /* no room.json: stand-in mode */ }
+  } catch (e) { /* no room.json: the built-in settings apply */ }
   let cfg = deepMerge(structuredClone(DEFAULTS), fileCfg);
   const published = cfg;
   if (isStudio()) {
@@ -677,22 +657,29 @@ const isLight = () => document.documentElement.dataset.look === 'light';
 const speech = {
   hints: true, busyWithDescription: false, lastAt: 0, timer: 0,
   // Rate-limited, but the latest message always gets through once things settle.
-  say(text, { force = false } = {}) {
+  say(text, { force = false, slow = false } = {}) {
     if (!text) return;
     clearTimeout(this.timer);
     const wait = force ? 0 : Math.max(0, 450 - (performance.now() - this.lastAt));
-    if (wait > 0) { this.timer = setTimeout(() => this.out(text), wait); return; }
-    this.out(text);
+    if (wait > 0) { this.timer = setTimeout(() => this.out(text, slow), wait); return; }
+    this.out(text, slow);
   },
-  out(text) {
+  out(text, slow = false) {
     this.lastAt = performance.now();
     if (this.hints && 'speechSynthesis' in window && !this.busyWithDescription) {
       try {
         speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
-        u.lang = SPEECH_LANG[LANG]; u.rate = 1.05; u.volume = 0.9;
+        // v1.7: landmark names are spoken more slowly (0.85) than other hints (1.0), and full volume
+        u.lang = SPEECH_LANG[LANG]; u.rate = slow ? 0.85 : 1.0; u.volume = 1;
         const hv = pickVoice(); if (hv) u.voice = hv;
+        u.onstart = () => audio.duck(true);
+        u.onend = u.onerror = () => { if (!speechSynthesis.speaking) audio.duck(false); };
+        audio.duck(true);
         speechSynthesis.speak(u);
+        // some browsers send no "end" after a cancel: bring the sound back once nothing is being spoken
+        clearInterval(this.duckPoll);
+        this.duckPoll = setInterval(() => { if (!speechSynthesis.speaking && !speechSynthesis.pending) { audio.duck(false); clearInterval(this.duckPoll); } }, 250);
         return;
       } catch (e) { /* fall through to the live region */ }
     }
@@ -725,7 +712,9 @@ class Sonifier {
     comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
     this.master.connect(comp).connect(c.destination);
     this.pan = c.createStereoPanner ? c.createStereoPanner() : c.createGain();
-    this.pan.connect(this.master);
+    // v1.7: the surface sound runs through "duck", which drops while a spoken hint plays, so words like "Tip" are heard
+    this.duckGain = c.createGain(); this.duckGain.gain.value = 1;
+    this.pan.connect(this.duckGain).connect(this.master);
 
     // Tone: two oscillators through a low-pass filter (brightness)
     this.o1 = c.createOscillator(); this.o1.type = 'sine';
@@ -831,6 +820,12 @@ class Sonifier {
       o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.05);
     }
   }
+  duck(on) {
+    if (!this.ready) return;
+    const t = this.ctx.currentTime;
+    this.duckGain.gain.cancelScheduledValues(t);
+    this.duckGain.gain.setTargetAtTime(on ? 0.22 : 1, t, on ? 0.03 : 0.12);
+  }
   silence() { if (this.ready) { this.tone({ freq: 220, bright: 0, gain: 0, pan: 0 }); this.water(0); } }
 }
 const audio = new Sonifier();
@@ -852,69 +847,12 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 
 /* ------------------------------------------------------------------ */
-/* Stand-in shell: a logarithmic helico-spiral (Raup's coiling model)  */
-/* ------------------------------------------------------------------ */
-function makeStandInShell() {
-  const nT = 560, nS = 80;
-  const turns = 8, g = 1.8, k = Math.log(g) / (2 * Math.PI);
-  const th0 = -turns * 2 * Math.PI, th1 = 0;
-  const H = 1.15, A = 0.6;
-  const R = (th) => Math.exp(k * th);
-  const pos = new Float32Array((nT + 1) * (nS + 1) * 3);
-  const col = new Float32Array((nT + 1) * (nS + 1) * 3);
-  const cA = new THREE.Color(), cB = new THREE.Color(), cC = new THREE.Color(), tmp = new THREE.Color();
-  cA.setRGB(0.93, 0.87, 0.77, THREE.SRGBColorSpace);  // cream
-  cB.setRGB(0.55, 0.36, 0.25, THREE.SRGBColorSpace);  // brown band
-  cC.setRGB(0.72, 0.62, 0.66, THREE.SRGBColorSpace);  // greyed apex
-  let p = 0;
-  const point = (th, s) => {
-    const r = R(th);
-    const lip = 1 + 0.22 * clamp((th - (th1 - 0.7)) / 0.7, 0, 1) ** 2;
-    const costae = 1 + 0.1 * Math.pow(Math.max(0, Math.cos(th * 9)), 6) * clamp((th - th0) / 6, 0, 1);
-    const cords = 1 + 0.03 * Math.cos(s * 16);
-    const rho = A * r * lip * costae * cords;
-    const ux = Math.cos(th), uz = Math.sin(th);
-    return [r * ux + rho * Math.cos(s) * ux, -H * r + rho * Math.sin(s), r * uz + rho * Math.cos(s) * uz];
-  };
-  for (let i = 0; i <= nT; i++) {
-    const th = lerp(th0, th1, i / nT);
-    for (let j = 0; j <= nS; j++) {
-      const s = (j / nS) * Math.PI * 2;
-      const [x, y, z] = point(th, s);
-      pos[p] = x; pos[p + 1] = y; pos[p + 2] = z;
-      const band = Math.pow(0.5 + 0.5 * Math.cos(s * 3 + 1.2), 3);
-      const rib = Math.pow(Math.max(0, Math.cos(th * 9)), 6);
-      tmp.copy(cA).lerp(cB, band * 0.75).lerp(cC, clamp(1 - (th - th0) / 10, 0, 1) * 0.6);
-      tmp.multiplyScalar(0.86 + 0.14 * rib);
-      col[p] = tmp.r; col[p + 1] = tmp.g; col[p + 2] = tmp.b;
-      p += 3;
-    }
-  }
-  const idx = [];
-  for (let i = 0; i < nT; i++) for (let j = 0; j < nS; j++) {
-    const a = i * (nS + 1) + j, b = a + nS + 1;
-    idx.push(a, b, a + 1, b, b + 1, a + 1);
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  geo.setIndex(idx);
-  geo.computeVertexNormals();
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62, metalness: 0, side: THREE.DoubleSide });
-  const mesh = new THREE.Mesh(geo, mat);
-  const group = new THREE.Group(); group.add(mesh);
-  const tip = point(th0, 0);
-  const opening = point(th1, -0.9);
-  return { object: group, rawLandmarks: [{ name: { en: 'Tip', pt: 'Ponta', de: 'Spitze' }, raw: tip }, { name: { en: 'Opening', pt: 'Abertura', de: 'Öffnung' }, raw: opening }] };
-}
-
-/* ------------------------------------------------------------------ */
 /* Scene                                                               */
 /* ------------------------------------------------------------------ */
 let cfg, published;
 let renderer, scene, camera, keyLight, rimLight, root, orient, norm, floor, probeMarker, lmGroup;
 let meshes = [];
-let modelInfo = { faces: 0, verts: 0, isStandIn: true, fileName: '' };
+let modelInfo = { faces: 0, verts: 0, fileName: '' };
 let worldYRange = [-1, 1];
 const view = { yaw: 0.65, pitch: 0.22, dist: 3.6, tYaw: 0.65, tPitch: 0.22, tDist: 3.6, baseDist: 3.6, lastInput: 0 };
 
@@ -1023,7 +961,7 @@ function clearModel() {
   while (norm.children.length) norm.remove(norm.children[0]);
   meshes = [];
 }
-function setModel(object, { isStandIn, fileName = '' }) {
+function setModel(object, { fileName = '' } = {}) {
   clearModel();
   norm.position.set(0, 0, 0); norm.scale.setScalar(1);
   orient.quaternion.identity();
@@ -1051,7 +989,7 @@ function setModel(object, { isStandIn, fileName = '' }) {
       mats.forEach((mt) => { mt.side = THREE.DoubleSide; });
     }
   }
-  modelInfo = { faces: Math.round(faces), verts, isStandIn, fileName };
+  modelInfo = { faces: Math.round(faces), verts, fileName };
   applyOrientation();
 }
 function applyOrientation() {
@@ -1274,7 +1212,7 @@ function renderLandmarkList() {
     const span = document.createElement('span'); span.textContent = loc(lm.name);
     const b = document.createElement('button'); b.type = 'button'; b.className = 'sbtn'; b.textContent = 'Remove';
     b.setAttribute('aria-label', 'Remove landmark ' + loc(lm.name));
-    b.addEventListener('click', () => { landmarks.splice(i, 1); cfg.__standInLandmarks = false; cfg.landmarks = landmarks.map((l) => ({ ...l })); buildLandmarkPins(); saveDraft(); });
+    b.addEventListener('click', () => { landmarks.splice(i, 1); cfg.landmarks = landmarks.map((l) => ({ ...l })); buildLandmarkPins(); saveDraft(); });
     li.append(span, b); ul.append(li);
   });
   if (!landmarks.length) { const li = document.createElement('li'); li.textContent = 'None yet'; li.className = 'note'; ul.append(li); }
@@ -1354,7 +1292,7 @@ function checkLandmarks() {
     const d = probe.local.distanceTo(new THREE.Vector3().fromArray(lm.at));
     if (d < r && !probe.insideLm.has(i)) {
       probe.insideLm.add(i); audio.knock(); haptics.event('landmark');
-      speech.say(loc(lm.name), { force: true }); logEvent('landmark:' + loc(lm.name), probe.mode);
+      speech.say(loc(lm.name), { force: true, slow: true }); logEvent('landmark:' + loc(lm.name), probe.mode);
     } else if (d > r * 1.35 && probe.insideLm.has(i)) probe.insideLm.delete(i);
   });
 }
@@ -1660,7 +1598,7 @@ stage.addEventListener('keydown', (e) => {
       view.tYaw += (e.key.toLowerCase() === 'q' ? -1 : 1) * Math.PI / 6; view.lastInput = now; kb.turningUntil = now + 900;
       logEvent('turn', 'keys'); e.preventDefault(); return;
     case 'Enter': startAudioFromGesture(); speech.say(describeSpot(), { force: true }); logEvent('spot-description', 'keys'); e.preventDefault(); return;
-    case ' ': case 'd': case 'D': startAudioFromGesture(); toggleDescription(); e.preventDefault(); return;
+    case ' ': case 'd': case 'D': if ($('describe').hidden) return; startAudioFromGesture(); toggleDescription(); e.preventDefault(); return;
     case '+': case '=': view.tDist = clamp(view.tDist * 0.85, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; e.preventDefault(); return;
     case '-': case '_': view.tDist = clamp(view.tDist / 0.85, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; e.preventDefault(); return;
     case 'Escape': stopAll(); return;
@@ -1814,17 +1752,18 @@ $('hints').addEventListener('click', () => {
   $('hints-state').textContent = speech.hints ? U('on') : U('off');
   if (!speech.hints) try { speechSynthesis.cancel(); } catch (e) {}
 });
-// v1.4: dark by default (the deep-sea look); a visible switch gives a light background, remembered in this browser
+// v1.4: dark by default (the deep-sea look); visitors can switch to light, remembered in this browser
 {
-  const lookBtn = $('look');
-  const syncLook = () => lookBtn.setAttribute('aria-pressed', String(isLight()));
-  syncLook();
-  lookBtn.addEventListener('click', () => {
-    const next = !isLight();
-    if (next) document.documentElement.dataset.look = 'light'; else delete document.documentElement.dataset.look;
-    try { localStorage.setItem(LOOK_KEY, next ? 'light' : 'dark'); } catch (e) {}
+  // v1.6: two buttons, Dark and Light; the one in use is filled
+  const syncLook = () => { $('look-dark').setAttribute('aria-pressed', String(!isLight())); $('look-light').setAttribute('aria-pressed', String(isLight())); };
+  const setLook = (light) => {
+    if (light) document.documentElement.dataset.look = 'light'; else delete document.documentElement.dataset.look;
+    try { localStorage.setItem(LOOK_KEY, light ? 'light' : 'dark'); } catch (e) {}
     syncLook();
-  });
+  };
+  syncLook();
+  $('look-dark').addEventListener('click', () => setLook(false));
+  $('look-light').addEventListener('click', () => setLook(true));
 }
 // the visitor's own vibration switch, remembered in this browser only
 const VIBE_KEY = 'tactileRoom.vibration';
@@ -1856,13 +1795,13 @@ function renderText() {
   for (const [k, v] of facts) { if (!v) continue; const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); }
   $('desc-text').textContent = txt.description || '';
   $('desc-details').hidden = !txt.description;
+  // v1.6: no description written yet (room.json) = no Describe button, rather than a button that does nothing
+  $('describe').hidden = !(txt.description || loc(cfg.description.audio));
   const about = $('about'), at = $('about-text');
   at.textContent = '';
   (txt.about || '').split(/\n\s*\n/).filter(Boolean).forEach((para) => { const p = document.createElement('p'); p.textContent = para.trim(); at.append(p); });
   $('credits').textContent = txt.credits || '';
   about.hidden = !(txt.about || txt.credits);
-  const badge = $('badge');
-  badge.hidden = !modelInfo.isStandIn; badge.textContent = U('badge');
   T = deepMerge(({ en: STRINGS, pt: STRINGS_PT, de: STRINGS_DE })[LANG] || STRINGS, stringsFor(cfg.strings));
   applyStaticText();
   $('map-state').textContent = soundMap.on ? U('on') : U('off');
@@ -1888,7 +1827,7 @@ function exportConfig() {
     about: cfg.about,
     credits: cfg.credits,
     sound: cfg.sound,
-    landmarks: cfg.__standInLandmarks ? [] : landmarks.map((l) => ({ name: l.name, at: l.at.map((x) => +(+x).toFixed(4)) })),
+    landmarks: landmarks.map((l) => ({ name: l.name, at: l.at.map((x) => +(+x).toFixed(4)) })),
     landmarkRadius: cfg.landmarkRadius,
     lang: cfg.lang,
     strings: cfg.strings || {}
@@ -1959,7 +1898,6 @@ function bindStudio() {
   $('lm-add').addEventListener('click', () => {
     if (!probe.lastTouched) { $('lm-name').placeholder = 'Touch the shell first'; return; }
     const name = $('lm-name').value.trim() || 'Landmark ' + (landmarks.length + 1);
-    if (cfg.__standInLandmarks) { landmarks = []; cfg.__standInLandmarks = false; }
     landmarks.push({ name: LANG === 'en' ? name : { pt: name }, at: probe.lastTouched.slice() }); cfg.landmarks = landmarks.map((l) => ({ ...l }));
     $('lm-name').value = ''; buildLandmarkPins(); saveDraft();
   });
@@ -2002,7 +1940,7 @@ function bindStudio() {
 function updateModelStats() {
   const el = $('model-stats'); if (!el) return;
   const warn = modelInfo.faces > 150000 ? ' Phones may struggle above about 100,000 faces: reduce it in Blender (Decimate).' : '';
-  el.textContent = `${modelInfo.isStandIn ? 'Stand-in shell' : (modelInfo.fileName || cfg.model || 'Your model')} · ${modelInfo.faces.toLocaleString('en-GB')} faces · surface analysed in ${analysisInfo.ms} ms.${warn}`;
+  el.textContent = `${modelInfo.fileName || cfg.model || 'Your model'} · ${modelInfo.faces.toLocaleString('en-GB')} faces · surface analysed in ${analysisInfo.ms} ms.${warn}`;
   el.className = 'note' + (warn ? ' warn' : '');
 }
 async function reanalyse() { setMsg(U('reading')); await new Promise((r) => setTimeout(r, 20)); await analyse(); setMsg(''); updateModelStats(); }
@@ -2012,12 +1950,11 @@ async function loadFile(file) {
   try {
     const buf = await file.arrayBuffer();
     const g = await parseGLTF(buf);
-    setModel(g.scene, { isStandIn: false, fileName: file.name });
+    setModel(g.scene, { fileName: file.name });
     const sameFile = cfg.model === 'assets/' + file.name;
     cfg.model = 'assets/' + file.name; $('model-path').value = cfg.model;
     // keep landmarks only if they were made for this same file
-    landmarks = (!cfg.__standInLandmarks && sameFile && cfg.landmarks) ? cfg.landmarks.map((l) => ({ ...l })) : [];
-    cfg.__standInLandmarks = false;
+    landmarks = (sameFile && cfg.landmarks) ? cfg.landmarks.map((l) => ({ ...l })) : [];
     cfg.landmarks = landmarks.map((l) => ({ ...l }));
     buildLandmarkPins();
     setMsg(U('reading')); await new Promise((r) => setTimeout(r, 20));
@@ -2170,29 +2107,24 @@ async function boot() {
   requestAnimationFrame(frame);
   speech.hints = true;
 
+  // v1.6: the scanned shell is the only shell. If it can't load, say so (the studio can still load a file)
   let loaded = false;
-  if (cfg.model) {
-    setMsg(U('loading'));
-    try {
-      const r = await fetch(cfg.model);
-      if (!r.ok) { const er = new Error('missing'); er.missing = r.status; throw er; }
-      const g = await parseGLTF(await r.arrayBuffer());
-      setModel(g.scene, { isStandIn: false, fileName: cfg.model.split('/').pop() });
-      landmarks = (cfg.landmarks || []).map((l) => ({ ...l }));
-      loaded = true;
-    } catch (e) {
-      console.warn(e);
-      if (!isStudio()) { setMsg(explainLoadError(e) + ' (' + cfg.model + ')', true); renderText(); window.__tactileRoomReady = true; return; }
-      setMsg('Couldn’t load ' + cfg.model + '. Showing the stand-in. ' + explainLoadError(e), true);
-    }
-  }
-  if (!loaded) {
-    const st = makeStandInShell();
-    setModel(st.object, { isStandIn: true });
-    const { c, s } = norm.userData.raw;
-    const own = st.rawLandmarks.map((l) => ({ name: l.name, at: new THREE.Vector3().fromArray(l.raw).sub(c).multiplyScalar(s).toArray().map((x) => +x.toFixed(4)) }));
-    landmarks = (cfg.landmarks && cfg.landmarks.length) ? cfg.landmarks.map((l) => ({ ...l })) : own;
-    cfg.__standInLandmarks = !(cfg.landmarks && cfg.landmarks.length);
+  setMsg(U('loading'));
+  try {
+    if (!cfg.model) throw Object.assign(new Error('missing'), { missing: 404 });
+    const r = await fetch(cfg.model);
+    if (!r.ok) { const er = new Error('missing'); er.missing = r.status; throw er; }
+    const g = await parseGLTF(await r.arrayBuffer());
+    setModel(g.scene, { fileName: cfg.model.split('/').pop() });
+    landmarks = (cfg.landmarks || []).map((l) => ({ ...l }));
+    loaded = true;
+  } catch (e) {
+    console.warn(e);
+    setMsg(isStudio() ? explainLoadError(e) + (cfg.model ? ' (' + cfg.model + ')' : '') : U('loadFailed'), true);
+    renderText(); openStudio(isStudio());
+    window.addEventListener('hashchange', () => openStudio(isStudio()));
+    window.__tactileRoomReady = true;
+    return;
   }
   buildLandmarkPins();
   if (!msg.classList.contains('error')) setMsg(U('reading'));
@@ -2227,8 +2159,8 @@ async function boot() {
   // a small read-only hook for automated checks
   window.tactileRoom = {
     state: () => ({ on: probe.on, midi: probe.midi, curv: probe.curv, pv: probe.pv, mode: probe.mode, local: probe.local.toArray(),
-      audio: audio.ready ? { running: audio.running, tone: audio.toneGain.gain.value, water: audio.waterGain.gain.value } : null,
-      landmarks: landmarks.map((l) => loc(l.name)), version: VERSION, lang: LANG, landmarkAt: landmarks.map((l) => l.at), kb: { x: kb.x, y: kb.y }, faces: modelInfo.faces, standIn: modelInfo.isStandIn, analysis: analysisInfo, live: live.textContent,
+      audio: audio.ready ? { running: audio.running, tone: audio.toneGain.gain.value, water: audio.waterGain.gain.value, duck: audio.duckGain.gain.value } : null,
+      landmarks: landmarks.map((l) => loc(l.name)), version: VERSION, lang: LANG, landmarkAt: landmarks.map((l) => l.at), kb: { x: kb.x, y: kb.y }, faces: modelInfo.faces, analysis: analysisInfo, live: live.textContent,
       textured: meshes.some((m) => { const mt = (m.userData.saved && m.userData.saved.material) || m.material; return !!(mt && mt.map && mt.map.image); }),
       view: { yaw: view.yaw, pitch: view.pitch, dist: view.dist },
       haptics: { phone: haptics.phone, pad: pad.index, user: haptics.user, strength: haptics.strength(), toggleShown: !$('vibe').hidden },

@@ -1,12 +1,12 @@
 # Tactile Room: project report (relatório de projeto)
 
-Working record of the whole process: research, decisions, versions, tests and ideas. It gathers the material; the final report text is yours. Every project gets one with the same headings. Last updated 11 Nov 2026 (evening).
+Working record of the whole process: research, decisions, versions, tests and ideas. It gathers the material; the final report text is yours. Every project gets one with the same headings. Last updated 12 Nov 2026 (v1.7).
 
 ## 1. Summary
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.5 (11 Nov 2026).
+- Current version: 1.7 (12 Nov 2026): your scanned shell, three landmarks, clearer spoken names.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -63,7 +63,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - What stayed for access: Atkinson Hyperlegible Next for reading text; the same page order; contrast 4.5:1 or more for text in both looks (most dark text above 8:1); 3:1 for control borders; 44 px targets; solid panels and no glow when the system asks for less transparency or more contrast.
 - Dark is the default for everyone; a visible switch gives a light background. Some low-vision people read better on dark, others on light. Ask testers (5.5).
 - **Your verdict on 1.4 (11 Nov): it still looked like generic Claude UI** (same fonts, everything in boxes, About not aligned). Why: the restyle kept the old layout and only changed colours and fonts; the mockups' look came mostly from invented readouts; mood words give colours, not composition. Lesson: design the screens yourself (Figma, with real data) and have them built in one round. Decision: keep 1.4's colours, change the fonts now, redesign after OceanX.
-- **1.5 fonts:** Syne for headings and buttons (made for Synesthésies, an art centre in Paris: synaesthesia fits a room where you hear a shape); Inclusive Sans for reading text (designed for accessibility); Martian Mono for data. Kept on the site, not loaded from Google (GDPR).
+- **1.5 fonts:** Syne for headings and buttons (made for Synesthésie, an art centre in Saint-Denis, near Paris: synaesthesia fits a room where you hear a shape); Inclusive Sans for reading text (designed for accessibility); Martian Mono for data. Kept on the site, not loaded from Google (GDPR).
 
 ## 4. Versions and decisions
 | Date | Version | Decision or change | Who decided | Reason |
@@ -78,8 +78,34 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 11 Nov | 1.4 | New look from your "Deep-Sea Sonar Studio" direction, dark by default with a light switch; access kept (see 3.5) | Chico (direction); Claude (build, and what to leave out for access) | The tools looked like generic AI-made pages |
 | 11 Nov | — | Published on GitHub Pages with your own domain (tactileroom.chicomorais.com), set up by you in VS Code | Chico | Testers and OceanX need a public link |
 | 11 Nov | 1.5 | New fonts (kept on the site); a two-finger trackpad swipe turns the shell; cues for the touch area (ping, edge ticks, first-touch spoken hint, lit edge); About aligned | Chico (requests); Claude (choices and build) | 1.4 still looked generic; trackpad users expected to turn the shell; a blind visitor can't tell why the page won't scroll |
+| 12 Nov | 1.6 | Your scan is the only shell; the generated one removed from the code, text and comments; Dark \| Light pair; language from all the device's languages; Describe hidden until a description exists | Chico (requests); Claude (build, 2K textures, landmark placement) | "It should be my shell"; the old button didn't show which look was on; a tester doesn't speak English |
+| 12 Nov | 1.7 | Landmark names spoken more slowly, and the shell's sound drops while any hint is spoken; "Tip" renamed "Spiral tip"; new "Back tip" at the far end; size 7 cm on the label | Chico ("Tip" was barely audible; the back tip said nothing); Claude (fix, names, placement) | Hints were drowned by the tone |
+| 12 Nov | — | Earlier versions stay public in `versions/` | Chico | They show the development, for the report and the website |
 
 - Every version is kept in the package (`versions/`, CHANGELOG.md).
+
+### 4.1 The scan (11–12 Nov)
+- **Set-up** (your photos `IMG_7934`, `IMG_7935`): Nikon D610 on a tripod, Foldio3 with the black backdrop, Halo Bars, the Kiuiom turntable, the shell on a grey stand.
+- **Photos** (`shell scan`, FACT from the files): 164 photos, Nikon D610, 50 mm, f/13, 1/8 s, ISO 100, taken 12 Nov 2026 between 00:20 and 01:20.
+- **Processing** (your screenshot): Reality Composer Pro (Apple Object Capture), Full Quality, "Isolate Object from Environment"; then Blender 3.6.1 to make the GLB.
+- **Your files** (`photogrammetry shell`): a medium-detail test (USDZ, 26 MB), the full-detail scan (USDZ, 58 MB), a GLB with 4K textures (37 MB) and a GLB with 4K JPEG textures (4.4 MB).
+- **On the site:** the 4.4 MB file with 2K textures (3.2 MB), so cheaper phones don't run out of graphics memory. 96,566 triangles; geometry unchanged.
+- **Size:** about 7 cm long, measured by you with a set square (`shell measurement 7cm.JPG`).
+- **Species and place: not settled.** Google's AI said mutable conch; size (7 cm against a 4 cm maximum) and place (Black Sea against Indo-Pacific) speak against it, and for *Rapana venosa*. Evidence and next step (iNaturalist): ideas/where-did-this-come-from.md.
+- Your verdict (12 Nov): "the shell was beautifully scanned".
+
+### 4.2 Process images (for the website's development section and OceanX)
+| File | What it shows | Use |
+|---|---|---|
+| `process/IMG_3221 shell possible origin.jpeg` | The beach, 8 Sep 2025 (Romanian Black Sea coast, from its GPS) | Origin story, once confirmed; check the beach's rules before naming it |
+| `photogrammetry shell/IMG_7934.jpeg`, `process/IMG_7935.jpeg` | The capture set-up: light tent, Halo Bars, turntable, Nikon | Website "how it was made"; OceanX sample project |
+| `shell scan/` (164 photos) | The capture itself | A contact sheet or a 3-second flip-through |
+| `process/Screenshot … 01.53.24 (2).png` | Reality Composer Pro "Model Created" beside the grey mesh in Blender | Process: from photos to 3D |
+| `photogrammetry shell/shell measurement 7cm.JPG` | The shell on a set square | Size, and evidence against the AI's species |
+| `process/screencapture-tactileroom-…png` | The live room, 12 Nov | Before/after with the next version |
+| `process/screencapture-google-search-….pdf` | Google's AI identification | The AI-error example (keep it as evidence) |
+| `versions/` in the repo | Every version, 1.0 to 1.6 | The development section: how it changed and why (decision 12 Nov: keep them public) |
+- **Privacy before publishing:** photos taken at home (`IMG_7933`–`IMG_7935`) carry your home's GPS position. Export them without location (Photos: Export, "Include location" off) or strip it (`exiftool -gps:all= file.jpg`). The beach photo's location is the point, so keep it there only once you've decided to name the beach.
 
 ## 5. User research
 ### 5.1 What happened so far
@@ -87,6 +113,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Opinions still have to come from observation, thinking aloud and questions after the session.
 
 ### 5.2 Possible testers (via Oliver, social worker)
+- 12 Nov: invitation drafted in German, with a short English note for Oliver to forward it.
 - Tester A: wants to know what it is beforehand. Send a plain description and the link first.
 - Tester B: heavy AI user; uses ChatGPT to communicate. Write in plain text that works pasted into ChatGPT. Ideal co-designer for the AI-question idea.
 - One of them speaks only German: write the first message, the consent and the session questions in German too. The page has German since v1.3.
@@ -139,6 +166,8 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 11 Nov | Gemini | Inspiration mockups for the new look | Invented readouts and sliders that don't exist in the room | Left out of v1.4 |
 | 11 Nov | Claude | v1.4 restyle from your direction; contrast checks and accessibility audit | Kept the old layout; same fonts; About misaligned. Looked generic | Fonts changed in 1.5; layout redesign planned in Figma after OceanX |
 | 11 Nov | Claude | v1.5: fonts, trackpad turning, touch-area cues, layout fixes | [to fill after you've tried it] | [to fill] |
+| 12 Nov | Google (AI search) | Identified the shell as a mutable conch, about 35–40 mm | Wrong size (your ruler: 7 cm); species very likely wrong (4 cm maximum; Indo-Pacific, not the Black Sea) | You checked WoRMS (name superseded); Claude checked size and range. Label keeps no species until iNaturalist |
+| 12 Nov | Claude | v1.6: removed the generated shell, set up your scan, placed two landmarks, Dark \| Light, device language | Didn't send a zip of 1.5 (its files went straight into your folder) | [to fill] |
 | [Sat] | [local model] | Draft shell description | [to fill] | [to fill] |
 
 ## 8. Open questions
@@ -146,6 +175,8 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Is the knock right, or should the landmark sound come from the real shell?
 - Which phones do the testers use?
 - Is the "gap" real after a proper literature search?
+- Are Spiral tip, Back tip and Opening where you'd put them? Other spots worth naming (the shoulder knobs)?
+- Which species is it? (iNaturalist.) Was it found on the Corbu–Midia beach, and may shells be taken there?
 - Dark or light: which do low-vision testers prefer?
 - Does the touch-area ping help people find the shell, or is it noise?
 - Do screen-reader users manage with VoiceOver's pass-through gesture, or switch it off?

@@ -2,11 +2,29 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.7 · 12 Nov 2026
+- **Spoken names are clearer** (Chico, 12 Nov: "Tip" could barely be heard over the other sound): landmark names are spoken more slowly (rate 0.85; other hints 1.0) at full volume, and the shell's tone and crackle drop to about a fifth while any hint is spoken, then come back.
+- **Landmarks:** "Tip" is now "Spiral tip" (PT "Ponta da espiral", DE "Spitze der Spirale"), a longer name that's easier to catch. New "Back tip" (PT "Ponta de trás", DE "Hintere Spitze") at the far end of the shell, where touching said nothing before; it's placed at the scan's point farthest from the spiral tip. "Opening" unchanged.
+- **Size on the label:** "About 7 cm long", from Chico's measurement with a set square.
+- No species, place or year on the label yet: the species is still being checked (see the project report).
+- Tests: each landmark is touched from a view where it can be seen and must be spoken slowly while the shell's sound drops.
+- 1.6 saved in `versions/v1.6-2026-11-12/`.
+
+## 1.6 · 12 Nov 2026
+- **Chico's scanned shell is the only shell** (his scan, 11–12 Nov): `assets/shell.glb` is his `shelljpg.glb` with the three textures reduced from 4096 to 2048 pixels for phones (about 270 MB of graphics memory down to about 67 MB; file 3.2 MB). Geometry unchanged: 96,566 triangles.
+- The generated stand-in shell is gone from the page: its code, its text, its label and badge, and every comment about it (Chico, 12 Nov: "it should be my shell"). If the scan can't load, visitors see a plain message in their language ("The shell couldn't load. Check your connection, then reload the page."); the studio says why.
+- New `room.json` with only what is known: name "Sea snail shell" (PT, DE), method "Photogrammetry: photographed and built by Chico Morais", credits. Species, place, year and size are left empty until checked. Two landmarks placed on the scan: Tip (point of the spire) and Opening (inside the mouth).
+- No description written yet, so the Describe button is hidden until there is one, instead of doing nothing.
+- **Dark | Light** (Chico, 12 Nov: the single "Light background" button didn't show which one was on): two buttons side by side, the one in use filled, like EN | PT | DE. Labelled "Background" for screen readers; in PT and DE too.
+- **Language from the device** (Chico, 12 Nov): the page now checks all of the visitor's device languages in order and opens in the first one it speaks (before, only the first device language counted). A language picked on the page is remembered; `?lang=` in a link wins over both.
+- Tests: new v1.6 suite (no generated shell anywhere, the scan, device languages, Dark | Light, messages); the others now run on the real scan and restore `room.json` after themselves.
+- 1.5 saved in `versions/v1.5-2026-11-11/`. Earlier versions in `versions/` still show the generated shell: they are the record of how the room was made.
+
 ## 1.5 · 11 Nov 2026
 - Published on GitHub Pages at https://tactileroom.chicomorais.com (11 Nov).
 - Studio note no longer says "Only you see this": anyone who adds `#studio` to the address can open it, but changes made there stay in their own browser.
 - New `docs/` folder for the project report, so the record lives with the code. `.DS_Store` removed and ignored.
-- Fonts (Chico, 11 Nov: the old ones looked like generic AI-made pages): Syne for headings and buttons (made for Synesthésies, an art centre in Paris); Inclusive Sans for reading text (designed for accessibility); Martian Mono, narrowed, for notes, numbers and labels. They are kept in `fonts/` on this site, so visitors' browsers never contact Google (in Germany, loading Google Fonts from Google's servers was ruled a GDPR breach: LG München, 2022). All three are under the SIL Open Font License; the licences are in `fonts/`.
+- Fonts (Chico, 11 Nov: the old ones looked like generic AI-made pages): Syne for headings and buttons (made for Synesthésie, an art centre in Saint-Denis, near Paris); Inclusive Sans for reading text (designed for accessibility); Martian Mono, narrowed, for notes, numbers and labels. They are kept in `fonts/` on this site, so visitors' browsers never contact Google (in Germany, loading Google Fonts from Google's servers was ruled a GDPR breach: LG München, 2022). All three are under the SIL Open Font License; the licences are in `fonts/`.
 - Turning (Chico, 11 Nov): over the shell's area, a two-finger swipe on a trackpad turns it (sideways) and tilts it (up and down); the mouse wheel does the same. Pinch on a trackpad, or Ctrl + wheel, zooms. Safari's own trackpad pinch and twist work too. Elsewhere on the page, scrolling works as before.
 - The touch area (Chico, 11 Nov: the page doesn't scroll while a finger is on the shell's area, which could confuse blind visitors):
   - touching the area but not the shell: one soft sonar ping and a short vibration;

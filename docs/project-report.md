@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.10 (12 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, and a feedback form (in a pop-up) for people you can't meet.
+- Current version: 1.12 (12 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, and a feedback form (in a pop-up) for people you can't meet.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -73,7 +73,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 6 Nov | 1.1 | Vibration (Android, gamepad) and gamepad control | Built by Claude on its own initiative after you said vibration is essential | Touch back into the Tactile Room |
 | 9 Nov | — | Scan the large shell (likely *Rapana venosa*); worn one for the test run; black background; turntable needs no cover | Chico | Detail and intact relief; contrast |
 | 10 Nov | 1.2 | Soft low knock replaces the chime; five-note scale on; water off by default; version recorded in the studio and test logs | Chico | Coin sound annoying and covered the spoken hints; more harmonic; water distracting |
-| 10 Nov | 1.3 | German (EN / PT / DE); test logs save themselves in the browser | Chico | One tester speaks only German; the friend test lost its data |
+| 10 Nov | 1.3 | German (EN / PT / DE); test logs save themselves in the browser | Chico | A tester may speak only German; the friend test lost its data |
 | 10 Nov | — | For OceanX: test on Android, state the iPhone limit plainly, propose a native iPhone version for the fellowship year | Chico | No time for a native app before 13 Nov |
 | 11 Nov | 1.4 | New look from your "Deep-Sea Sonar Studio" direction, dark by default with a light switch; access kept (see 3.5) | Chico (direction); Claude (build, and what to leave out for access) | The tools looked like generic AI-made pages |
 | 11 Nov | — | Published on GitHub Pages with your own domain (tactileroom.chicomorais.com), set up by you in VS Code | Chico | Testers and OceanX need a public link |
@@ -84,13 +84,16 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | — | Framing: the Tactile Room makes objects explorable through sound and vibration; the shell is the first object, not the subject. No session length in the invitation | Chico | "Only a shell" diminishes it; the method can work for any object, and is what a master's or fellowship would develop |
 | 12 Nov | 1.8 | Intro about objects, the shell as the first; vibration Off \| Light \| Strong with a test buzz, Strong by default | Chico (framing; no vibration felt on an LG K9); Claude (cause and fix) | Short taps (5–15 ms) are likely below what older phones' motors can produce (INFERENCE; check on the K9) |
 | 12 Nov | — | Testers open the room for the first time during the session; the link only on request | Chico (question), Claude (recommendation) | First contact is data you only get once |
-| 12 Nov | — | Tester invitation: your own intro, how you know Oliver, "du" | Chico | Personal and informal fits how Oliver knows them |
 | 12 Nov | 1.9 | Feedback form at the end of the page (EN/PT/DE), answers to a Google Sheet; device details in the test log | Chico (in case no blind testers can meet before the deadline); Claude (build) | Remote people can try it and answer; the log shows the device without asking |
 | 12 Nov | 1.9 | First form question: "How do you describe yourself?" (blind, partially sighted, sighted, prefer not to say), not how much someone sees | Chico | "How much do you see" can feel offensive; self-description is optional and respectful |
 | 12 Nov | 1.10 | Form in a pop-up; credits as one line at the bottom, no About box; fonts and three.js no longer named on the page | Chico (keep the page clean; that information isn't important to visitors) | Font licences stay with the font files, which is what they require |
 | 12 Nov | 1.10 | The shell's description, spoken by Describe: shape with the landmark names, then the species' journey and where you found it | Chico (asked for it back once the species was confirmed); Claude (draft from checked facts) | **Check against the real shell:** the orange inside, the knobs on the shoulder, the short channel at the back tip |
+| 12 Nov | 1.11 | Gamepad: L2 zooms out, R2 zooms in (small steps now from a gentle push or the d-pad); voices: prefer the natural-sounding ones, never the robotic or joke voices | Chico (8BitDo Pro 2 on a Mac: vibration works, no zoom; "voices super robotic") | Some systems list robotic voices first, and 1.10 took the first one |
+| 12 Nov | 1.11 | Description corrected from the photos: cream with rows of brown dashes outside; inside smooth and glossy, salmon orange at the inner edge, darker brown bands deeper in | Chico (Qwen description); Claude (checked it against the photos) | Qwen got the size and the inside colour wrong (below, AI log) |
+| 12 Nov | 1.12 | Description rewritten from your own check of the Qwen description: 7 × 6 cm, a point at each end, six turns, the net of ribs, hundreds of fine brown lines that fade into the cream, turn dotted, then strong, and run deep inside; inside pinkish white to salmon with brown at the inner lip. Label size: 7 cm long, 6 cm wide | Chico (measured and checked against the shell) | Your eyes on the object beat both AIs |
+| 12 Nov | 1.12 | Description and keys moved under the shell; the description keeps its paragraphs | Chico (an open description left a big empty gap) | The side panel stays short; the text fills the shell's column |
 | 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
-| 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, on Bürgergeld, no fee possible, results may support a fellowship or master's | Chico (who to ask; that they know you're an immigrant on Bürgergeld, doing it out of love); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
+| 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, no fee possible, results may support a fellowship or master's | Chico (who to ask; that it's done out of love, not for money); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 
 - Every version is kept in the package (`versions/`, CHANGELOG.md).
 
@@ -101,15 +104,15 @@ Working record of the whole process: research, decisions, versions, tests and id
 - **Your files** (`photogrammetry shell`): a medium-detail test (USDZ, 26 MB), the full-detail scan (USDZ, 58 MB), a GLB with 4K textures (37 MB) and a GLB with 4K JPEG textures (4.4 MB).
 - **On the site:** the 4.4 MB file with 2K textures (3.2 MB), so cheaper phones don't run out of graphics memory. 96,566 triangles; geometry unchanged.
 - **Size:** about 7 cm long, measured by you with a set square (`shell measurement 7cm.JPG`).
-- **Species: veined rapa whelk, *Rapana venosa*** (FACT, iNaturalist, 12 Nov 2026): **Research Grade**, 3 of 3 identifications agree, observed 8 Sep 2025 at Corbu, Constanța, Romania; iNaturalist marks it as introduced there. Observation: https://www.inaturalist.org/observations/414290045 (all photos now in this one; you deleted the duplicate observations on request). Screenshots of every observation before deletion: `process/screencapture-inaturalist-…pdf`.
-- **On the label since 12 Nov:** *Rapana venosa*; found on the Black Sea coast, Romania; 2025. The beach itself stays off the label until you've checked the collecting rules (ideas/where-did-this-come-from.md).
+- **Species: veined rapa whelk, *Rapana venosa*** (FACT, iNaturalist, 12 Nov 2026): **Research Grade**, 3 of 3 identifications agree, observed 8 Sep 2025 on the Romanian Black Sea coast; iNaturalist marks it as introduced there. Observation: https://www.inaturalist.org/observations/414290045 (all photos now in this one; you deleted the duplicate observations on request). Screenshots of every observation before deletion: `process/screencapture-inaturalist-…pdf`.
+- **On the label since 12 Nov:** *Rapana venosa*; found on the Black Sea coast, Romania; 2025. The exact place stays private.
 - Google's AI had said mutable conch; size and place spoke against it. Evidence: ideas/where-did-this-come-from.md.
 - Your verdict (12 Nov): "the shell was beautifully scanned".
 
 ### 4.2 Process images (for the website's development section and OceanX)
 | File | What it shows | Use |
 |---|---|---|
-| `process/IMG_3221 shell possible origin.jpeg` | The beach, 8 Sep 2025 (Romanian Black Sea coast, from its GPS) | Origin story, once confirmed; check the beach's rules before naming it |
+| `process/IMG_3221 shell possible origin.jpeg` | The beach, 8 Sep 2025 (Romanian Black Sea coast, from its GPS) | Origin story; shown without its location |
 | `photogrammetry shell/IMG_7934.jpeg`, `process/IMG_7935.jpeg` | The capture set-up: light tent, Halo Bars, turntable, Nikon | Website "how it was made"; OceanX sample project |
 | `shell scan/` (164 photos) | The capture itself | A contact sheet or a 3-second flip-through |
 | `process/Screenshot … 01.53.24 (2).png` | Reality Composer Pro "Model Created" beside the grey mesh in Blender | Process: from photos to 3D |
@@ -124,21 +127,15 @@ Working record of the whole process: research, decisions, versions, tests and id
 - The friend test produced no data. The log stayed in the browser until copied, and it only records movements, not opinions. Fixed in v1.3: logs save themselves, and "Copy all saved logs" exports every session with its date and version.
 - Opinions still have to come from observation, thinking aloud and questions after the session.
 
-### 5.2 Possible testers (via Oliver, social worker)
-- 12 Nov: invitation drafted in German, with a short English note for Oliver to forward it; shortened the same day, with no session length and the wider framing (objects, not only a shell).
-- Tester A: wants to know what it is beforehand. Send a plain description and the link first.
-- Tester B: heavy AI user; uses ChatGPT to communicate. Write in plain text that works pasted into ChatGPT. Ideal co-designer for the AI-question idea.
-- One of them speaks only German: write the first message, the consent and the session questions in German too. The page has German since v1.3.
-- **The link is public now: https://tactileroom.chicomorais.com** (since 11 Nov). Check it opens on your phone over mobile data before sending it.
-- Screen readers on phones (POTENTIAL, test it): VoiceOver and TalkBack take over touch, so a normal drag doesn't reach the page. VoiceOver's pass-through gesture (double-tap and hold, then drag) may work; otherwise testers turn the screen reader off for the touch part, or use a laptop with the arrow keys. Whatever they choose is a finding.
-
+### 5.2 Possible testers
+- Two people, through a personal contact; invitation in German (12 Nov). Their details stay private.
 ### 5.3 Format (recommendation)
 - A moderated session: in person or by video call, 45 minutes, on their own device with their own screen-reader settings. You watch, ask and take notes.
 - Ask first which phone and screen reader they use. On an iPhone, the page can't vibrate; note it as a finding.
 - **First contact together.** Don't send the link before the session; open it with them. If someone asks for it earlier, send it and note "had seen it before". On Android, have them choose Strong vibration and check the test buzz first.
 
 ### 5.4 First message (structure; the words are yours)
-1. Who you are, in one line, and that Oliver passed on their contact.
+1. Who you are, in one line, and who passed on their contact.
 2. What the Tactile Room is, in two plain lines.
 3. The ask: 45 minutes, in person in Berlin or by video call, on their own device.
 4. What happens: they explore and say what they notice, then a few questions. It's an early prototype, so their criticism is the point. They can stop at any time.
@@ -208,7 +205,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | Google (AI search) | Identified the shell as a mutable conch, about 35–40 mm | Wrong size (your ruler: 7 cm) and wrong species: the iNaturalist community confirmed *Rapana venosa* (Research Grade, 3 of 3) the same day | You checked WoRMS (name superseded); Claude checked size and range; people identified it |
 | 12 Nov | Claude | v1.6: removed the generated shell, set up your scan, placed two landmarks, Dark \| Light, device language | Didn't send a zip of 1.5 (its files went straight into your folder) | [to fill] |
 | 12 Nov | Claude | v1.7–1.9: clearer names, vibration levels, feedback form and receiver script; session guide; tester and association emails | [to fill after testing] | [to fill] |
-| [Sat] | [local model] | Draft shell description | [to fill] | [to fill] |
+| 12 Nov | Qwen 3.5 9B (local, LM Studio; your four photos, one with the set square) | Described the shell for someone who can't see it | **Your check, point by point (your doc "LLM shell description against my checkings"):** size invented against the ruler in its own picture ("4–6 cm", "10–15 cm wide"; you measured 7 cm long, 6 cm wide); missed the second point at the back, "very visible" in the photos; "pearly white" inside (pinkish white to salmon, brown at the inner lip); "brown spots" (you see hundreds of fine brown lines that fade, dot and strengthen, and run deep inside). Right: six turns (you counted six), the shouldered knobs, the net of ribs | Description rewritten from your checks (1.12). Claude's own first pass had also got the inside wrong ("deep orange"). The third example of checking AI against evidence, and the best one: you checked it yourself, against the object |
 
 ## 8. Open questions
 - Does silence off the shell make it harder to find the shell again?
@@ -216,7 +213,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Which phones do the testers use? (Since 1.9 the log and the form's visit box record it.)
 - Is the "gap" real after a proper literature search?
 - Are Spiral tip, Back tip and Opening where you'd put them? Other spots worth naming (the shoulder knobs)?
-- ~~Which species is it?~~ *Rapana venosa*, confirmed 12 Nov. Still open: may shells be taken on the Corbu–Midia beach?
+- ~~Which species is it?~~ *Rapana venosa*, confirmed 12 Nov.
 - Dark or light: which do low-vision testers prefer?
 - Does the touch-area ping help people find the shell, or is it noise?
 - Do screen-reader users manage with VoiceOver's pass-through gesture, or switch it off?

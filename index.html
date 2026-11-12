@@ -95,7 +95,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
 .bench { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 
-.stage-wrap { display: grid; gap: 12px; min-width: 0; }
+.stage-wrap { display: grid; gap: 12px; min-width: 0; align-content: start; }
 /* the stage: open water, no box. Faint sonar rings behind a transparent 3D canvas. */
 .stage {
   position: relative; width: 100%; aspect-ratio: 3 / 4; max-height: 66svh; min-height: 320px;
@@ -160,6 +160,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .specimen .rule { display: none; }
 
 details { border-top: 1px solid var(--hair); padding-top: 12px; }
+details.panel { border-top: 0; padding: 4px 16px 12px; }
+#desc-text { white-space: pre-line; } /* keep the description's paragraphs */
 summary { cursor: pointer; font-family: var(--f-display); font-weight: 700; min-height: 44px; display: flex; align-items: center; }
 details p { margin-top: 8px; max-width: 65ch; }
 .keys dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 8px 0 0; font-size: var(--s-1); }
@@ -307,6 +309,25 @@ dialog.feedback::backdrop { background: rgba(2, 10, 14, 0.72); }
         <div class="trace-head"><span class="label" data-i18n="hear">What you hear</span><output id="readout" class="mono" aria-live="off">Silent</output></div>
         <canvas id="trace" aria-hidden="true"></canvas>
       </div>
+      <!-- v1.12: the description and the keys sit under the shell, so an open description no longer stretches the side panel and leaves an empty gap (Chico, 12 Nov) -->
+      <details class="desc glass panel" id="desc-details">
+        <summary data-i18n="readDesc">Read the description</summary>
+        <p id="desc-text"></p>
+      </details>
+      <details class="keys glass panel">
+        <summary data-i18n="keys">Keys</summary>
+        <dl>
+          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></dt><dd data-i18n-html="kMove">Move your fingertip across the picture (hold <kbd>Shift</kbd> for small steps)</dd>
+          <dt><kbd>Q</kbd> <kbd>E</kbd></dt><dd data-i18n="kTurn">Turn the shell left or right under your fingertip</dd>
+          <dt><kbd>Home</kbd></dt><dd data-i18n="kHome">Back to the middle</dd>
+          <dt><kbd>Enter</kbd></dt><dd data-i18n="kEnter">Describe the spot you are on</dd>
+          <dt data-i18n-html="kDKeys"><kbd>D</kbd> or <kbd>Space</kbd></dt><dd data-i18n="kD">Play or stop the description</dd>
+          <dt><kbd>+</kbd> <kbd>−</kbd></dt><dd data-i18n="kZoom">Move closer or further away</dd>
+          <dt><kbd>Esc</kbd></dt><dd data-i18n="kEsc">Stop all sound</dd>
+          <dt data-i18n="kPad">Gamepad</dt><dd data-i18n="kPadDo">Left stick moves your fingertip (push it gently for small steps; the d-pad moves one step at a time), right stick turns the shell, L2 and R2 zoom out and in, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle</dd>
+        </dl>
+        <p class="hint" data-i18n="vibeNote">The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.</p>
+      </details>
     </section>
 
     <aside class="side glass" aria-label="Controls and specimen label" data-i18n-label="secSide">
@@ -341,24 +362,6 @@ dialog.feedback::backdrop { background: rgba(2, 10, 14, 0.72); }
         <dl id="sp-facts"></dl>
       </article>
 
-      <details class="desc" id="desc-details">
-        <summary data-i18n="readDesc">Read the description</summary>
-        <p id="desc-text"></p>
-      </details>
-      <details class="keys">
-        <summary data-i18n="keys">Keys</summary>
-        <dl>
-          <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></dt><dd data-i18n-html="kMove">Move your fingertip across the picture (hold <kbd>Shift</kbd> for small steps)</dd>
-          <dt><kbd>Q</kbd> <kbd>E</kbd></dt><dd data-i18n="kTurn">Turn the shell left or right under your fingertip</dd>
-          <dt><kbd>Home</kbd></dt><dd data-i18n="kHome">Back to the middle</dd>
-          <dt><kbd>Enter</kbd></dt><dd data-i18n="kEnter">Describe the spot you are on</dd>
-          <dt data-i18n-html="kDKeys"><kbd>D</kbd> or <kbd>Space</kbd></dt><dd data-i18n="kD">Play or stop the description</dd>
-          <dt><kbd>+</kbd> <kbd>−</kbd></dt><dd data-i18n="kZoom">Move closer or further away</dd>
-          <dt><kbd>Esc</kbd></dt><dd data-i18n="kEsc">Stop all sound</dd>
-          <dt data-i18n="kPad">Gamepad</dt><dd data-i18n="kPadDo">Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle</dd>
-        </dl>
-        <p class="hint" data-i18n="vibeNote">The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.</p>
-      </details>
     </aside>
   </main>
 
@@ -540,8 +543,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description
-const VERSION = '1.10';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description · 1.11 (12 Nov) gamepad zoom on L2/R2, more natural voices · 1.12 (12 Nov) description and keys under the shell, description from Chico's own checks
+const VERSION = '1.12';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -623,7 +626,7 @@ const UI = {
     noWebgl: 'This page needs WebGL, which isn’t available in this browser. Try another browser or device.',
     rRidge: 'ridge', rGroove: 'groove', rSmooth: 'smooth', water: 'Water', shellFallback: 'Shell',
     vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Off', vibeLight: 'Light', vibeStrong: 'Strong',
-    kPadDo: 'Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle',
+    kPadDo: 'Left stick moves your fingertip (push it gently for small steps; the d-pad moves one step at a time), right stick turns the shell, L2 and R2 zoom out and in, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle',
     vibeNote: 'The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.',
     padOn: 'Gamepad connected. The left stick explores, the right stick turns the shell, A describes the spot. If you hear nothing, press any key or tap the screen once.',
     // v1.9 feedback form
@@ -694,7 +697,7 @@ const UI = {
     noWebgl: 'Esta página precisa de WebGL, que não está disponível neste navegador. Tente outro navegador ou aparelho.',
     rRidge: 'nervura', rGroove: 'sulco', rSmooth: 'liso', water: 'Água', shellFallback: 'Concha',
     vibe: 'Vibração', kPad: 'Controle de videogame', vibeOff: 'Desligada', vibeLight: 'Leve', vibeStrong: 'Forte',
-    kPadDo: 'O analógico esquerdo move a ponta do dedo (segure o gatilho esquerdo para passos menores), o direito gira a concha, A ou ✕ descreve o ponto, B ou ○ toca a descrição, Y ou △ volta ao centro',
+    kPadDo: 'O analógico esquerdo move a ponta do dedo (empurre de leve para passos menores; o direcional anda um passo por vez), o direito gira a concha, L2 e R2 afastam e aproximam, A ou ✕ descreve o ponto, B ou ○ toca a descrição, Y ou △ volta ao centro',
     vibeNote: 'A concha vibra sob o dedo em celulares Android e com um controle de videogame. Escolha Forte se não sentir nada; celulares mais antigos precisam de pulsos mais longos. iPhones não vibram a partir de uma página da web.',
     padOn: 'Controle conectado. O analógico esquerdo explora, o direito gira a concha, A descreve o ponto. Se não ouvir nada, aperte qualquer tecla ou toque a tela uma vez.',
     // v1.9 feedback form
@@ -765,7 +768,7 @@ const UI = {
     noWebgl: 'Diese Seite braucht WebGL, das in diesem Browser nicht verfügbar ist. Bitte einen anderen Browser oder ein anderes Gerät versuchen.',
     rRidge: 'Rippe', rGroove: 'Rille', rSmooth: 'glatt', water: 'Wasser', shellFallback: 'Muschel',
     vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Aus', vibeLight: 'Leicht', vibeStrong: 'Stark',
-    kPadDo: 'Linker Stick bewegt die Fingerspitze (linken Trigger halten für kleine Schritte), rechter Stick dreht die Muschel, A oder ✕ beschreibt die Stelle, B oder ○ spielt die Beschreibung ab, Y oder △ führt zurück zur Mitte',
+    kPadDo: 'Linker Stick bewegt die Fingerspitze (sanft drücken für kleine Schritte; das Steuerkreuz geht je einen Schritt), rechter Stick dreht die Muschel, L2 und R2 zoomen heraus und hinein, A oder ✕ beschreibt die Stelle, B oder ○ spielt die Beschreibung ab, Y oder △ führt zurück zur Mitte',
     vibeNote: 'Die Muschel vibriert unter dem Finger auf Android-Handys und mit einem Gamepad. Wenn nichts zu spüren ist, „Stark“ wählen: Ältere Handys brauchen längere Impulse. iPhones können auf einer Webseite nicht vibrieren.',
     padOn: 'Gamepad verbunden. Der linke Stick erkundet, der rechte dreht die Muschel, A beschreibt die Stelle. Falls nichts zu hören ist, einmal eine Taste drücken oder auf den Bildschirm tippen.',
     // v1.9 feedback form
@@ -1894,11 +1897,10 @@ function pollPad(now) {
   const dz = (v) => (Math.abs(v || 0) < 0.18 ? 0 : (v - Math.sign(v) * 0.18) / 0.82);
   const lx = dz(gp.axes[0]), ly = dz(gp.axes[1]), rx = dz(gp.axes[2]), ry = dz(gp.axes[3]);
   latchPad();
-  const held = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
   const pressed = (i) => pad.latched.has(i);
   let moved = false;
   if (lx || ly) {
-    const speed = held(6) ? 0.25 : 0.85; // left trigger: small, careful steps
+    const speed = 0.85; // v1.11: the stick is analog, so a gentle push already gives small steps (L2 now zooms)
     kb.x += lx * dt * speed; kb.y -= ly * dt * speed * (stage.clientWidth / Math.max(1, stage.clientHeight));
     moved = true;
   }
@@ -1911,6 +1913,13 @@ function pollPad(now) {
   if (rx || ry) {
     view.tYaw += rx * dt * 1.6; view.tPitch = clamp(view.tPitch + ry * dt * 1.2, -1.2, 1.2);
     view.lastInput = now; kb.active = true; kb.input = 'pad'; kb.turningUntil = now + 300;
+  }
+  // v1.11: L2 zooms out, R2 zooms in; the harder you press, the faster (Chico's 8BitDo Pro 2, 12 Nov)
+  const trig = (i) => { const b = gp.buttons[i]; const v = b ? (typeof b.value === 'number' && b.value > 0 ? b.value : (b.pressed ? 1 : 0)) : 0; return v > 0.08 ? v : 0; };
+  const zoom = trig(6) - trig(7);
+  if (zoom) {
+    view.tDist = clamp(view.tDist * Math.exp(zoom * dt * 1.3), view.baseDist * 0.45, view.baseDist * 1.8);
+    view.userZoomed = true; view.lastInput = now;
   }
   if (pressed(4) || pressed(5)) {
     view.tYaw += (pressed(4) ? -1 : 1) * Math.PI / 6; view.lastInput = now;
@@ -1960,7 +1969,21 @@ function pickVoice() {
   const named = loc(d.voice);
   const byName = named && voices.find((v) => v.name === named);
   if (byName && (byName.lang || '').slice(0, 2) === want.slice(0, 2)) return byName;
-  return voices.find((v) => v.lang === want) || voices.find((v) => (v.lang || '').replace('_', '-').startsWith(want.slice(0, 2))) || null;
+  // v1.11: among the voices for this language, prefer the natural-sounding ones (Premium, Enhanced, Natural, Siri, Google)
+  // and never pick the joke voices or the old robotic ones that some systems list first (Chico: "super robotic")
+  const same = voices.filter((v) => (v.lang || '').replace('_', '-').slice(0, 2).toLowerCase() === want.slice(0, 2));
+  if (!same.length) return null;
+  const score = (v) => {
+    const n = (v.name || '').toLowerCase(); let k = 0;
+    if (/premium|enhanced|natural|neural|siri/.test(n)) k += 50;
+    if (/^google /.test(n) || /microsoft .* online/.test(n)) k += 30;
+    if (/\b(daniel|kate|serena|samantha|karen|moira|tessa|martha|arthur|luciana|joana|felipe|anna|petra|markus|helena|yannick|viktor)\b/.test(n)) k += 20;
+    if (/\b(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|kathy|eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley)\b/.test(n)) k -= 100;
+    if ((v.lang || '').replace('_', '-') === want) k += 5;
+    if (v.default) k += 2;
+    return k;
+  };
+  return same.slice().sort((a, b) => score(b) - score(a))[0];
 }
 function toggleDescription() {
   if (descPlaying) { stopDescription(); return; }
@@ -2498,11 +2521,12 @@ async function boot() {
   window.__tactileRoomReady = true;
   // a small read-only hook for automated checks
   window.tactileRoom = {
+    voice: () => { const v = pickVoice(); return v ? v.name : null; },
     state: () => ({ on: probe.on, midi: probe.midi, curv: probe.curv, pv: probe.pv, mode: probe.mode, local: probe.local.toArray(),
       audio: audio.ready ? { running: audio.running, tone: audio.toneGain.gain.value, water: audio.waterGain.gain.value, duck: audio.duckGain.gain.value } : null,
       landmarks: landmarks.map((l) => loc(l.name)), version: VERSION, lang: LANG, landmarkAt: landmarks.map((l) => l.at), kb: { x: kb.x, y: kb.y }, faces: modelInfo.faces, analysis: analysisInfo, live: live.textContent,
       textured: meshes.some((m) => { const mt = (m.userData.saved && m.userData.saved.material) || m.material; return !!(mt && mt.map && mt.map.image); }),
-      view: { yaw: view.yaw, pitch: view.pitch, dist: view.dist },
+      view: { yaw: view.yaw, pitch: view.pitch, dist: view.dist, target: view.tDist },
       haptics: { phone: haptics.phone, pad: pad.index, user: haptics.user, strength: haptics.strength(), toggleShown: !$('vibe').hidden },
       fit: (() => { const bx = new THREE.Box3(); meshes.forEach((m) => bx.expandByObject(m)); const sp = bx.getBoundingSphere(new THREE.Sphere()); return [+sp.center.length().toFixed(3), +sp.radius.toFixed(3)]; })(),
       test: { running: test.running, rows: test.rows.length } }),

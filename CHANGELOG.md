@@ -2,6 +2,20 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.12 · 12 Nov 2026
+- **The description, from Chico's own check** of a local AI's description (Qwen 3.5 9B, given his four photos): about 7 cm long and 6 cm wide, oval with a point at each end, six turns, knobs on the shoulder, a fine net where low ribs cross the spiral ridges, hundreds of thin brown lines that fade into the cream near the top, turn dotted, then strong, and run on deep inside the opening, which is pinkish white to salmon with brown at the inner lip. Label size updated to 7 × 6 cm.
+- **No more empty gap** (Chico): the description and the keys now sit under the shell instead of in the side panel, so opening them fills the shell's column. The description keeps its paragraphs.
+- Tests: description content, layout with the description open, line length. The zoom checks now compare the camera's target, which doesn't depend on the test machine's frame rate.
+- 1.11 saved in `versions/v1.11-2026-11-12/`.
+
+## 1.11 · 12 Nov 2026
+- **Gamepad zoom** (Chico, on an 8BitDo Pro 2 in Chrome on a Mac, where the vibration works): L2 zooms out, R2 zooms in; the harder you press, the faster. Small steps now come from a gentle push on the stick (it's analog) or the d-pad, since L2 used to be the small-steps button.
+- **More natural voices** (Chico: "super robotic"): the room now prefers Premium, Enhanced, Natural, Siri and Google voices and never picks the joke voices or the old robotic ones, which some systems list first.
+- **Description corrected from the photos:** cream with rows of brown dashes outside; the opening smooth and glossy, salmon orange at the inner edge, with darker brown bands deeper in. Checked against Chico's four photos after a local AI (Qwen 3.5 9B) described the shell with an invented size and a white inside.
+- **Public copy of the report:** `docs/project-report.md` now leaves out testers' details, the benefits mention and the exact place of the find. The full report stays private. (Earlier versions remain in the Git history.)
+- Tests: new v1.11 suite (trigger zoom in and out, a lightly resting trigger does nothing, the zoom limit, voice choice in three languages, the description). The state hook also reports the camera's zoom target.
+- 1.10 saved in `versions/v1.10-2026-11-12/`.
+
 ## 1.10 · 12 Nov 2026
 - **The form opens in a pop-up** (Chico: keep the page clean). "Tell me how it went" in the side panel and at the bottom of the page opens it; Close or Esc closes it, and what was typed stays until it's sent. A link ending in `#feedback` opens it straight away, for emails.
 - **The shell's description is back** (Chico: the species is confirmed, so the description was missing). Describe (or D) reads it aloud in the page's language: the shape, walked through with the landmark names, then where the species comes from and where Chico found it. Draft by Claude from checked facts (size, landmarks, iNaturalist, MarLIN); Chico to check the shape details against the real shell.

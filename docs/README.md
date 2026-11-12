@@ -1,6 +1,6 @@
 # Tactile Room: build guide
 
-**Version 1.10 (12 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
+**Version 1.12 (12 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
 
 **Look.** Dark by default (the deep-sea look). Visitors switch with **Dark | Light** at the top (the one in use is filled); the choice is remembered in their browser. Both looks meet the same contrast rules.
 
@@ -24,7 +24,7 @@ Since 1.6 the page shows only your scanned shell (12 Nov). What's left is yours:
 | `fonts/` | The three fonts and their licences (SIL Open Font License). |
 | `versions/` | Every earlier version, exactly as it was. |
 | `CHANGELOG.md` | What changed in each version, and why. |
-| `docs/` | The project report, this guide, and `feedback-receiver.gs` (the script that puts form answers in your Google Sheet). |
+| `docs/` | The public copy of the project report (without testers' details, benefits or the exact place of the find; the full report stays in your Project), this guide, and `feedback-receiver.gs` (the script that puts form answers in your Google Sheet). |
 | `CNAME` | Tells GitHub Pages to answer at tactileroom.chicomorais.com. Don't delete it. |
 
 This build guide lives in the Claude Project (`projects/tactile-room-build-guide.md`).
@@ -243,7 +243,7 @@ Before the test:
    - phone: a short pulse each time you cross a ridge, a fine rhythm on sharp ridges, a tap when you reach the shell, a double tap at a landmark. Phones can only switch vibration on and off, so texture comes from rhythm, not strength;
    - gamepad: two motors with strength. The fast motor follows ridges (strong) and grooves (almost nothing), the slow one follows how far the surface sticks out, so it reads like the pitch. Off the shell, a slow soft swell for the water;
    - finger still = no vibration, like the sound. Visitors can switch it off; the choice is remembered in their browser.
-7. **Gamepad.** Left stick moves the same fingertip as the arrow keys (hold the left trigger for small steps), right stick turns the shell, A describes the spot, B plays the description, Y goes back to the middle, LB and RB turn it in steps. The page announces the gamepad when it connects. Sound still needs one key press or tap first: browsers don't count a gamepad button as permission to play sound.
+7. **Gamepad.** Left stick moves the same fingertip as the arrow keys (push it gently for small steps; the d-pad moves one step at a time), L2 and R2 zoom out and in (since 1.11; tried by you on an 8BitDo Pro 2 in Chrome on a Mac, where the vibration also works), right stick turns the shell, A describes the spot, B plays the description, Y goes back to the middle, LB and RB turn it in steps. The page announces the gamepad when it connects. Sound still needs one key press or tap first: browsers don't count a gamepad button as permission to play sound.
 8. **Access.** The room works without sight (sound, spoken hints, screen-reader support), without hearing (the "What you hear" trace and the sound map show the sound), with reduced motion settings (no auto-rotation, no ripples) and on any phone without an app.
 
 Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/shapesonic/) (SIGGRAPH Asia 2023) uses the same idea of sound for touching 3D shapes, in a VR headset with abstract shapes. Your difference: a real ocean object from your own travels, in a plain browser, with a checked description, tested with people.
@@ -256,7 +256,7 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 - **iPhone silent switch.** The page asks iOS to play sound anyway; on older iOS versions it may stay silent. Tell testers to flip the switch.
 - **Old browsers.** The page needs iOS 16.4 or newer (Safari 16.4+). Older devices show a message instead of the shell.
 - **Inside the opening.** Touch can reach what the camera sees. Turn the shell to explore the inside.
-- **Voices differ by device.** Without a recording, the description uses the device's own voice. Record your own for a consistent result.
+- **Voices differ by device.** Without a recording, the description uses the device's own voice. Since 1.11 the room picks the most natural one it finds (Premium, Enhanced, Natural, Siri or Google voices) and never the joke or old robotic ones. To get better voices: on a Mac, System Settings → Accessibility → Spoken Content → System voice → Manage voices, and download an Enhanced or Premium voice for English, Portuguese and German; on iPhone, Settings → Accessibility → Spoken Content → Voices; on Android, the Google speech engine's voices. Screen-reader users who turn Spoken hints off hear their own screen reader's voice. **Most human of all: record the description in your own voice** (see "Record" above).
 - **Draco-compressed files** don't load in the Claude preview. Export without compression.
 
 ## AI use (facts for your AI-use log)

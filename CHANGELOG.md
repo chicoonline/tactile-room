@@ -2,6 +2,12 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.8 · 12 Nov 2026
+- **The intro is about objects, with the shell as the first one** (Chico, 12 Nov: the project is a way to explore objects through sound and vibration, not only a shell). EN: "Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys." Same in PT and DE; the page description for search engines too.
+- **Vibration: Off | Light | Strong** (Chico, 12 Nov: nothing felt on an LG K9). The short taps of 1.1–1.7 (about 5–15 ms) are likely too short for the cheaper vibration motors in older phones. Strong, now the default, makes every pulse 2.5 times longer and at least 30 ms (20 ms inside the fine rhythm on sharp ridges). Light keeps the short taps. Choosing Light or Strong gives a test buzz at once (60 or 160 ms), so you know straight away whether the phone vibrates at all. The choice is remembered in that browser.
+- Tests: Strong pulses at least 20 ms, Light under 20 ms, the test buzzes, the new intro in three languages.
+- 1.7 saved in `versions/v1.7-2026-11-12/`.
+
 ## 1.7 · 12 Nov 2026
 - **Spoken names are clearer** (Chico, 12 Nov: "Tip" could barely be heard over the other sound): landmark names are spoken more slowly (rate 0.85; other hints 1.0) at full volume, and the shell's tone and crackle drop to about a fifth while any hint is spoken, then come back.
 - **Landmarks:** "Tip" is now "Spiral tip" (PT "Ponta da espiral", DE "Spitze der Spirale"), a longer name that's easier to catch. New "Back tip" (PT "Ponta de trás", DE "Hintere Spitze") at the far end of the shell, where touching said nothing before; it's placed at the scan's point farthest from the spiral tip. "Opening" unchanged.

@@ -81,6 +81,9 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | 1.6 | Your scan is the only shell; the generated one removed from the code, text and comments; Dark \| Light pair; language from all the device's languages; Describe hidden until a description exists | Chico (requests); Claude (build, 2K textures, landmark placement) | "It should be my shell"; the old button didn't show which look was on; a tester doesn't speak English |
 | 12 Nov | 1.7 | Landmark names spoken more slowly, and the shell's sound drops while any hint is spoken; "Tip" renamed "Spiral tip"; new "Back tip" at the far end; size 7 cm on the label | Chico ("Tip" was barely audible; the back tip said nothing); Claude (fix, names, placement) | Hints were drowned by the tone |
 | 12 Nov | — | Earlier versions stay public in `versions/` | Chico | They show the development, for the report and the website |
+| 12 Nov | — | Framing: the Tactile Room makes objects explorable through sound and vibration; the shell is the first object, not the subject. No session length in the invitation | Chico | "Only a shell" diminishes it; the method can work for any object, and is what a master's or fellowship would develop |
+| 12 Nov | 1.8 | Intro about objects, the shell as the first; vibration Off \| Light \| Strong with a test buzz, Strong by default | Chico (framing; no vibration felt on an LG K9); Claude (cause and fix) | Short taps (5–15 ms) are likely below what older phones' motors can produce (INFERENCE; check on the K9) |
+| 12 Nov | — | Testers open the room for the first time during the session; the link only on request | Chico (question), Claude (recommendation) | First contact is data you only get once |
 
 - Every version is kept in the package (`versions/`, CHANGELOG.md).
 
@@ -91,6 +94,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - **Your files** (`photogrammetry shell`): a medium-detail test (USDZ, 26 MB), the full-detail scan (USDZ, 58 MB), a GLB with 4K textures (37 MB) and a GLB with 4K JPEG textures (4.4 MB).
 - **On the site:** the 4.4 MB file with 2K textures (3.2 MB), so cheaper phones don't run out of graphics memory. 96,566 triangles; geometry unchanged.
 - **Size:** about 7 cm long, measured by you with a set square (`shell measurement 7cm.JPG`).
+- **iNaturalist (12 Nov):** five observations posted (Corbu, Constanța, 8 Sep 2025), waiting for identifications; one already carries a suggestion of veined rapa whelk (*Rapana venosa*).
 - **Species and place: not settled.** Google's AI said mutable conch; size (7 cm against a 4 cm maximum) and place (Black Sea against Indo-Pacific) speak against it, and for *Rapana venosa*. Evidence and next step (iNaturalist): ideas/where-did-this-come-from.md.
 - Your verdict (12 Nov): "the shell was beautifully scanned".
 
@@ -113,7 +117,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - Opinions still have to come from observation, thinking aloud and questions after the session.
 
 ### 5.2 Possible testers (via Oliver, social worker)
-- 12 Nov: invitation drafted in German, with a short English note for Oliver to forward it.
+- 12 Nov: invitation drafted in German, with a short English note for Oliver to forward it; shortened the same day, with no session length and the wider framing (objects, not only a shell).
 - Tester A: wants to know what it is beforehand. Send a plain description and the link first.
 - Tester B: heavy AI user; uses ChatGPT to communicate. Write in plain text that works pasted into ChatGPT. Ideal co-designer for the AI-question idea.
 - One of them speaks only German: write the first message, the consent and the session questions in German too. The page has German since v1.3.
@@ -123,6 +127,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 ### 5.3 Format (recommendation)
 - A moderated session: in person or by video call, 45 minutes, on their own device with their own screen-reader settings. You watch, ask and take notes.
 - Ask first which phone and screen reader they use. On an iPhone, the page can't vibrate; note it as a finding.
+- **First contact together.** Don't send the link before the session; open it with them. If someone asks for it earlier, send it and note "had seen it before". On Android, have them choose Strong vibration and check the test buzz first.
 
 ### 5.4 First message (structure; the words are yours)
 1. Who you are, in one line, and that Oliver passed on their contact.

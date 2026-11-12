@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tactile Room</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Hear the shape of a shell: a 3D scan you explore by touch and sound, with or without looking.">
+<meta name="description" content="Explore objects through sound and vibration, with or without seeing them. The first is a scanned sea snail shell.">
 <!-- fonts: kept on this site (fonts/), see fonts/fonts.css -->
 <link rel="preload" href="fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/inclusive-sans.woff2" as="font" type="font/woff2" crossorigin>
@@ -142,6 +142,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .btn { font: inherit; font-family: var(--f-display); font-weight: 600; font-size: var(--s0); min-height: 44px; padding: 8px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; box-shadow: 0 0 18px var(--glow); }
+.vibe-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 44px; font-family: var(--f-display); font-weight: 600; }
 .btn .state { font-family: var(--f-mono); font-size: var(--s-1); opacity: 0.9; }
 .btn[aria-pressed="true"]:not(.primary) { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), 0 0 14px var(--glow); }
 .btn[aria-pressed="true"]:not(.primary) .state { color: var(--accent); }
@@ -232,7 +233,7 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
   <header class="masthead">
     <div>
       <h1 data-i18n="title">Tactile Room</h1>
-      <p class="lede" id="lede" data-i18n="lede">Hear the shape of a shell. Press and drag across it, or select it and use the arrow keys. Works with your eyes closed.</p>
+      <p class="lede" id="lede" data-i18n="lede">Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys.</p>
     </div>
     <div class="top-right">
       <div class="lang" role="group" aria-label="Language / Idioma">
@@ -279,7 +280,14 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
         <button class="btn" id="map" type="button" aria-pressed="false"><span data-i18n="map">Show the sound map</span><span class="state" id="map-state">off</span></button>
         <button class="btn" id="hints" type="button" aria-pressed="true"><span data-i18n="hints">Spoken hints</span><span class="state" id="hints-state">on</span></button>
         <p class="hint" data-i18n="hintsNote">Turn spoken hints off if you use a screen reader. It will read them instead.</p>
-        <button class="btn" id="vibe" type="button" aria-pressed="true" hidden><span data-i18n="vibe">Vibration</span><span class="state" id="vibe-state">on</span></button>
+        <div class="vibe-row" id="vibe" hidden>
+          <span id="vibe-label" data-i18n="vibe">Vibration</span>
+          <div class="lang" role="group" aria-labelledby="vibe-label">
+            <button type="button" id="vibe-off" aria-pressed="false" data-i18n="vibeOff">Off</button>
+            <button type="button" id="vibe-light" aria-pressed="false" data-i18n="vibeLight">Light</button>
+            <button type="button" id="vibe-strong" aria-pressed="true" data-i18n="vibeStrong">Strong</button>
+          </div>
+        </div>
       </div>
       <div class="legend" id="legend" hidden>
         <span><i style="background: var(--ridge)"></i><span data-i18n="lgRidge">Ridge: brighter sound, clicks as you cross it</span></span>
@@ -313,7 +321,7 @@ kbd { font-family: var(--f-mono); font-size: 0.85em; border: 1px solid var(--lin
           <dt><kbd>Esc</kbd></dt><dd data-i18n="kEsc">Stop all sound</dd>
           <dt data-i18n="kPad">Gamepad</dt><dd data-i18n="kPadDo">Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle</dd>
         </dl>
-        <p class="hint" data-i18n="vibeNote">The shell vibrates under your finger on Android phones and with a gamepad. iPhones can’t vibrate from a web page.</p>
+        <p class="hint" data-i18n="vibeNote">The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.</p>
       </details>
     </aside>
   </main>
@@ -431,8 +439,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size
-const VERSION = '1.7';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong
+const VERSION = '1.8';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -491,7 +499,7 @@ const STRINGS_DE = {
 const UI = {
   en: {
     title: 'Tactile Room',
-    lede: 'Hear the shape of a shell. Press and drag across it, or select it and use the arrow keys. Works with your eyes closed.',
+    lede: 'Explore objects through sound and vibration, with or without seeing them. The first is a sea snail shell: press and drag across it, or select it and use the arrow keys.',
     secShell: 'The shell',
     stage: 'Shell. Drag across it, or move with the arrow keys, to hear its shape. Q and E turn it. Enter describes the spot. D plays the description.',
     turn: 'Turn the shell', turnL: 'Turn the shell left', turnR: 'Turn the shell right',
@@ -511,14 +519,14 @@ const UI = {
     loading: 'Loading the shell…', reading: 'Reading the surface…',
     noWebgl: 'This page needs WebGL, which isn’t available in this browser. Try another browser or device.',
     rRidge: 'ridge', rGroove: 'groove', rSmooth: 'smooth', water: 'Water', shellFallback: 'Shell',
-    vibe: 'Vibration', kPad: 'Gamepad',
+    vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Off', vibeLight: 'Light', vibeStrong: 'Strong',
     kPadDo: 'Left stick moves your fingertip (hold the left trigger for small steps), right stick turns the shell, A or ✕ describes the spot, B or ○ plays the description, Y or △ goes back to the middle',
-    vibeNote: 'The shell vibrates under your finger on Android phones and with a gamepad. iPhones can’t vibrate from a web page.',
+    vibeNote: 'The shell vibrates under your finger on Android phones and with a gamepad. Choose Strong if you feel nothing; older phones need longer pulses. iPhones can’t vibrate from a web page.',
     padOn: 'Gamepad connected. The left stick explores, the right stick turns the shell, A describes the spot. If you hear nothing, press any key or tap the screen once.'
   },
   pt: {
     title: 'Sala Tátil',
-    lede: 'Ouça a forma de uma concha. Toque e arraste sobre ela, ou selecione-a e use as setas do teclado. Funciona de olhos fechados.',
+    lede: 'Explore objetos pelo som e pela vibração, vendo ou não. O primeiro é uma concha de caramujo marinho: toque e arraste sobre ela, ou selecione-a e use as setas do teclado.',
     secShell: 'A concha',
     stage: 'Concha. Arraste sobre ela, ou use as setas, para ouvir sua forma. Q e E giram a concha. Enter descreve o ponto. D toca a descrição.',
     turn: 'Girar a concha', turnL: 'Girar a concha para a esquerda', turnR: 'Girar a concha para a direita',
@@ -538,14 +546,14 @@ const UI = {
     loading: 'Carregando a concha…', reading: 'Lendo a superfície…',
     noWebgl: 'Esta página precisa de WebGL, que não está disponível neste navegador. Tente outro navegador ou aparelho.',
     rRidge: 'nervura', rGroove: 'sulco', rSmooth: 'liso', water: 'Água', shellFallback: 'Concha',
-    vibe: 'Vibração', kPad: 'Controle de videogame',
+    vibe: 'Vibração', kPad: 'Controle de videogame', vibeOff: 'Desligada', vibeLight: 'Leve', vibeStrong: 'Forte',
     kPadDo: 'O analógico esquerdo move a ponta do dedo (segure o gatilho esquerdo para passos menores), o direito gira a concha, A ou ✕ descreve o ponto, B ou ○ toca a descrição, Y ou △ volta ao centro',
-    vibeNote: 'A concha vibra sob o dedo em celulares Android e com um controle de videogame. iPhones não vibram a partir de uma página da web.',
+    vibeNote: 'A concha vibra sob o dedo em celulares Android e com um controle de videogame. Escolha Forte se não sentir nada; celulares mais antigos precisam de pulsos mais longos. iPhones não vibram a partir de uma página da web.',
     padOn: 'Controle conectado. O analógico esquerdo explora, o direito gira a concha, A descreve o ponto. Se não ouvir nada, aperte qualquer tecla ou toque a tela uma vez.'
   },
   de: {
     title: 'Tastraum',
-    lede: 'Die Form einer Muschel hören. Auf die Muschel drücken und darüber ziehen, oder sie auswählen und die Pfeiltasten benutzen. Funktioniert auch mit geschlossenen Augen.',
+    lede: 'Gegenstände über Klang und Vibration erkunden, mit oder ohne Sehen. Der erste ist das Gehäuse einer Meeresschnecke: darauf drücken und darüber ziehen, oder es auswählen und die Pfeiltasten benutzen.',
     secShell: 'Die Muschel',
     stage: 'Muschel. Darüber ziehen oder mit den Pfeiltasten bewegen, um ihre Form zu hören. Q und E drehen sie. Enter beschreibt die Stelle. D spielt die Beschreibung ab.',
     turn: 'Muschel drehen', turnL: 'Muschel nach links drehen', turnR: 'Muschel nach rechts drehen',
@@ -565,9 +573,9 @@ const UI = {
     loading: 'Muschel wird geladen…', reading: 'Oberfläche wird gelesen…',
     noWebgl: 'Diese Seite braucht WebGL, das in diesem Browser nicht verfügbar ist. Bitte einen anderen Browser oder ein anderes Gerät versuchen.',
     rRidge: 'Rippe', rGroove: 'Rille', rSmooth: 'glatt', water: 'Wasser', shellFallback: 'Muschel',
-    vibe: 'Vibration', kPad: 'Gamepad',
+    vibe: 'Vibration', kPad: 'Gamepad', vibeOff: 'Aus', vibeLight: 'Leicht', vibeStrong: 'Stark',
     kPadDo: 'Linker Stick bewegt die Fingerspitze (linken Trigger halten für kleine Schritte), rechter Stick dreht die Muschel, A oder ✕ beschreibt die Stelle, B oder ○ spielt die Beschreibung ab, Y oder △ führt zurück zur Mitte',
-    vibeNote: 'Die Muschel vibriert unter dem Finger auf Android-Handys und mit einem Gamepad. iPhones können auf einer Webseite nicht vibrieren.',
+    vibeNote: 'Die Muschel vibriert unter dem Finger auf Android-Handys und mit einem Gamepad. Wenn nichts zu spüren ist, „Stark“ wählen: Ältere Handys brauchen längere Impulse. iPhones können auf einer Webseite nicht vibrieren.',
     padOn: 'Gamepad verbunden. Der linke Stick erkundet, der rechte dreht die Muschel, A beschreibt die Stelle. Falls nichts zu hören ist, einmal eine Taste drücken oder auf den Bildschirm tippen.'
   }
 };
@@ -1331,9 +1339,10 @@ function describeSpot() {
 // ridges and grooves, the low one how far the surface sticks out, so it reads like the tone.
 // iPhones have no vibration for web pages, so nothing happens there.
 const haptics = {
-  user: true, padIndex: -1, lastPad: 0, lastRhythm: 0,
+  // v1.8: level = 'strong' (default), 'light' (the short taps of 1.1–1.7) or 'off'
+  level: 'strong', get user() { return this.level !== 'off'; }, padIndex: -1, lastPad: 0, lastRhythm: 0,
   phone: typeof navigator.vibrate === 'function' && (navigator.maxTouchPoints || 0) > 0,
-  strength() { return this.user ? clamp(cfg.sound.vibration ?? 0.7, 0, 1) : 0; },
+  strength() { return this.level === 'off' ? 0 : clamp(cfg.sound.vibration ?? 0.7, 0, 1); },
   actuator() {
     if (this.padIndex < 0 || !navigator.getGamepads) return null;
     const gp = navigator.getGamepads()[this.padIndex];
@@ -1348,7 +1357,8 @@ const haptics = {
       if (p && p.catch) p.catch(() => {});
     } catch (e) {}
   },
-  ms(x) { return Math.max(1, Math.round(x)); },
+  // Strong: pulses 2.5 times longer and never under 30 ms, which cheaper vibration motors need before you feel anything
+  ms(x, floor = 30) { return this.level === 'strong' ? Math.max(floor, Math.round(x * 2.5)) : Math.max(1, Math.round(x)); },
   // single moments: crossing a ridge, entering or leaving the shell, a landmark
   event(kind, amount = 1) {
     const k = this.strength(); if (!k) return;
@@ -1377,7 +1387,7 @@ const haptics = {
     // phone: on a sharp ridge, a fine rhythm between the single ridge pulses
     if (this.phone && onShell && moving && curv > 0.45 && now - this.lastRhythm > 130) {
       this.lastRhythm = now;
-      const on = this.ms(7 * k), off = Math.round(lerp(40, 18, Math.min(1, curv)));
+      const on = this.ms(7 * k, 20), off = Math.round(lerp(40, 18, Math.min(1, curv)));
       this.buzz([on, off, on, off, on]);
     }
   },
@@ -1389,8 +1399,7 @@ const haptics = {
 function updateVibeToggle() {
   const b = $('vibe'); if (!b) return;
   b.hidden = !haptics.available() || !(cfg.sound.vibration > 0);
-  b.setAttribute('aria-pressed', String(haptics.user));
-  $('vibe-state').textContent = haptics.user ? U('on') : U('off');
+  for (const l of ['off', 'light', 'strong']) $('vibe-' + l).setAttribute('aria-pressed', String(haptics.level === l));
 }
 
 /* ------------------------------------------------------------------ */
@@ -1767,13 +1776,16 @@ $('hints').addEventListener('click', () => {
 }
 // the visitor's own vibration switch, remembered in this browser only
 const VIBE_KEY = 'tactileRoom.vibration';
-try { if (localStorage.getItem(VIBE_KEY) === 'off') haptics.user = false; } catch (e) {}
-$('vibe').addEventListener('click', () => {
-  haptics.user = !haptics.user;
-  try { localStorage.setItem(VIBE_KEY, haptics.user ? 'on' : 'off'); } catch (e) {}
-  if (haptics.user) haptics.event('enter'); else haptics.stop();
-  updateVibeToggle();
-});
+try { const v = localStorage.getItem(VIBE_KEY); if (v === 'off' || v === 'light') haptics.level = v; } catch (e) {}
+for (const l of ['off', 'light', 'strong']) {
+  $('vibe-' + l).addEventListener('click', () => {
+    haptics.level = l;
+    try { localStorage.setItem(VIBE_KEY, l); } catch (e) {}
+    // a test buzz right away, so you know at once whether this phone vibrates
+    if (l === 'off') haptics.stop(); else { haptics.buzz(l === 'strong' ? 160 : 60); haptics.rumble(0.6, 0.4, l === 'strong' ? 160 : 60); }
+    updateVibeToggle();
+  });
+}
 
 /* ------------------------------------------------------------------ */
 /* Page text from the config                                           */

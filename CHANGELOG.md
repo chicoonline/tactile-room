@@ -2,6 +2,12 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.14 · 13 Nov 2026
+- **The shell starts larger** (Chico: start at a larger scale, without spilling over the edges; a friend found the vibration more precise zoomed in). The frame now fits the shell itself instead of the corners of its bounding box: about 1.3× larger, and every part stays inside the frame however it's turned.
+- **Vibration tip** (from a friend's phone, 13 Nov: no vibration until she turned on Haptic feedback): "Feel nothing? Choose Strong, and turn on Haptic feedback in your phone's settings (search for "vibration"). Zoom in for finer detail." Same tip on the vibration check page. EN, PT, DE.
+- Tests: new v1.14 suite (the frame fits the shell, about 1.3× larger, six turns on desktop and phone without leaving the frame, the tip in three languages).
+- 1.13 saved in `versions/v1.13-2026-11-13/`.
+
 ## 1.13 · 13 Nov 2026
 - **Screen-reader switch first on the page** (Chico: spoken hints should start off for screen-reader users). A browser can't tell whether a screen reader is running, so the first thing on the page is a button, hidden until it gets focus like a skip link: "Using a screen reader? Switch off this page's own voice, so your screen reader reads the hints instead." It works both ways and says what it did.
 - **Spoken hints are remembered** in the browser, from the switch or the side-panel button.

@@ -2,6 +2,11 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.14.1 · 13 Nov 2026
+- **The text under the shell lines up** (Chico's screenshot: the description, the keys and the vibration note each had a different width). Everything in the two panels now shares one measure, about 80 characters of the description, so the left and right edges match in all three languages.
+- Tests: the v1.14 suite checks the edges at 1540 and 1200 pixels, in EN, PT and DE.
+- 1.14 saved in `versions/v1.14-2026-11-13/`.
+
 ## 1.14 · 13 Nov 2026
 - **The shell starts larger** (Chico: start at a larger scale, without spilling over the edges; a friend found the vibration more precise zoomed in). The frame now fits the shell itself instead of the corners of its bounding box: about 1.3× larger, and every part stays inside the frame however it's turned.
 - **Vibration tip** (from a friend's phone, 13 Nov: no vibration until she turned on Haptic feedback): "Feel nothing? Choose Strong, and turn on Haptic feedback in your phone's settings (search for "vibration"). Zoom in for finer detail." Same tip on the vibration check page. EN, PT, DE.

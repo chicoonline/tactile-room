@@ -1,6 +1,6 @@
 # Tactile Room: build guide
 
-**Version 1.14 (13 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
+**Version 1.14.1 (13 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
 
 **Look.** Dark by default (the deep-sea look). Visitors switch with **Dark | Light** at the top (the one in use is filled); the choice is remembered in their browser. Both looks meet the same contrast rules.
 

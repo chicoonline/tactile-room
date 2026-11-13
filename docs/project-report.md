@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.14 (13 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, and a feedback form (in a pop-up) for people you can't meet.
+- Current version: 1.14.1 (13 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, and a feedback form (in a pop-up) for people you can't meet.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -94,6 +94,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 12 Nov | 1.12 | Description and keys moved under the shell; the description keeps its paragraphs | Chico (an open description left a big empty gap) | The side panel stays short; the text fills the shell's column |
 | 13 Nov | 1.13 | Screen-reader switch as the first thing on the page; spoken hints remembered; `?hints=off` for links to screen-reader users | Chico (hints should start off for screen-reader users) | A browser can't detect a screen reader, so the switch has to come first instead |
 | 13 Nov | 1.14 | The shell starts about 1.3× larger (frame fits the shell, not its box); tip to turn on Haptic feedback | Chico (larger start); a friend's test on her Android phone: nothing until Haptic feedback was on, and more precise zoomed in | First Android evidence: the setting, not the code, was the block on her phone |
+| 13 Nov | 1.14.1 | The description, the keys and the vibration note share one text width | Chico's screenshot: three different widths in the panels under the shell | A layout fix, so a point release; the count of fifteen versions in nine days stays |
 | 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
 | 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, no fee possible, results may support a fellowship or master's | Chico (who to ask; that it's done out of love, not for money); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 

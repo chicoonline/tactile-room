@@ -310,7 +310,7 @@ dialog.feedback::backdrop { background: rgba(2, 10, 14, 0.72); }
         </div>
         <div class="curtain" id="curtain" hidden><p>Screen hidden for the test</p></div>
       </div>
-      <p id="stage-help" class="hint" data-i18n="help">Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn't scroll while you touch this area: scroll outside it.</p>
+      <p id="stage-help" class="hint" data-i18n="help">Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. Hold one finger still on the shell and turn it with another: it plays as it passes under your finger. The page doesn't scroll while you touch this area: scroll outside it.</p>
       <div class="trace glass">
         <div class="trace-head"><span class="label" data-i18n="hear">What you hear</span><output id="readout" class="mono" aria-live="off">Silent</output></div>
         <canvas id="trace" aria-hidden="true"></canvas>
@@ -549,8 +549,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description · 1.11 (12 Nov) gamepad zoom on L2/R2, more natural voices · 1.12 (12 Nov) description and keys under the shell, description from Chico's own checks · 1.13 (13 Nov) screen-reader switch first on the page, spoken hints remembered, ?hints=off · 1.14 (13 Nov) the shell starts larger, haptic-feedback tip · 1.14.1 (13 Nov) the text under the shell lines up
-const VERSION = '1.14.1';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description · 1.11 (12 Nov) gamepad zoom on L2/R2, more natural voices · 1.12 (12 Nov) description and keys under the shell, description from Chico's own checks · 1.13 (13 Nov) screen-reader switch first on the page, spoken hints remembered, ?hints=off · 1.14 (13 Nov) the shell starts larger, haptic-feedback tip · 1.14.1 (13 Nov) the text under the shell lines up · 1.15 (13 Nov) the shell plays as it turns under a still finger; one finger listens while another turns
+const VERSION = '1.15';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -615,7 +615,7 @@ const UI = {
     secShell: 'The shell',
     stage: 'Shell. Drag across it, or move with the arrow keys, to hear its shape. Q and E turn it. Enter describes the spot. D plays the description.',
     turn: 'Turn the shell', turnL: 'Turn the shell left', turnR: 'Turn the shell right',
-    help: 'Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. The page doesn\'t scroll while you touch this area: scroll outside it.',
+    help: 'Higher notes where the shell sticks out. A brighter, crackly sound over ridges. A short falling sound when you leave the shell. Two fingers turn it (on a screen or a trackpad), or right-drag with a mouse; pinch to zoom. Hold one finger still on the shell and turn it with another: it plays as it passes under your finger. The page doesn\'t scroll while you touch this area: scroll outside it.',
     hear: 'What you hear', secSide: 'Controls and specimen label',
     map: 'Show the sound map', hints: 'Spoken hints', on: 'on', off: 'off',
     hintsNote: 'Turn spoken hints off if you use a screen reader. It will read them instead.',
@@ -690,7 +690,7 @@ const UI = {
     secShell: 'A concha',
     stage: 'Concha. Arraste sobre ela, ou use as setas, para ouvir sua forma. Q e E giram a concha. Enter descreve o ponto. D toca a descrição.',
     turn: 'Girar a concha', turnL: 'Girar a concha para a esquerda', turnR: 'Girar a concha para a direita',
-    help: 'Notas mais agudas onde a concha se projeta. Um som mais brilhante e crepitante sobre as nervuras. Um som curto e descendente quando você sai da concha. Dois dedos giram a concha (na tela ou no trackpad), ou arraste com o botão direito do mouse; faça pinça para aproximar. A página não rola enquanto você toca esta área: role fora dela.',
+    help: 'Notas mais agudas onde a concha se projeta. Um som mais brilhante e crepitante sobre as nervuras. Um som curto e descendente quando você sai da concha. Dois dedos giram a concha (na tela ou no trackpad), ou arraste com o botão direito do mouse; faça pinça para aproximar. Deixe um dedo parado na concha e gire-a com outro: ela soa enquanto passa sob o seu dedo. A página não rola enquanto você toca esta área: role fora dela.',
     hear: 'O que você ouve', secSide: 'Controles e etiqueta do espécime',
     map: 'Mostrar o mapa de som', hints: 'Dicas faladas', on: 'ligado', off: 'desligado',
     hintsNote: 'Desligue as dicas faladas se você usa um leitor de tela. Ele as lerá no lugar.',
@@ -765,7 +765,7 @@ const UI = {
     secShell: 'Die Muschel',
     stage: 'Muschel. Darüber ziehen oder mit den Pfeiltasten bewegen, um ihre Form zu hören. Q und E drehen sie. Enter beschreibt die Stelle. D spielt die Beschreibung ab.',
     turn: 'Muschel drehen', turnL: 'Muschel nach links drehen', turnR: 'Muschel nach rechts drehen',
-    help: 'Höhere Töne, wo die Muschel hervorsteht. Ein hellerer, knisternder Klang über Rippen. Ein kurzer, fallender Ton, wenn der Finger die Muschel verlässt. Mit zwei Fingern drehen (auf dem Bildschirm oder dem Trackpad) oder mit gedrückter rechter Maustaste ziehen; zum Zoomen zwei Finger spreizen. Beim Berühren dieser Fläche scrollt die Seite nicht: zum Scrollen außerhalb davon wischen.',
+    help: 'Höhere Töne, wo die Muschel hervorsteht. Ein hellerer, knisternder Klang über Rippen. Ein kurzer, fallender Ton, wenn der Finger die Muschel verlässt. Mit zwei Fingern drehen (auf dem Bildschirm oder dem Trackpad) oder mit gedrückter rechter Maustaste ziehen; zum Zoomen zwei Finger spreizen. Einen Finger ruhig auf der Muschel lassen und sie mit einem anderen drehen: Sie klingt, während sie unter dem Finger vorbeizieht. Beim Berühren dieser Fläche scrollt die Seite nicht: zum Scrollen außerhalb davon wischen.',
     hear: 'Was zu hören ist', secSide: 'Bedienung und Etikett',
     map: 'Klangkarte zeigen', hints: 'Gesprochene Hinweise', on: 'an', off: 'aus',
     hintsNote: 'Gesprochene Hinweise ausschalten, wenn ein Screenreader benutzt wird. Er liest sie dann vor.',
@@ -1742,7 +1742,14 @@ const trace = {
 /* Input                                                               */
 /* ------------------------------------------------------------------ */
 const pointers = new Map();
-let exploringId = null, rotating = null, pendingScreen = null;
+let exploringId = null, rotating = null, pendingScreen = null, exploreSince = 0;
+// v1.15: the fingers that turn the shell are every finger except the one listening (Chico: hold one finger still and spin the shell under it, like an instrument)
+function turners() { return [...pointers.entries()].filter(([id]) => id !== exploringId).map(([, p]) => p); }
+function turnAnchor() {
+  const t = turners(); if (!t.length) return null;
+  if (t.length === 1) return { x: t[0].x, y: t[0].y, d: 0 };
+  return { x: (t[0].x + t[1].x) / 2, y: (t[0].y + t[1].y) / 2, d: Math.hypot(t[0].x - t[1].x, t[0].y - t[1].y) };
+}
 function ndcFromEvent(e) {
   const r = glCanvas.getBoundingClientRect();
   return { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1, fx: (e.clientX - r.left) / r.width, fresh: true };
@@ -1765,11 +1772,16 @@ stage.addEventListener('pointerdown', (e) => {
   try { stage.setPointerCapture(e.pointerId); } catch (err) {}
   view.lastInput = performance.now();
   const wantsRotate = e.pointerType === 'mouse' && (e.button === 2 || e.shiftKey || e.button === 1);
-  if (pointers.size >= 2 || wantsRotate) {
+  // v1.15: a finger that has been listening for a moment keeps listening when another finger lands; the new finger turns the shell.
+  // Two fingers landing together (within 250 ms) still mean a two-finger turn and pinch.
+  const keepListening = e.pointerType !== 'mouse' && exploringId !== null && exploringId !== e.pointerId && pointers.has(exploringId) && performance.now() - exploreSince > 250;
+  if (keepListening) {
+    rotating = turnAnchor(); noteTurn();
+  } else if (pointers.size >= 2 || wantsRotate) {
     exploringId = null; pendingScreen = null;
-    rotating = { x: e.clientX, y: e.clientY, d: pinchDist() }; noteTurn();
+    rotating = turnAnchor(); noteTurn();
   } else if (e.button === 0 || e.pointerType !== 'mouse') {
-    exploringId = e.pointerId; pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; kb.active = false;
+    exploringId = e.pointerId; exploreSince = performance.now(); pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; kb.active = false;
     area.firstSample = true; area.out = false; area.touch = e.pointerType !== 'mouse';
     stage.classList.add('touching');
     logEvent('touch-start', 'pointer');
@@ -1793,29 +1805,23 @@ function areaEdgeCheck(e) {
   if (out && !area.out) { area.out = true; audio.edge(); haptics.event('edge'); speech.say(T.areaEdge); logEvent('touch-edge', 'pointer'); }
   else if (!out && area.out) area.out = false;
 }
-function pinchDist() {
-  const p = [...pointers.values()]; if (p.length < 2) return 0;
-  return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
-}
 stage.addEventListener('pointermove', (e) => {
   if (!pointers.has(e.pointerId)) return;
   const prev = pointers.get(e.pointerId);
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   view.lastInput = performance.now();
+  if (e.pointerId === exploringId) { pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; areaEdgeCheck(e); return; }
   if (rotating) {
     noteTurn();
-    if (pointers.size >= 2) {
-      const ps = [...pointers.values()];
-      const mx = (ps[0].x + ps[1].x) / 2, my = (ps[0].y + ps[1].y) / 2;
-      view.tYaw -= (mx - rotating.x) * 0.008; view.tPitch = clamp(view.tPitch + (my - rotating.y) * 0.006, -1.2, 1.2);
-      const d = pinchDist(); if (rotating.d && d) { view.tDist = clamp(view.tDist * rotating.d / d, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; }
-      rotating = { x: mx, y: my, d };
+    const a = turnAnchor(); if (!a) return;
+    if (turners().length >= 2) {
+      view.tYaw -= (a.x - rotating.x) * 0.008; view.tPitch = clamp(view.tPitch + (a.y - rotating.y) * 0.006, -1.2, 1.2);
+      if (rotating.d && a.d) { view.tDist = clamp(view.tDist * rotating.d / a.d, view.baseDist * 0.45, view.baseDist * 1.8); view.userZoomed = true; }
     } else {
       view.tYaw -= (e.clientX - prev.x) * 0.008; view.tPitch = clamp(view.tPitch + (e.clientY - prev.y) * 0.006, -1.2, 1.2);
     }
-    return;
+    rotating = a;
   }
-  if (e.pointerId === exploringId) { pendingScreen = ndcFromEvent(e); kb.x = pendingScreen.x; kb.y = pendingScreen.y; areaEdgeCheck(e); }
 });
 function endPointer(e) {
   if (!pointers.has(e.pointerId)) return;
@@ -1828,7 +1834,7 @@ function endPointer(e) {
   }
   if (e.pointerId === exploringId) { exploringId = null; pendingScreen = null; logEvent('touch-end', 'pointer'); }
   if (pointers.size === 0) { rotating = null; stage.classList.remove('touching'); }
-  else if (rotating) rotating = { ...[...pointers.values()][0], d: 0 };
+  else if (rotating) rotating = turnAnchor(); // null when only the listening finger is left
 }
 stage.addEventListener('pointerup', endPointer);
 stage.addEventListener('pointercancel', endPointer);
@@ -2435,13 +2441,16 @@ function markFound() {
 /* Frame loop                                                          */
 /* ------------------------------------------------------------------ */
 let lastFrame = performance.now();
+const heard = { yaw: 0, pitch: 0, dist: 0 }; // the view at the last pointer sample
 function frame(now) {
   requestAnimationFrame(frame);
   if (document.hidden) return;
   const dt = Math.min(0.05, (now - lastFrame) / 1000); lastFrame = now;
+  // v1.15: a still finger keeps listening while the shell turns under it (trackpad, wheel, another finger, the buttons)
+  if (pendingScreen && exploringId !== null && (Math.abs(view.yaw - heard.yaw) > 1e-4 || Math.abs(view.pitch - heard.pitch) > 1e-4 || Math.abs(view.dist - heard.dist) > 1e-4)) pendingScreen.fresh = true;
   // pointer exploring: one raycast per frame
   if (pendingScreen && pendingScreen.fresh && exploringId !== null && meshes.length) {
-    pendingScreen.fresh = false;
+    pendingScreen.fresh = false; heard.yaw = view.yaw; heard.pitch = view.pitch; heard.dist = view.dist;
     const s = castFromScreen(pendingScreen.x, pendingScreen.y);
     updateProbe(s, { now, input: 'pointer', screenX: pendingScreen.fx });
     probe.pan = clamp(pendingScreen.fx * 2 - 1, -1, 1) * 0.6;

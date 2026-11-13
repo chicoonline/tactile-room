@@ -1,6 +1,6 @@
 # Tactile Room: build guide
 
-**Version 1.14.1 (13 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
+**Version 1.15 (13 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
 
 **Look.** Dark by default (the deep-sea look). Visitors switch with **Dark | Light** at the top (the one in use is filled); the choice is remembered in their browser. Both looks meet the same contrast rules.
 
@@ -9,6 +9,13 @@
 **Vibration (Android phones, gamepads).** Off | Light | Strong in the side panel; Strong is the default. Choosing Light or Strong buzzes once, as a test. If even Strong's test buzz isn't felt: open the page in Chrome itself (not inside WhatsApp, Instagram or another app's browser); take the phone off silent and Do Not Disturb; check that vibration is on in the phone's sound settings. Browsers only allow vibration after the first tap on the page, so the very first stroke may be silent. iPhones can't vibrate from a web page at all.
 
 **Turning.** Two fingers on a touchscreen or a trackpad, right-drag with a mouse, the mouse wheel, Q and E on a keyboard, or the turn buttons. Pinch, Ctrl + wheel, or + and − zoom.
+
+**Playing the shell as it turns (since 1.15).** Hold one finger still on the shell and turn it with another finger, the trackpad, the turn buttons or a gamepad: the shell plays as it passes under the still finger, and a faster spin sounds busier. On a touchscreen, a finger that has been on the shell for a quarter of a second keeps listening when another finger lands; that finger turns, and two more fingers pinch to zoom. Two fingers that land together still turn and pinch as before. (Your idea, 13 Nov: spinning it this way "could become a music instrument".)
+
+**Your own edits in VS Code (since 13 Nov).** You can change `index.html` yourself, for example layout adjustments. Rules that keep both of us safe:
+- Commit your changes before asking Claude for the next change. Claude reads your committed version first and adds its change to yours; it never copies an older file over your work.
+- Keep layout changes within the accessibility rules the page already meets: reading text no wider than about 80 characters a line, contrast of 4.5:1 or more for text, touch targets of at least 44 px.
+- Add a line to `CHANGELOG.md` saying what you changed, so the record stays complete.
 
 Built 5 Nov 2026 for the OceanX Immersive Media application (cutoff 18 Nov, 05:59 Berlin).
 Since 1.6 the page shows only your scanned shell (12 Nov). What's left is yours: the description, the facts on the label (species once checked, where and when you found it, its size), the sound tuning, more landmarks if you want them, and the test with people.
@@ -33,12 +40,13 @@ This build guide lives in the Claude Project (`projects/tactile-room-build-guide
 
 If the shell can't load, visitors see a plain message in their language; the studio (`#studio`) says why. There is no generated shell any more.
 
-**What `room.json` says today, and what's left for you:**
-- Name: "Sea snail shell" (EN), "Concha de caramujo marinho" (PT), "Gehäuse einer Meeresschnecke" (DE). Change it when the species is checked (iNaturalist, then WoRMS), and fill `scientific` then.
-- `size`: "About 7 cm long" (your measurement, 12 Nov). `place` and `year`: empty until you've confirmed the beach (and whether shells may be taken there).
-- `method`: "Photogrammetry: photographed and built by Chico Morais". Add the camera and software if you like.
-- `description`: empty, so the Describe button stays hidden. Write it in all three languages and it appears.
-- `about`: empty. `credits`: concept and scan by you, code with AI assistance, three.js, the fonts.
+**What `room.json` says today (1.15, 13 Nov):**
+- Name: "Sea snail shell" (EN), "Concha de caramujo marinho" (PT), "Gehäuse einer Meeresschnecke" (DE). `scientific`: *Rapana venosa* (iNaturalist Research Grade, 3 of 3, 12 Nov).
+- `place`: "Black Sea coast, Romania" (no beach name, by your rule). `year`: 2025. `size`: "About 7 cm long and 6 cm wide" (your measurement).
+- `method`: "Photogrammetry: photographed and built by Chico Morais".
+- `description`: in EN, PT and DE, rewritten from your own check of the Qwen description (1.12). Describe reads it aloud.
+- `about`: empty (the About box was removed in 1.10). `credits`: one line at the bottom of the page: "Concept and scan: Chico Morais. Code written with AI assistance (Claude)."
+- `feedback.endpoint`: your Google Apps Script address (connected 12 Nov; answers go to the sheet "Tactile Room feedback").
 - Three landmarks, placed on your scan: **Spiral tip** (the point of the spire), **Back tip** (the far end) and **Opening** (inside the mouth). Check them in the studio (orange dots) and add others there: touch the spot, type a name, press Add. Names of two or three words are easier to catch than one short word.
 - Landmark names are spoken more slowly than other hints, and the shell's sound drops while anything is spoken.
 
@@ -147,6 +155,8 @@ The studio opens for anyone who adds `#studio` to the address, but changes made 
 
 ## Saturday: the description (about 2 hours)
 
+*Done 12 Nov (1.12): the description is yours, from your own check of the Qwen draft. The steps below stay as the record of how.*
+
 The description is the part reviewers can check most easily, so every claim in it must be one you've confirmed.
 
 **1. Photos for the model.** Choose 3–4 of your own photos of the real shell: top, opening, side, and one next to a ruler. Use JPEG.
@@ -189,7 +199,7 @@ At the end of the page, a short form asks, in the visitor's language:
 
 Everything is optional except the agreement. A second box, unticked by default, adds anonymous details about the visit: device, system and browser, how long they stayed, how they explored (touch, mouse, keyboard, gamepad), the landmarks they found and their settings. Nothing leaves the page until they press Send. Since 1.10 the form opens in a pop-up from "Tell me how it went" (in the side panel and at the bottom of the page). **For emails:** a link ending in `#feedback` (for example `https://tactileroom.chicomorais.com/?lang=de#feedback`) opens the form straight away; send it only to people who have already tried the room.
 
-**The form stays hidden until `room.json` has an endpoint.** To switch it on (about 5 minutes, once):
+**Connected 12 Nov** (your sheet "Tactile Room feedback"; answers arriving). The steps below are the record, and what to do if you ever need a new sheet. The form stays hidden whenever `room.json` has no endpoint:
 1. In Google Drive, make a new Google Sheet, for example "Tactile Room feedback".
 2. In the sheet: **Extensions → Apps Script**. Delete what's there, paste all of `docs/feedback-receiver.gs`, and save.
 3. **Deploy → New deployment**, click the cog, choose **Web app**. Execute as: **Me**. Who has access: **Anyone**. Deploy.
@@ -204,6 +214,8 @@ Everything is optional except the agreement. A second box, unticked by default, 
 - Asking how someone describes their sight is health data under the GDPR. That's why there's an agreement box and no name field (POTENTIAL: this isn't legal advice; if an association asks about data protection, show them the privacy note).
 
 ## Sunday: the test with two people
+
+*Status 13 Nov: invitations sent through a personal contact and to the ABSV and DBSV; the online questionnaire is live. The German session guide is `projects/tactile-room-session-guide.md`.*
 
 The studio has a test mode, so the test produces numbers you can quote in your essays.
 
@@ -237,12 +249,12 @@ Before the test:
    - off the shell: silence since v1.2 (the water sound is off by default; the studio can turn it back on);
    - a short rising blip when you reach the shell, a falling one when you leave it, a soft low knock at a landmark (since v1.2; it was a bright three-note chime that sounded like a game coin and covered the spoken hints);
    - left and right: the sound pans with where your finger is on the screen;
-   - finger still = silence.
+   - finger still and shell still = silence. Turn the shell under a still finger and it plays (since 1.15).
 5. **Keyboard.** The arrow keys move a fingertip across the picture, using the same ray as touch. Q and E turn the shell under it. Enter speaks what's under the fingertip ("on a ridge, near the tip").
 6. **Vibration** (Android phones and gamepads; iPhones can't vibrate from a web page):
    - phone: a short pulse each time you cross a ridge, a fine rhythm on sharp ridges, a tap when you reach the shell, a double tap at a landmark. Phones can only switch vibration on and off, so texture comes from rhythm, not strength;
    - gamepad: two motors with strength. The fast motor follows ridges (strong) and grooves (almost nothing), the slow one follows how far the surface sticks out, so it reads like the pitch. Off the shell, a slow soft swell for the water;
-   - finger still = no vibration, like the sound. Visitors can switch it off; the choice is remembered in their browser.
+   - finger still and shell still = no vibration, like the sound; turning the shell under a still finger vibrates too (since 1.15). Visitors can switch it off; the choice is remembered in their browser.
 7. **Gamepad.** Left stick moves the same fingertip as the arrow keys (push it gently for small steps; the d-pad moves one step at a time), L2 and R2 zoom out and in (since 1.11; tried by you on an 8BitDo Pro 2 in Chrome on a Mac, where the vibration also works), right stick turns the shell, A describes the spot, B plays the description, Y goes back to the middle, LB and RB turn it in steps. The page announces the gamepad when it connects. Sound still needs one key press or tap first: browsers don't count a gamepad button as permission to play sound.
 8. **Access.** The room works without sight (sound, spoken hints, screen-reader support), without hearing (the "What you hear" trace and the sound map show the sound), with reduced motion settings (no auto-rotation, no ripples) and on any phone without an app.
 
@@ -250,8 +262,8 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 
 ## Known limits
 
-- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones. On top of that, 199 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried with a gamepad, or by a blind person with a screen reader. (GAP)
-- **Android vibration not felt yet** (12 Nov: your LG K9 and three friends' Android phones). Being checked with `vibration-check.html`; see the project report.
+- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones, and with a gamepad (8BitDo Pro 2 in Chrome on a Mac: vibration works). On top of that, 282 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried by a blind person with a screen reader: invitations sent 13 Nov. (GAP)
+- **Android vibration:** first felt on 13 Nov, on a friend's Xiaomi, after she turned on Haptic feedback in the phone's settings; more precise when zoomed in. Your LG K9 and two other friends' phones: not yet retried with Haptic feedback on. The page and `vibration-check.html` now show this tip (1.14).
 - **Vibration:** Android Chrome and gamepads in Chrome or Edge only. Not on iPhones (no browser there can vibrate) and not in Firefox. How it feels depends on the phone's motor: tune the strength on your own Android phone if you have one.
 - **iPhone silent switch.** The page asks iOS to play sound anyway; on older iOS versions it may stay silent. Tell testers to flip the switch.
 - **Old browsers.** The page needs iOS 16.4 or newer (Safari 16.4+). Older devices show a message instead of the shell.

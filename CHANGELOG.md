@@ -2,6 +2,13 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.15 · 13 Nov 2026
+- **The shell plays as it turns** (Chico: spinning it fast while holding a finger still felt like a musical instrument, but the sound got stuck). The room used to read the surface only when the listening finger moved, so a still finger kept the last note while the shell turned under it. Now it keeps reading the surface whenever the shell turns: by trackpad, wheel, another finger, the turn buttons or a gamepad. The faster it spins, the more it sounds.
+- **One finger listens while another turns** (touch screens). A finger that has been on the shell for a moment keeps listening when another finger lands; the new finger turns the shell, and two more fingers pinch to zoom. Two fingers that land together still turn and pinch as before.
+- The help under the shell says so, in EN, PT and DE.
+- Tests: new v1.15 suite (a still mouse while the trackpad turns, listening and turning with two fingers, three fingers, two fingers together, the help text).
+- 1.14.1 saved in `versions/v1.14.1-2026-11-13/`.
+
 ## 1.14.1 · 13 Nov 2026
 - **The text under the shell lines up** (Chico's screenshot: the description, the keys and the vibration note each had a different width). Everything in the two panels now shares one measure, about 80 characters of the description, so the left and right edges match in all three languages.
 - Tests: the v1.14 suite checks the edges at 1540 and 1200 pixels, in EN, PT and DE.

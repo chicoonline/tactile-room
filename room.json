@@ -1,10 +1,6 @@
 {
   "model": "assets/shell.glb",
-  "orientation": [
-    0,
-    0,
-    0
-  ],
+  "orientation": [0, 0, 0],
   "label": {
     "name": {
       "en": "Sea snail shell",
@@ -46,9 +42,9 @@
   },
   "about": "",
   "credits": {
-    "en": "Concept and scan: Chico Morais. Code written with AI assistance (Claude).",
-    "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA (Claude).",
-    "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben (Claude)."
+    "en": "Concept and scan: Chico Morais. Code written with AI assistance .",
+    "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA.",
+    "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben."
   },
   "author": {
     "name": "Chico Morais",
@@ -74,11 +70,7 @@
         "pt": "Ponta da espiral",
         "de": "Spitze der Spirale"
       },
-      "at": [
-        -0.0469,
-        0.1291,
-        0.6866
-      ]
+      "at": [-0.0469, 0.1291, 0.6866]
     },
     {
       "name": {
@@ -86,11 +78,7 @@
         "pt": "Ponta de trás",
         "de": "Hintere Spitze"
       },
-      "at": [
-        -0.0523,
-        -0.2547,
-        -0.7103
-      ]
+      "at": [-0.0523, -0.2547, -0.7103]
     },
     {
       "name": {
@@ -98,11 +86,7 @@
         "pt": "Abertura",
         "de": "Öffnung"
       },
-      "at": [
-        0.0135,
-        0.0375,
-        -0.3468
-      ]
+      "at": [0.0135, 0.0375, -0.3468]
     }
   ],
   "landmarkRadius": 0.12,

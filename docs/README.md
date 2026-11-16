@@ -13,6 +13,7 @@
 **Playing the shell as it turns (since 1.15).** Hold one finger still on the shell and turn it with another finger, the trackpad, the turn buttons or a gamepad: the shell plays as it passes under the still finger, and a faster spin sounds busier. On a touchscreen, a finger that has been on the shell for a quarter of a second keeps listening when another finger lands; that finger turns, and two more fingers pinch to zoom. Two fingers that land together still turn and pinch as before. (Your idea, 13 Nov: spinning it this way "could become a music instrument".)
 
 **Your own edits in VS Code (since 13 Nov).** You can change `index.html` yourself, for example layout adjustments. Rules that keep both of us safe:
+
 - Commit your changes before asking Claude for the next change. Claude reads your committed version first and adds its change to yours; it never copies an older file over your work.
 - Keep layout changes within the accessibility rules the page already meets: reading text no wider than about 80 characters a line, contrast of 4.5:1 or more for text, touch targets of at least 44 px.
 - Add a line to `CHANGELOG.md` saying what you changed, so the record stays complete.
@@ -22,17 +23,17 @@ Since 1.6 the page shows only your scanned shell (12 Nov). What's left is yours:
 
 ## What's in this folder
 
-| File | What it is |
-|---|---|
-| `index.html` | The whole page. You shouldn't need to edit it. |
-| `room.json` | Your shell's settings: label, description, landmarks, sound. Edit it in VS Code, or let the studio write it. |
-| `room.example.json` | Shows every setting, with notes. |
-| `assets/shell.glb` | Your scan (2K textures, 3.2 MB). `description.mp3` goes here too if you record your voice. |
-| `fonts/` | The three fonts and their licences (SIL Open Font License). |
-| `versions/` | Every earlier version, exactly as it was. |
-| `CHANGELOG.md` | What changed in each version, and why. |
-| `docs/` | The public copy of the project report (without testers' details, benefits or the exact place of the find; the full report stays in your Project), this guide, and `feedback-receiver.gs` (the script that puts form answers in your Google Sheet). |
-| `CNAME` | Tells GitHub Pages to answer at tactileroom.chicomorais.com. Don't delete it. |
+| File                | What it is                                                                                                                                                                                                                                         |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`        | The whole page. You shouldn't need to edit it.                                                                                                                                                                                                     |
+| `room.json`         | Your shell's settings: label, description, landmarks, sound. Edit it in VS Code, or let the studio write it.                                                                                                                                       |
+| `room.example.json` | Shows every setting, with notes.                                                                                                                                                                                                                   |
+| `assets/shell.glb`  | Your scan (2K textures, 3.2 MB). `description.mp3` goes here too if you record your voice.                                                                                                                                                         |
+| `fonts/`            | The three fonts and their licences (SIL Open Font License).                                                                                                                                                                                        |
+| `versions/`         | Every earlier version, exactly as it was.                                                                                                                                                                                                          |
+| `CHANGELOG.md`      | What changed in each version, and why.                                                                                                                                                                                                             |
+| `docs/`             | The public copy of the project report (without testers' details, benefits or the exact place of the find; the full report stays in your Project), this guide, and `feedback-receiver.gs` (the script that puts form answers in your Google Sheet). |
+| `CNAME`             | Tells GitHub Pages to answer at tactileroom.chicomorais.com. Don't delete it.                                                                                                                                                                      |
 
 This build guide lives in the Claude Project (`projects/tactile-room-build-guide.md`).
 
@@ -41,11 +42,12 @@ This build guide lives in the Claude Project (`projects/tactile-room-build-guide
 If the shell can't load, visitors see a plain message in their language; the studio (`#studio`) says why. There is no generated shell any more.
 
 **What `room.json` says today (1.15, 13 Nov):**
-- Name: "Sea snail shell" (EN), "Concha de caramujo marinho" (PT), "Gehäuse einer Meeresschnecke" (DE). `scientific`: *Rapana venosa* (iNaturalist Research Grade, 3 of 3, 12 Nov).
+
+- Name: "Sea snail shell" (EN), "Concha de caramujo marinho" (PT), "Gehäuse einer Meeresschnecke" (DE). `scientific`: _Rapana venosa_ (iNaturalist Research Grade, 3 of 3, 12 Nov).
 - `place`: "Black Sea coast, Romania" (no beach name, by your rule). `year`: 2025. `size`: "About 7 cm long and 6 cm wide" (your measurement).
 - `method`: "Photogrammetry: photographed and built by Chico Morais".
 - `description`: in EN, PT and DE, rewritten from your own check of the Qwen description (1.12). Describe reads it aloud.
-- `about`: empty (the About box was removed in 1.10). `credits`: one line at the bottom of the page: "Concept and scan: Chico Morais. Code written with AI assistance (Claude)."
+- `about`: empty (the About box was removed in 1.10). `credits`: one line at the bottom of the page: "Concept and scan: Chico Morais. Code written with AI assistance."
 - `author` (since 1.16): `{ "name": "Chico Morais", "url": "https://portfolio.chicomorais.com" }`. Wherever that name appears in the credits, it becomes a link to that address. Change the address here if your site moves.
 - `feedback.endpoint`: your Google Apps Script address (connected 12 Nov; answers go to the sheet "Tactile Room feedback").
 - Three landmarks, placed on your scan: **Spiral tip** (the point of the spire), **Back tip** (the far end) and **Opening** (inside the mouth). Check them in the studio (orange dots) and add others there: touch the spot, type a name, press Add. Names of two or three words are easier to catch than one short word.
@@ -56,6 +58,7 @@ If the shell can't load, visitors see a plain message in their language; the stu
 ## Capturing the shell (photogrammetry)
 
 **Which camera.** Both work; the computer does the 3D part either way (Object Capture on your Mac).
+
 - **Nikon D610 + 50 mm (first choice, 11 Nov).** Every photo comes out the same, with more detail.
   - Stand about 60 cm away and use f/11, so the whole shell is sharp front to back. At 45 cm and f/8 only about 4 cm of it is.
   - ISO 100, M mode, shutter set by the histogram.
@@ -89,6 +92,7 @@ That's about 120–180 photos, overlapping by more than half between neighbours.
 The dossier gave Friday 4–5 hours for building the room. That part is done, so Friday is now tuning.
 
 **1. Export the scan from Blender**
+
 - File › Export › glTF 2.0.
 - Format: **glTF Binary (.glb)**.
 - Include: Selected Objects (select only the shell, not the turntable or backdrop).
@@ -97,6 +101,7 @@ The dossier gave Friday 4–5 hours for building the room. That part is done, so
 - Aim for under 100,000 faces and under about 15 MB. The studio warns you above 150,000 faces.
 
 **2. Open the studio**
+
 - Open the preview link (or your published page) with `#studio` at the end of the address.
 - Drop the `.glb` onto the shell, or use "choose one". The file stays in your browser; nothing is uploaded.
 
@@ -104,16 +109,16 @@ The dossier gave Friday 4–5 hours for building the room. That part is done, so
 
 **4. Tune the sound, with headphones on.** Start with the defaults and change one thing at a time.
 
-| Setting | What it changes | Start at |
-|---|---|---|
-| Pitch follows | "How far the surface sticks out", or "Height in the room" (up = higher note) | Sticks out |
-| Lowest / highest note | The pitch range | C3 to A5 |
-| Five-note scale | Snaps pitch to a pentatonic scale: more musical, less exact | On (since v1.2) |
-| Ridge sensitivity | How easily crossing a ridge makes a click | 55% |
-| Tone / click / water volume | Balance between the three sounds. Water is off since v1.2; raise it only if testers lose the shell | 70 / 55 / 0% |
-| Scan smoothing | Removes scan noise before ridges are measured. Raise it if the whole shell crackles; lower it if real ridges disappear. Press "Re-analyse surface" after changing it | 2 |
-| Swap ridges and grooves | Use only if ridges sound dull and grooves sound bright | Off |
-| Vibration strength | How strongly the shell vibrates under the finger (Android phones and gamepads). 0% turns it off for everyone | 70% |
+| Setting                     | What it changes                                                                                                                                                      | Start at        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Pitch follows               | "How far the surface sticks out", or "Height in the room" (up = higher note)                                                                                         | Sticks out      |
+| Lowest / highest note       | The pitch range                                                                                                                                                      | C3 to A5        |
+| Five-note scale             | Snaps pitch to a pentatonic scale: more musical, less exact                                                                                                          | On (since v1.2) |
+| Ridge sensitivity           | How easily crossing a ridge makes a click                                                                                                                            | 55%             |
+| Tone / click / water volume | Balance between the three sounds. Water is off since v1.2; raise it only if testers lose the shell                                                                   | 70 / 55 / 0%    |
+| Scan smoothing              | Removes scan noise before ridges are measured. Raise it if the whole shell crackles; lower it if real ridges disappear. Press "Re-analyse surface" after changing it | 2               |
+| Swap ridges and grooves     | Use only if ridges sound dull and grooves sound bright                                                                                                               | Off             |
+| Vibration strength          | How strongly the shell vibrates under the finger (Android phones and gamepads). 0% turns it off for everyone                                                         | 70%             |
 
 Turn on "Show the sound map" while tuning: cyan is a ridge, coral is a groove, lighter is a higher note.
 
@@ -121,6 +126,7 @@ Turn on "Show the sound map" while tuning: cyan is a ridge, coral is a groove, l
 Don't mark the roughest area. Sunday's test asks testers to find it on their own.
 
 **6. Fill in the label and the description.**
+
 - Label: name, scientific name (only if you checked it on WoRMS or iNaturalist), where and when you found it, real size, how you made the model.
 - Description: paste your checked text. If you record your own voice, put the file in `assets/` and type its path (for example `assets/description.mp3`).
 - About and credits: these appear under the room. Your words.
@@ -156,26 +162,27 @@ The studio opens for anyone who adds `#studio` to the address, but changes made 
 
 ## Saturday: the description (about 2 hours)
 
-*Done 12 Nov (1.12): the description is yours, from your own check of the Qwen draft. The steps below stay as the record of how.*
+_Done 12 Nov (1.12): the description is yours, from your own check of the Qwen draft. The steps below stay as the record of how._
 
 The description is the part reviewers can check most easily, so every claim in it must be one you've confirmed.
 
 **1. Photos for the model.** Choose 3–4 of your own photos of the real shell: top, opening, side, and one next to a ruler. Use JPEG.
 
 **2. A first draft from a local model (optional).** With [Ollama](https://ollama.com) on your Mac:
+
 - `ollama pull qwen3-vl:8b` (about 6 GB, fits a 16 GB Mac; `qwen2.5vl:7b` is the alternative, according to [InsiderLLM's guide](https://insiderllm.com/guides/vision-models-locally/), July 2026).
 - Run it with the photo path inside the prompt, for example: `ollama run qwen3-vl:8b "<prompt below> ./top.jpg"`.
-- Prompt to adapt: *Describe only what you can see in this photo of a seashell, for someone who cannot see it. Cover the overall shape, how many turns the spiral has, the opening, the surface texture (ridges, bumps, smooth areas) and the colours. Give sizes only relative to the ruler. Do not name the species or where it was found. Mark anything you are unsure of with "(unsure)".*
+- Prompt to adapt: _Describe only what you can see in this photo of a seashell, for someone who cannot see it. Cover the overall shape, how many turns the spiral has, the opening, the surface texture (ridges, bumps, smooth areas) and the colours. Give sizes only relative to the ruler. Do not name the species or where it was found. Mark anything you are unsure of with "(unsure)"._
 - Vision models miscount and invent details, so treat the output as a list of claims to check, not as text.
 
 **3. Check every claim.**
 
-| Claim from the draft | Checked against | Keep, change or cut |
-|---|---|---|
-| e.g. "about seven turns" | Count on the shell itself | |
-| e.g. "ridges run along the spiral" | Run a finger along it | |
-| Species or genus | iNaturalist (upload a photo; wait for community IDs), then the accepted name on WoRMS (marinespecies.org) | If unsure, use the genus or "a sea snail's shell" |
-| Where and when you found it | Your trip photos (date and place in the files) | |
+| Claim from the draft               | Checked against                                                                                           | Keep, change or cut                               |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| e.g. "about seven turns"           | Count on the shell itself                                                                                 |                                                   |
+| e.g. "ridges run along the spiral" | Run a finger along it                                                                                     |                                                   |
+| Species or genus                   | iNaturalist (upload a photo; wait for community IDs), then the accepted name on WoRMS (marinespecies.org) | If unsure, use the genus or "a sea snail's shell" |
+| Where and when you found it        | Your trip photos (date and place in the files)                                                            |                                                   |
 
 **4. Write it yourself.** 60–90 seconds spoken, which is roughly 150–220 words. Shape first, then touch and texture, then where it came from. Then the Portuguese version, your own or DeepL plus your edit.
 
@@ -183,14 +190,15 @@ The description is the part reviewers can check most easily, so every claim in i
 
 **6. AI-use log.** One table, kept as you go. It's the evidence for the fellowship's "document AI use" ask.
 
-| Date | Tool | What it did | What it got wrong | What I changed |
-|---|---|---|---|---|
-| 5 Nov 2026 | Claude | Wrote the room's code from my build plan | | |
-| [7 Nov] | [model] | Drafted a description from 4 photos | | |
+| Date       | Tool    | What it did                              | What it got wrong | What I changed |
+| ---------- | ------- | ---------------------------------------- | ----------------- | -------------- |
+| 5 Nov 2026 | Claude  | Wrote the room's code from my build plan |                   |                |
+| [7 Nov]    | [model] | Drafted a description from 4 photos      |                   |                |
 
 ## Feedback form (since 1.9)
 
 At the end of the page, a short form asks, in the visitor's language:
+
 - how they describe themselves (blind, partially sighted, sighted, or prefer not to say);
 - whether they used a screen reader or magnification, and which;
 - what they noticed first;
@@ -201,6 +209,7 @@ At the end of the page, a short form asks, in the visitor's language:
 Everything is optional except the agreement. A second box, unticked by default, adds anonymous details about the visit: device, system and browser, how long they stayed, how they explored (touch, mouse, keyboard, gamepad), the landmarks they found and their settings. Nothing leaves the page until they press Send. Since 1.10 the form opens in a pop-up from "Tell me how it went" (in the side panel and at the bottom of the page). **For emails:** a link ending in `#feedback` (for example `https://tactileroom.chicomorais.com/?lang=de#feedback`) opens the form straight away; send it only to people who have already tried the room.
 
 **Connected 12 Nov** (your sheet "Tactile Room feedback"; answers arriving). The steps below are the record, and what to do if you ever need a new sheet. The form stays hidden whenever `room.json` has no endpoint:
+
 1. In Google Drive, make a new Google Sheet, for example "Tactile Room feedback".
 2. In the sheet: **Extensions → Apps Script**. Delete what's there, paste all of `docs/feedback-receiver.gs`, and save.
 3. **Deploy → New deployment**, click the cog, choose **Web app**. Execute as: **Me**. Who has access: **Anyone**. Deploy.
@@ -216,7 +225,7 @@ Everything is optional except the agreement. A second box, unticked by default, 
 
 ## Sunday: the test with two people
 
-*Status 13 Nov: invitations sent through a personal contact and to the ABSV and DBSV; the online questionnaire is live. The German session guide is `projects/tactile-room-session-guide.md`.*
+_Status 13 Nov: invitations sent through a personal contact and to the ABSV and DBSV; the online questionnaire is live. The German session guide is `projects/tactile-room-session-guide.md`._
 
 The studio has a test mode, so the test produces numbers you can quote in your essays.
 
@@ -231,6 +240,7 @@ The studio has a test mode, so the test produces numbers you can quote in your e
 6. Fix the two biggest problems only.
 
 Before the test:
+
 - If the tester uses a screen reader, turn **Spoken hints** off. Their screen reader reads the hints instead.
 - Bring an Android phone. On an iPhone testers get sound only; on Android, sound and vibration. Note whether vibration helped them find the ridges: that's evidence for the Tactile Earth idea.
 - iPhone VoiceOver takes over touch gestures, so the drag doesn't reach the page. Ask the tester to try touch with VoiceOver off, or use the laptop and the arrow keys. Note what they prefer; that's a finding in itself.
@@ -263,7 +273,7 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 
 ## Known limits
 
-- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones, and with a gamepad (8BitDo Pro 2 in Chrome on a Mac: vibration works). On top of that, 296 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried by a blind person with a screen reader: invitations sent 13 Nov. (GAP)
+- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones, and with a gamepad (8BitDo Pro 2 in Chrome on a Mac: vibration works). On top of that, 296 automated checks run in Chrome on a server, with simulated phones (they prove the page _asks_ for vibration, not that a phone motor moves). Not yet tried by a blind person with a screen reader: invitations sent 13 Nov. (GAP)
 - **Android vibration:** first felt on 13 Nov, on a friend's Xiaomi, after she turned on Haptic feedback in the phone's settings; more precise when zoomed in. Your LG K9 and two other friends' phones: not yet retried with Haptic feedback on. The page and `vibration-check.html` now show this tip (1.14).
 - **Vibration:** Android Chrome and gamepads in Chrome or Edge only. Not on iPhones (no browser there can vibrate) and not in Firefox. How it feels depends on the phone's motor: tune the strength on your own Android phone if you have one.
 - **iPhone silent switch.** The page asks iOS to play sound anyway; on older iOS versions it may stay silent. Tell testers to flip the switch.
@@ -276,7 +286,7 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 
 - The page's code was written by Claude (AI) on 5 Nov 2026, from the build plan in your Tactile Room dossier, and tested with automated browser checks.
 - Yours: the concept and its lineage (the PUC-Rio museum-touch idea, Pele Bruta), choosing and scanning the shell, the orientation, the sound tuning, the landmarks, the checked description, the test with people and the decisions after it.
-- A credit line that states this plainly: "Code written with AI assistance (Claude)."
+- A credit line that states this plainly: "Code written with AI assistance."
 - Read "How it works" above until you can explain each step in your own words. An interviewer may ask.
 
 ## room.json reference
@@ -284,6 +294,7 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 See `room.example.json`. Landmark positions are in the model's own space, so they stay put if you change the orientation. Use the studio rather than editing positions by hand.
 
 **English, Portuguese and German.** The page has an EN / PT / DE switch at the top. It opens in Portuguese or German for visitors whose browser is set to that language, or with `?lang=pt` or `?lang=de` at the end of the address, and it remembers the choice.
+
 - German (added in v1.3) is a draft too: check it, especially the name "Tastraum". "Muschel" is the everyday word for any shell; strictly, a sea snail's shell is a "Schneckenhaus".
 - Your own German texts: switch to DE in the studio and type them. In room.json they sit beside the others, for example `"name": { "en": "Shell", "pt": "Concha", "de": "Muschel" }`.
 - Spoken hints use a German voice when one is installed (most phones and Macs have one).

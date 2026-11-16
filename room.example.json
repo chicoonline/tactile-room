@@ -1,10 +1,6 @@
 {
   "model": "assets/shell.glb",
-  "orientation": [
-    0,
-    0,
-    0
-  ],
+  "orientation": [0, 0, 0],
   "label": {
     "name": {
       "en": "[common name, or just 'Shell']",
@@ -33,7 +29,7 @@
     "rate": 1
   },
   "about": "[a short paragraph in your words. A blank line starts a new paragraph.]",
-  "credits": "[e.g. Concept, scan and testing: Chico Morais. Code written with AI assistance (Claude). 3D: three.js.]",
+  "credits": "[e.g. Concept, scan and testing: Chico Morais. Code written with AI assistance. 3D: three.js.]",
   "sound": {
     "pitchFrom": "bulge",
     "low": 48,
@@ -54,11 +50,7 @@
         "pt": "Ponta",
         "de": "Spitze"
       },
-      "at": [
-        0,
-        0.95,
-        0
-      ]
+      "at": [0, 0.95, 0]
     }
   ],
   "landmarkRadius": 0.12,

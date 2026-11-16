@@ -50,6 +50,10 @@
     "pt": "Conceito e escaneamento: Chico Morais. Código escrito com assistência de IA (Claude).",
     "de": "Konzept und Scan: Chico Morais. Code mit KI-Unterstützung geschrieben (Claude)."
   },
+  "author": {
+    "name": "Chico Morais",
+    "url": "https://portfolio.chicomorais.com"
+  },
   "sound": {
     "pitchFrom": "bulge",
     "low": 48,

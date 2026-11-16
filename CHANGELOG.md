@@ -2,6 +2,11 @@
 
 Each version is kept as it was, so the development can be compared. Reasons for each change are in the project report (`projects/tactile-room-project-report.md` in the Project).
 
+## 1.16 · 16 Nov 2026
+- **"Chico Morais" in the credits links to https://portfolio.chicomorais.com** (Chico: there was nowhere on the page linking to his website). Same tab, in EN, PT and DE; the rest of the credits line is unchanged. Set in `room.json` under `author` (name and address), so it can change without touching the page.
+- Tests: new v1.16 suite (the link in three languages, reachable with Tab, visible focus, contrast 14:1 dark and 5.4:1 light).
+- 1.15 saved in `versions/v1.15-2026-11-13/`.
+
 ## 1.15 · 13 Nov 2026
 - **The shell plays as it turns** (Chico: spinning it fast while holding a finger still felt like a musical instrument, but the sound got stuck). The room used to read the surface only when the listening finger moved, so a still finger kept the last note while the shell turned under it. Now it keeps reading the surface whenever the shell turns: by trackpad, wheel, another finger, the turn buttons or a gamepad. The faster it spins, the more it sounds.
 - **One finger listens while another turns** (touch screens). A finger that has been on the shell for a moment keeps listening when another finger lands; the new finger turns the shell, and two more fingers pinch to zoom. Two fingers that land together still turn and pinch as before.

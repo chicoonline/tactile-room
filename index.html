@@ -549,8 +549,8 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 /* ------------------------------------------------------------------ */
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
-// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description · 1.11 (12 Nov) gamepad zoom on L2/R2, more natural voices · 1.12 (12 Nov) description and keys under the shell, description from Chico's own checks · 1.13 (13 Nov) screen-reader switch first on the page, spoken hints remembered, ?hints=off · 1.14 (13 Nov) the shell starts larger, haptic-feedback tip · 1.14.1 (13 Nov) the text under the shell lines up · 1.15 (13 Nov) the shell plays as it turns under a still finger; one finger listens while another turns
-const VERSION = '1.15';
+// Version history: 1.0 (5 Nov 2026) first build · 1.1 (6 Nov) vibration and gamepad · 1.2 (10 Nov) soft knock, five-note scale on, water off · 1.3 (10 Nov) German, auto-saved test logs · 1.4 (11 Nov) deep-sea sonar look, light option · 1.5 (11 Nov) own fonts, trackpad turning, touch-area cues · 1.6 (12 Nov) Chico's scanned shell, Dark | Light switch, device language · 1.7 (12 Nov) clearer landmark names, back tip, size · 1.8 (12 Nov) objects in the intro, vibration Off | Light | Strong · 1.9 (12 Nov) feedback form, device details in the test log · 1.10 (12 Nov) form in a pop-up, credits as a footer, the shell's description · 1.11 (12 Nov) gamepad zoom on L2/R2, more natural voices · 1.12 (12 Nov) description and keys under the shell, description from Chico's own checks · 1.13 (13 Nov) screen-reader switch first on the page, spoken hints remembered, ?hints=off · 1.14 (13 Nov) the shell starts larger, haptic-feedback tip · 1.14.1 (13 Nov) the text under the shell lines up · 1.15 (13 Nov) the shell plays as it turns under a still finger; one finger listens while another turns · 1.16 (16 Nov) Chico's name in the credits links to his portfolio
+const VERSION = '1.16';
 const DEFAULTS = {
   model: 'assets/shell.glb',   // the scanned shell; room.json can point elsewhere
   orientation: [0, 0, 0],
@@ -558,6 +558,8 @@ const DEFAULTS = {
   description: { text: '', audio: '', lang: 'en-GB', voice: '', rate: 1 },
   about: '',
   credits: '',
+  // v1.16 (16 Nov): the author's name in the credits links to their website
+  author: { name: '', url: '' },
   // v1.2 (10 Nov): five-note scale on and water off by default; both can be changed in the studio
   sound: { pitchFrom: 'bulge', low: 48, high: 81, steps: true, texture: 0.55, toneVol: 0.7, texVol: 0.55, waterVol: 0, smoothing: 2, invert: false, vibration: 0.7 },
   landmarks: [],            // points visitors can find, set in room.json or the studio
@@ -567,6 +569,15 @@ const DEFAULTS = {
   // v1.9: where the feedback form sends answers (a Google Apps Script web app). No endpoint = no form.
   feedback: { endpoint: '', contact: '' }
 };
+// v1.16: the author's name inside the credits line becomes a link to their website (Chico: "at least the Chico Morais should be a link")
+function renderCredits(text) {
+  const el = $('credits'); el.textContent = '';
+  const name = (cfg.author && cfg.author.name) || '', url = (cfg.author && cfg.author.url) || '';
+  const i = name ? text.indexOf(name) : -1;
+  if (i < 0 || !/^https:\/\//.test(url)) { el.textContent = text; return; }
+  const a = document.createElement('a'); a.href = url; a.rel = 'author'; a.textContent = name;
+  el.append(text.slice(0, i), a, text.slice(i + name.length));
+}
 function shown() {
   return { label: cfg.label, description: loc(cfg.description.text), about: loc(cfg.about), credits: loc(cfg.credits) };
 }
@@ -2121,7 +2132,7 @@ function renderText() {
   const about = $('about'), at = $('about-text');
   at.textContent = '';
   (txt.about || '').split(/\n\s*\n/).filter(Boolean).forEach((para) => { const p = document.createElement('p'); p.textContent = para.trim(); at.append(p); });
-  $('credits').textContent = txt.credits || '';
+  renderCredits(txt.credits || '');
   about.hidden = !txt.about;
   T = deepMerge(({ en: STRINGS, pt: STRINGS_PT, de: STRINGS_DE })[LANG] || STRINGS, stringsFor(cfg.strings));
   applyStaticText();
@@ -2148,6 +2159,7 @@ function exportConfig() {
     description: cfg.description,
     about: cfg.about,
     credits: cfg.credits,
+    author: cfg.author,
     sound: cfg.sound,
     landmarks: landmarks.map((l) => ({ name: l.name, at: l.at.map((x) => +(+x).toFixed(4)) })),
     landmarkRadius: cfg.landmarkRadius,

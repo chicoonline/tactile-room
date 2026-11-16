@@ -6,7 +6,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 - A real shell, scanned in 3D, that people can explore without sight on an ordinary phone or computer. Sound and vibration follow its surface, and spoken hints say where you are.
 - In English, German and Portuguese.
 - First piece of the "Where did this come from?" series (ideas/where-did-this-come-from.md). Sample project for the OceanX Immersive Media application (deadline 13 Nov 2026).
-- Current version: 1.15 (13 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, a feedback form (in a pop-up) for people you can't meet, and a shell that plays as it turns under a still finger.
+- Current version: 1.16 (16 Nov 2026): your scanned shell, three landmarks, its spoken description, vibration levels, gamepad zoom, a feedback form (in a pop-up) for people you can't meet, and a shell that plays as it turns under a still finger.
 - **Public page: https://tactileroom.chicomorais.com** (GitHub Pages; repository chicoonline/tactile-room; you set it up yourself in VS Code on 11 Nov).
 - Claude copy (private): https://claude.ai/artifact/GnGn7AJvYDvBfsyKX7oSQ3. First stage, frozen: https://claude.ai/artifact/QqJCYbJ4kwvoKFm2H3HPdc
 
@@ -97,6 +97,7 @@ Working record of the whole process: research, decisions, versions, tests and id
 | 13 Nov | 1.14.1 | The description, the keys and the vibration note share one text width | Chico's screenshot: three different widths in the panels under the shell | A layout fix, so a point release; the count of fifteen versions in nine days stays |
 | 13 Nov | 1.15 | The shell keeps sounding as it turns under a still finger; on touch screens one finger listens while another turns (two fingers landing together still turn and pinch) | Chico (spinning it fast while holding a finger still "could become a music instrument", but the sound got stuck) | The room read the surface only when the finger moved; now it also reads it whenever the shell turns |
 | 13 Nov | — | Layout adjustments (such as how wide the text runs under the shell) are yours, in VS Code; they must keep the accessibility rules (reading text about 80 characters a line at most, contrast, 44 px targets). Before any change, Claude reads your committed version and adds to it | Chico | 1.14.1 aligned the text blocks to each other, but you wanted the text to follow the layout box; small visual tweaks are quicker and cheaper by hand |
+| 16 Nov | 1.16 | "Chico Morais" in the credits links to portfolio.chicomorais.com (same tab, three languages) | Chico (nowhere on the page linked to his website) | Visitors, reviewers and testers can find the rest of your work |
 | 12 Nov | — | Species on the label: *Rapana venosa*, Black Sea coast, Romania, 2025 | Chico (agreed with the iNaturalist community) | Research Grade, 3 of 3 identifications |
 | 12 Nov | — | Ask the associations: ABSV (Berlin) to visit and forward; DBSV (national) to forward. Say openly: non-commercial, no fee possible, results may support a fellowship or master's | Chico (who to ask; that it's done out of love, not for money); Claude (drafts; the fellowship line) | Honest about where the results go, so nothing looks hidden later |
 

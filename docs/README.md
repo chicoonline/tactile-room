@@ -1,6 +1,6 @@
 # Tactile Room: build guide
 
-**Version 1.15 (13 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
+**Version 1.16 (16 Nov 2026).** Live at https://tactileroom.chicomorais.com. Earlier versions are kept in `versions/`. See CHANGELOG.md.
 
 **Look.** Dark by default (the deep-sea look). Visitors switch with **Dark | Light** at the top (the one in use is filled); the choice is remembered in their browser. Both looks meet the same contrast rules.
 
@@ -46,6 +46,7 @@ If the shell can't load, visitors see a plain message in their language; the stu
 - `method`: "Photogrammetry: photographed and built by Chico Morais".
 - `description`: in EN, PT and DE, rewritten from your own check of the Qwen description (1.12). Describe reads it aloud.
 - `about`: empty (the About box was removed in 1.10). `credits`: one line at the bottom of the page: "Concept and scan: Chico Morais. Code written with AI assistance (Claude)."
+- `author` (since 1.16): `{ "name": "Chico Morais", "url": "https://portfolio.chicomorais.com" }`. Wherever that name appears in the credits, it becomes a link to that address. Change the address here if your site moves.
 - `feedback.endpoint`: your Google Apps Script address (connected 12 Nov; answers go to the sheet "Tactile Room feedback").
 - Three landmarks, placed on your scan: **Spiral tip** (the point of the spire), **Back tip** (the far end) and **Opening** (inside the mouth). Check them in the studio (orange dots) and add others there: touch the spot, type a name, press Add. Names of two or three words are easier to catch than one short word.
 - Landmark names are spoken more slowly than other hints, and the shell's sound drops while anything is spoken.
@@ -262,7 +263,7 @@ Prior art to name on the project page: [ShapeSonic](https://cragl.cs.gmu.edu/sha
 
 ## Known limits
 
-- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones, and with a gamepad (8BitDo Pro 2 in Chrome on a Mac: vibration works). On top of that, 282 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried by a blind person with a screen reader: invitations sent 13 Nov. (GAP)
+- **Where it has been tried.** You test every version yourself on a computer, an iPhone and Android phones, and with a gamepad (8BitDo Pro 2 in Chrome on a Mac: vibration works). On top of that, 296 automated checks run in Chrome on a server, with simulated phones (they prove the page *asks* for vibration, not that a phone motor moves). Not yet tried by a blind person with a screen reader: invitations sent 13 Nov. (GAP)
 - **Android vibration:** first felt on 13 Nov, on a friend's Xiaomi, after she turned on Haptic feedback in the phone's settings; more precise when zoomed in. Your LG K9 and two other friends' phones: not yet retried with Haptic feedback on. The page and `vibration-check.html` now show this tip (1.14).
 - **Vibration:** Android Chrome and gamepads in Chrome or Edge only. Not on iPhones (no browser there can vibrate) and not in Firefox. How it feels depends on the phone's motor: tune the strength on your own Android phone if you have one.
 - **iPhone silent switch.** The page asks iOS to play sound anyway; on older iOS versions it may stay silent. Tell testers to flip the switch.
